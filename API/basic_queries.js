@@ -74,7 +74,7 @@ async function deleteDevice(Id){
     const query = new Parse.Query(Device);
   
     let device = query.get(Id)
-    device.destroy()
+    await device.destroy()
   
 }
 
@@ -113,7 +113,7 @@ async function updatingPerson(Id, username, email, confirmPassword, owner) {
     person.set('confirmPassword', confirmPassword);
     person.set('owner', owner);
 
-    person.save()
+    await person.save()
 
 }
 
@@ -122,7 +122,7 @@ async function deletePerson(Id) {
     const query = new Parse.Query(Person);
 
     let person = query.get(Id)
-    person.destroy()
+    await person.destroy()
 
 }
 
@@ -137,7 +137,7 @@ async function createUser(username, password, confirmPassword, email, owner) {
     user.set('password', password);
     user.set("owner", owner)
 
-    user.save()
+   await user.save()
 
 }
 
@@ -159,7 +159,7 @@ async function updatingUser(Id, username, email, confirmPassword, owner) {
     user.set('confirmPassword', confirmPassword);
     user.set('owner', owner);
 
-    user.save()
+   await user.save()
 
 }
 
@@ -168,7 +168,7 @@ async function deleteUser(Id) {
     const query = new Parse.Query(User);
 
     let user = query.get(Id)
-    user.destroy()
+    await user.destroy()
 
 }
 // ================== Address
@@ -183,7 +183,7 @@ async function createAddress(street, neighborhood, n, cep, owner) {
     address.set('cep', cep);
     address.set("owner", owner)
 
-    address.save()
+    await address.save()
 
 }
 
@@ -205,7 +205,7 @@ async function updatingAddress(Id, street, neighborhood, n, cep, owner) {
     address.set('cep', cep);
     address.set("owner", owner)
 
-    address.save()
+    await address.save()
 
 }
 
@@ -214,7 +214,7 @@ async function deleteAddress(Id) {
     const query = new Parse.Query(Address);
 
     let address = query.get(Id)
-    address.destroy()
+    await address.destroy()
 
 }
 
