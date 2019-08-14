@@ -171,6 +171,52 @@ async function deleteUser(Id) {
     await user.destroy()
 
 }
+
+// ================== User management
+
+async function createRole(Role , PublicReadAccess, PublicWriteAccess){
+    let myACL = new Parse.ACL()
+    myACL.setPublicReadAccess(PublicReadAccess)
+    myACL.setPublicWriteAccess(PublicWriteAccess)
+    
+    let myRole = new Parse.Role(Role, myACL)
+    myRole.save()
+}
+
+async function setRole(user, Role){
+    if(user){
+        let rolesQuery = new Parse.Query(Parse.Role)
+        rolesQuery.equalTo('name', Role)
+        let role = await rolesQuery.first()
+
+        if(role){
+            role.getUsers.add(user)
+            role.save()
+        }
+    }
+}
+
+async function _logIn(user, password){
+    let user = await Parse.User.logIn(user, password)
+}
+
+async function _logOut(user){
+    if (user){
+        Parse.User.enableUnsafeCurrentUser()
+        user = await Parse.User.logOut()
+        console.log('User logged out')
+    }
+}
+
+async function _requestPasswordReset(user, email){
+    if (user){
+        await Parse.User.requestPasswordReset(email)
+    }
+}
+
+//async function _l
+
+
 // ================== Address
 
 async function createAddress(street, neighborhood, n, cep, owner) {
