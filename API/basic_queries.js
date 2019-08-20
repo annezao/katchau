@@ -41,6 +41,79 @@ async function readVoltage(device, start, end = new Date()) {
     return arr
 }
 
+async function readVoltage(device, start, end = new Date()) {
+    const Voltage = Parse.Object.extend('Voltage')
+    const query = new Parse.Query(Voltage)
+
+    query.equalTo("source", device)
+    query.greaterThanOrEqualTo("date", start)
+    query.lessThanOrEqualTo("date", end)
+    query.include('value')
+    query.include('date')
+
+    var result = await query.find()
+
+    let arr = []
+
+    for (var i = 0; i < result.length; i++) {
+        let thisObject = result[i]
+        arr.push({
+            'date': thisObject.get('date'),
+            'value': thisObject.get('value')
+        })
+    }
+
+    return arr
+}
+// ================= Config
+
+async function createConfig(notificar_email, notificar_push, vibrate, som, intervalo_notificar) {
+    let Config = Parse.Object.extend('Config')
+    let config = new Config()
+
+    config.set('notificar_email', notificar_email)
+    config.set('notificar_push', notificar_push)
+    config.set('vibrate', vibrate)
+    config.set('som', som)
+    config.set('intervalo_notificar', intervalo_notificar)
+
+    await config.save()
+}
+
+async function readConfig(id) {
+    const Config = Parse.Object.extend('Config')
+    const query = new Parse.Query(Config)
+    let device = await query.get(id)
+    return device
+}
+
+async function updatingConfig(notificar_email, notificar_push, vibrate, som, intervalo_notificar) {
+    let Config = Parse.Object.extend('Config')
+    const query = new Parse.Query(Config);
+
+    let config = await query.get(Id)
+    config.set('notificar_email', notificar_email)
+    config.set('notificar_push', notificar_push)
+    config.set('vibrate', vibrate)
+    config.set('som', som)
+    config.set('intervalo_notificar', intervalo_notificar)
+
+    await config.save()
+
+}
+
+
+async function deleteConfig(Id){
+    let Config = Parse.Object.extend('Config')
+    const query = new Parse.Query(Config);
+  
+    let config = query.get(Id)
+    await config.destroy()
+}
+
+
+
+
 // ================= Device
 
 async function createDevice() {
@@ -57,6 +130,9 @@ async function readDevice(id) {
     let device = await query.get(id)
     return device
 }
+
+
+
 /*
 async function updatingDevice(Id, username, email, confirmPassword, owner){
     let Device = Parse.Object.extend('Device')
@@ -128,14 +204,15 @@ async function deletePerson(Id) {
 
 // ================== User
 
-async function createUser(username, password, confirmPassword, email, owner) {
+async function createUser(username, password, confirmPassword, email, owner, config) {
     const user = new Parse.User();
 
     user.set('username', username);
     user.set('email', email);
     user.set('confirmPassword', confirmPassword);
     user.set('password', password);
-    user.set("owner", owner)
+    user.set("owner", owner);
+    user.set("config", config);
 
    await user.save()
 
@@ -159,7 +236,7 @@ async function updatingUser(Id, username, email, confirmPassword, owner) {
     user.set('confirmPassword', confirmPassword);
     user.set('owner', owner);
 
-   await user.save()
+    await user.save()
 
 }
 
@@ -262,10 +339,7 @@ async function deleteAddress(Id) {
     let address = query.get(Id)
     await address.destroy()
 
-}
-
-
-
+} 
 
 // ================== Monitoring
 
