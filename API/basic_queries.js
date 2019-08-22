@@ -41,36 +41,14 @@ async function readVoltage(device, start, end = new Date()) {
     return arr
 }
 
-async function readVoltage(device, start, end = new Date()) {
-    const Voltage = Parse.Object.extend('Voltage')
-    const query = new Parse.Query(Voltage)
-
-    query.equalTo("source", device)
-    query.greaterThanOrEqualTo("date", start)
-    query.lessThanOrEqualTo("date", end)
-    query.include('value')
-    query.include('date')
-
-    var result = await query.find()
-
-    let arr = []
-
-    for (var i = 0; i < result.length; i++) {
-        let thisObject = result[i]
-        arr.push({
-            'date': thisObject.get('date'),
-            'value': thisObject.get('value')
-        })
-    }
-
-    return arr
-}
 // ================= Config
 
-async function createConfig(notificar_email, notificar_push, vibrate, som, intervalo_notificar) {
+async function createConfig(user, notificar_email = true, notificar_push = true, vibrate = true,
+    som = true, intervalo_notificar = 2) {
     let Config = Parse.Object.extend('Config')
     let config = new Config()
 
+    config.set ('user', user)
     config.set('notificar_email', notificar_email)
     config.set('notificar_push', notificar_push)
     config.set('vibrate', vibrate)
@@ -103,15 +81,13 @@ async function updatingConfig(notificar_email, notificar_push, vibrate, som, int
 }
 
 
-async function deleteConfig(Id){
+async function deleteConfig(Id) {
     let Config = Parse.Object.extend('Config')
     const query = new Parse.Query(Config);
-  
+
     let config = query.get(Id)
     await config.destroy()
 }
-
-
 
 
 // ================= Device
@@ -131,27 +107,25 @@ async function readDevice(id) {
     return device
 }
 
-
-
 /*
 async function updatingDevice(Id, username, email, confirmPassword, owner){
     let Device = Parse.Object.extend('Device')
     const query = new Parse.Query(Device);
-  
+
     let device =  await query.get(Id)
     device.set("something", something)
-  
+
     device.save()
 
 }
 */
-async function deleteDevice(Id){
+async function deleteDevice(Id) {
     let Device = Parse.Object.extend('Device')
     const query = new Parse.Query(Device);
-  
+
     let device = query.get(Id)
     await device.destroy()
-  
+
 }
 
 // ================= Person
@@ -163,7 +137,6 @@ async function createPerson(name, lastname, email, cel) {
 
     person.set('name', name)
     person.set('lastname', lastname)
-    person.set('email', email)
     person.set('cellphone', cel)
 
     await person.save()
@@ -178,16 +151,14 @@ async function readPerson(id) {
     return person
 }
 
-async function updatingPerson(Id, username, email, confirmPassword, owner) {
+async function updatingPerson(Id, name, lastname, email, cel) {
     let Person = Parse.Object.extend('Person')
     const query = new Parse.Query(Person);
 
     let person = await query.get(Id)
-    person.set('username', username);
-    person.set('email', email);
-    person.set('Password', confirmPassword);
-    person.set('confirmPassword', confirmPassword);
-    person.set('owner', owner);
+    person.set('name', name)
+    person.set('lastname', lastname)
+    person.set('cellphone', cel)
 
     await person.save()
 
@@ -204,7 +175,7 @@ async function deletePerson(Id) {
 
 // ================== User
 
-async function createUser(username, password, confirmPassword, email, owner, config) {
+async function createUser(username, password, confirmPassword, email, owner) {
     const user = new Parse.User();
 
     user.set('username', username);
@@ -212,9 +183,7 @@ async function createUser(username, password, confirmPassword, email, owner, con
     user.set('confirmPassword', confirmPassword);
     user.set('password', password);
     user.set("owner", owner);
-    user.set("config", config);
-
-   await user.save()
+    await user.save()
 
 }
 
@@ -225,14 +194,14 @@ async function readUser(Id) {
     return user
 }
 
-async function updatingUser(Id, username, email, confirmPassword, owner) {
+async function updatingUser(Id, username, password, confirmPassword, email, owner) {
     const User = new Parse.User();
     const query = new Parse.Query(User);
 
     let user = await query.get(Id)
     user.set('username', username);
     user.set('email', email);
-    user.set('Password', confirmPassword);
+    user.set('Password', password);
     user.set('confirmPassword', confirmPassword);
     user.set('owner', owner);
 
@@ -251,42 +220,42 @@ async function deleteUser(Id) {
 
 // ================== User management
 
-async function createRole(Role , PublicReadAccess, PublicWriteAccess){
+async function createRole(Role, PublicReadAccess, PublicWriteAccess) {
     let myACL = new Parse.ACL()
     myACL.setPublicReadAccess(PublicReadAccess)
     myACL.setPublicWriteAccess(PublicWriteAccess)
-    
+
     let myRole = new Parse.Role(Role, myACL)
     myRole.save()
 }
 
-async function setRole(user, Role){
-    if(user){
+async function setRole(user, Role) {
+    if (user) {
         let rolesQuery = new Parse.Query(Parse.Role)
         rolesQuery.equalTo('name', Role)
         let role = await rolesQuery.first()
 
-        if(role){
+        if (role) {
             role.getUsers.add(user)
             role.save()
         }
     }
 }
 
-async function _logIn(user, password){
+async function _logIn(user, password) {
     let user = await Parse.User.logIn(user, password)
 }
 
-async function _logOut(user){
-    if (user){
+async function _logOut(user) {
+    if (user) {
         Parse.User.enableUnsafeCurrentUser()
         user = await Parse.User.logOut()
         console.log('User logged out')
     }
 }
 
-async function _requestPasswordReset(user, email){
-    if (user){
+async function _requestPasswordReset(user, email) {
+    if (user) {
         await Parse.User.requestPasswordReset(email)
     }
 }
@@ -339,7 +308,7 @@ async function deleteAddress(Id) {
     let address = query.get(Id)
     await address.destroy()
 
-} 
+}
 
 // ================== Monitoring
 
@@ -380,9 +349,12 @@ module.exports = Base
 // ================== Testing Module
 
 async function run() {
-    //let Person = await readPerson("40Z7orijSS")
-    //createAddress("Terencio Sampaio", "Grageru", "215", "49025-700", user)
-    //createUser("anya", "123456", "123456", "email@example.com", Person)
+    //createPerson("Valente", "Rodrigues", "3131313131");
+    let Person = await readPerson("VV7PFqaltk")
+   // createUser("ant", "123456", "123456", "email10@example.com", Person);
+    //createAddress("Terencio Sampaio", "Grageru", "111", "49020-700", Person.id)
+    let User = await readUser("sAFx7sQSj1")
+    createConfig(User)
 }
 
 run()
