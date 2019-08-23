@@ -18,7 +18,7 @@
 /*eslint-disable*/
 import React from "react";
 // used for making the prop types of this component
-import PropTypes from "prop-types";
+import {FiZap} from "react-icons/fi";
 
 // reactstrap components
 import { Container, Row, Nav, NavItem, NavLink } from "reactstrap";
@@ -29,16 +29,7 @@ class Footer extends React.Component {
       <footer className="footer">
         <Container fluid>
           <div className="copyright">
-            © {new Date().getFullYear()} made with{" "}
-            <i className="tim-icons icon-heart-2" /> by{" "}
-            <a
-              href="javascript:void(0)"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Creative Tim
-            </a>{" "}
-            for a better web.
+            © Copyright {new Date().getFullYear()} | KATCHAU <FiZap/> Company.
           </div>
         </Container>
       </footer>

@@ -1,427 +1,590 @@
-/*!
+import moment from "moment";
+import Parse from 'parse';
+import "moment/locale/pt-br";
+import 'hammerjs';
+import 'chartjs-plugin-zoom';
 
-=========================================================
-* Black Dashboard React v1.0.0
-=========================================================
+moment.locale('pt-br');
 
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
 
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-// ##############################
-// // // Chart variables
-// #############################
-
-// chartExample1 and chartExample2 options
-let chart1_2_options = {
-  maintainAspectRatio: false,
-  legend: {
-    display: false
-  },
-  tooltips: {
-    backgroundColor: "#f5f5f5",
-    titleFontColor: "#333",
-    bodyFontColor: "#666",
-    bodySpacing: 4,
-    xPadding: 12,
-    mode: "nearest",
-    intersect: 0,
-    position: "nearest"
-  },
-  responsive: true,
-  scales: {
-    yAxes: [
-      {
-        barPercentage: 1.6,
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(29,140,248,0.0)",
-          zeroLineColor: "transparent"
-        },
-        ticks: {
-          suggestedMin: 60,
-          suggestedMax: 125,
-          padding: 20,
-          fontColor: "#9a9a9a"
-        }
-      }
-    ],
-    xAxes: [
-      {
-        barPercentage: 1.6,
-        gridLines: {
-          drawBorder: false,
-          color: "rgba(29,140,248,0.1)",
-          zeroLineColor: "transparent"
-        },
-        ticks: {
-          padding: 20,
-          fontColor: "#9a9a9a"
-        }
-      }
-    ]
-  }
-};
-
-// #########################################
-// // // used inside src/views/Dashboard.jsx
-// #########################################
-let chartExample1 = {
-  data1: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
-
-    return {
-      labels: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC"
-      ],
-      datasets: [
+let mainCharts = {
+  dia: {
+    datasets: (data, gradientStroke) => {
+      return [
         {
-          label: "My First dataset",
+          label: "",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100]
-        }
-      ]
-    };
-  },
-  data2: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
-
-    return {
-      labels: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC"
-      ],
-      datasets: [
-        {
-          label: "My First dataset",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120]
-        }
-      ]
-    };
-  },
-  data3: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
-
-    return {
-      labels: [
-        "JAN",
-        "FEB",
-        "MAR",
-        "APR",
-        "MAY",
-        "JUN",
-        "JUL",
-        "AUG",
-        "SEP",
-        "OCT",
-        "NOV",
-        "DEC"
-      ],
-      datasets: [
-        {
-          label: "My First dataset",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130]
-        }
-      ]
-    };
-  },
-  options: chart1_2_options
-};
-
-// #########################################
-// // // used inside src/views/Dashboard.jsx
-// #########################################
-let chartExample2 = {
-  data: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(29,140,248,0.2)");
-    gradientStroke.addColorStop(0.4, "rgba(29,140,248,0.0)");
-    gradientStroke.addColorStop(0, "rgba(29,140,248,0)"); //blue colors
-
-    return {
-      labels: ["JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
-      datasets: [
-        {
-          label: "Data",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: "#1f8ef1",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#1f8ef1",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#1f8ef1",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: [80, 100, 70, 80, 120, 80]
-        }
-      ]
-    };
-  },
-  options: chart1_2_options
-};
-
-// #########################################
-// // // used inside src/views/Dashboard.jsx
-// #########################################
-let chartExample3 = {
-  data: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(72,72,176,0.1)");
-    gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
-    gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
-
-    return {
-      labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
-      datasets: [
-        {
-          label: "Countries",
-          fill: true,
-          backgroundColor: gradientStroke,
-          hoverBackgroundColor: gradientStroke,
           borderColor: "#d048b6",
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45]
+          pointBackgroundColor: "#d048b6",
+          pointBorderColor: "rgba(255,255,255,0)",
+          hoverBackgroundColor: "#F10EC7",
+          pointBorderWidth: 15,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 20,
+          pointRadius: 4,
+          data: data
         }
+      ];
+    },
+    labels: (date) => {
+      return [
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 1, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 2, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 3, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 4, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 5, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 6, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 7, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 9, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 10, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 11, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 13, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 14, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 15, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 16, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 17, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 18, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 19, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 20, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 21, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 22, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 0)
       ]
-    };
-  },
-  options: {
-    maintainAspectRatio: false,
-    legend: {
-      display: false
     },
-    tooltips: {
-      backgroundColor: "#f5f5f5",
-      titleFontColor: "#333",
-      bodyFontColor: "#666",
-      bodySpacing: 4,
-      xPadding: 12,
-      mode: "nearest",
-      intersect: 0,
-      position: "nearest"
-    },
-    responsive: true,
-    scales: {
-      yAxes: [
-        {
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(225,78,202,0.1)",
-            zeroLineColor: "transparent"
+    options: (min, max, date) => {
+        console.log("charts.jsx options: (min, max)", min, max);
+        return {
+          maintainAspectRatio: false,
+          legend: {
+            display: false
           },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 120,
-            padding: 20,
-            fontColor: "#9e9e9e"
+          tooltips: {
+            backgroundColor: "#f5f5f5",
+            titleFontColor: "#333",
+            bodyFontColor: "#666",
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest",
+            callbacks: {
+              title: function (tooltipItem, myData) {
+                return `${myData.datasets[0].data[tooltipItem[0].index].x.format('LLL')}`;
+              },
+              label: function (tooltipItem, myData) {
+                return `foram gastos ${tooltipItem.value}kW`;
+              }
+            }
+          },
+          responsive: true,
+          scales: {
+            yAxes: [
+              {
+                barPercentage: 1.6,
+                gridLines: {
+                  drawBorder: false,
+                  color: "rgba(29,140,248,0.0)",
+                  zeroLineColor: "transparent"
+                },
+                ticks: {
+                  padding: 10,
+                  fontColor: "#9a9a9a",
+                  callback: function (value) {
+                    if (Math.floor(value) === value) {
+                      return value
+                    }
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Watts'
+                }
+              }
+            ],
+            xAxes: [
+              {
+                barPercentage: 1.6,
+                gridLines: {
+                  drawBorder: false,
+                  color: "rgba(29,140,248,0.1)",
+                  zeroLineColor: "transparent"
+                },
+                ticks: {
+                  padding: 30,
+                  fontColor: "#9a9a9a"
+                },
+                type: 'time',
+                time: {
+                  unit: 'hour',
+                  displayFormats: {
+                    hour: 'HH:mm'
+                  }
+                }
+              }
+            ]
+          },
+          pan: {
+            enabled: true,
+            mode: "xy",
+            rangeMin: {
+              x: moment(date).valueOf(),
+              y: 0
+            },
+            rangeMax: {
+              x: moment(date).add({ hours: 23 }).valueOf(),
+              y: (max + 1000)
+            }
+          },
+          zoom: {
+            enabled: true,
+            drag: false,
+            mode: "xy",
+            rangeMin: {
+              y: 0
+            },
+            rangeMax: {
+              y: (max + 400)
+            }
           }
         }
-      ],
-      xAxes: [
-        {
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(225,78,202,0.1)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
+    },
+    //example
+    values: (day) => {
+
+      let m = moment(),
+        n = moment().add(-1, 'd'),
+        todayExample = m.date() + "/" + (m.month() + 1) + "/" + m.year(),
+        yesterdayExample = n.date() + "/" + (n.month() + 1) + "/" + n.year();
+      day = moment(day);
+      day = day.date() + "/" + (day.month() + 1) + "/" + day.year();
+
+      let v = {};
+      v[todayExample] = [
+        { x: moment("00:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) }
+      ];
+
+      v[yesterdayExample] = [
+        { x: moment("00:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("00:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("01:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("02:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("03:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("04:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("05:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("06:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("06:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("06:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
+        { x: moment("06:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) }
       ]
+
+      return v[day]
+      // return getAccumulate(v[day])
     }
-  }
-};
-
-// #########################################
-// // // used inside src/views/Dashboard.jsx
-// #########################################
-const chartExample4 = {
-  data: canvas => {
-    let ctx = canvas.getContext("2d");
-
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
-    gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
-    gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
-
-    return {
-      labels: ["JUL", "AUG", "SEP", "OCT", "NOV"],
-      datasets: [
+  },
+  mes: {
+    datasets: (data, gradientStroke) => {
+      return [
         {
-          label: "My First dataset",
+          label: "",
           fill: true,
           backgroundColor: gradientStroke,
-          borderColor: "#00d6b4",
+          borderColor: "#d048b6",
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          pointBackgroundColor: "#00d6b4",
+          pointBackgroundColor: "#d048b6",
           pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#00d6b4",
-          pointBorderWidth: 20,
+          hoverBackgroundColor: "#F10EC7",
+          pointBorderWidth: 15,
           pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
+          pointHoverBorderWidth: 20,
           pointRadius: 4,
-          data: [90, 27, 60, 12, 80]
+          data: data
         }
-      ]
-    };
-  },
-  options: {
-    maintainAspectRatio: false,
-    legend: {
-      display: false
+      ];
     },
-
-    tooltips: {
-      backgroundColor: "#f5f5f5",
-      titleFontColor: "#333",
-      bodyFontColor: "#666",
-      bodySpacing: 4,
-      xPadding: 12,
-      mode: "nearest",
-      intersect: 0,
-      position: "nearest"
+    labels: (date) => {
+      let data = [], month = date.getMonth()+1,
+        days = moment(month, "MM").endOf("month").date();
+      for (let index = 1; index <= days; index++) {
+        data.push(moment(`${index}/${month}`, "DD/MM"));
+      }
+      return data;
     },
-    responsive: true,
-    scales: {
-      yAxes: [
-        {
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(29,140,248,0.0)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            suggestedMin: 50,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9e9e9e"
+    options: (min, max) => {
+      console.log("charts.jsx options: (min, max)", min, max);
+      return {
+        maintainAspectRatio: false,
+        legend: {
+          display: false
+        },
+        tooltips: {
+          backgroundColor: "#f5f5f5",
+          titleFontColor: "#333",
+          bodyFontColor: "#666",
+          bodySpacing: 4,
+          xPadding: 12,
+          mode: "nearest",
+          intersect: 0,
+          position: "nearest",
+          callbacks: {
+            title: function (tooltipItem, myData) {
+              return `${myData.datasets[0].data[tooltipItem[0].index].x.format('LL')}`;
+            },
+            label: function (tooltipItem, myData) {
+              return `foram gastos ${tooltipItem.value}kW`;
+            }
           }
+        },
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              barPercentage: 1.6,
+              gridLines: {
+                drawBorder: false,
+                color: "rgba(29,140,248,0.0)",
+                zeroLineColor: "transparent"
+              },
+              ticks: {
+                padding: 10,
+                fontColor: "#9a9a9a",
+                callback: function (value) {
+                  if (Math.floor(value) === value) {
+                    return value
+                  }
+                }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Watts'
+              }
+            }
+          ],
+          xAxes: [
+            {
+              barPercentage: 1.6,
+              gridLines: {
+                drawBorder: false,
+                color: "rgba(29,140,248,0.1)",
+                zeroLineColor: "transparent"
+              },
+              ticks: {
+                padding: 30,
+                fontColor: "#9a9a9a"
+              },
+              type: 'time',
+              time: {
+                displayFormats: {
+                  'day': 'MMM DD'
+                }
+              }
+            }
+          ]
         }
-      ],
-
-      xAxes: [
-        {
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(0,242,195,0.1)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
-      ]
+      }
+    },
+    //example
+    values: (month) => {
+      let data = [], days = moment(month, "MM").endOf("month").date();
+      for (let index = 1; index <= days; index++) {
+        data.push({ x: moment(`${index}/${month}`, "DD/MM"), y: Math.floor((Math.random() * 3000) + 1000) });
+      }
+      return data;
     }
+  },
+  ano: {
+    datasets: (data, gradientStroke) => {
+      return [
+        {
+          label: "",
+          fill: true,
+          backgroundColor: gradientStroke,
+          borderColor: "#d048b6",
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          pointBackgroundColor: "#d048b6",
+          pointBorderColor: "rgba(255,255,255,0)",
+          hoverBackgroundColor: "#F10EC7",
+          pointBorderWidth: 15,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 20,
+          pointRadius: 4,
+          data: data
+        }
+      ];
+    },
+    labels: () => moment.monthsShort(),
+    options: (min, max) => {
+      console.log("charts.jsx options: (min, max)", min, max);
+      return {
+        maintainAspectRatio: false,
+        legend: {
+          display: false
+        },
+        tooltips: {
+          backgroundColor: "#f5f5f5",
+          titleFontColor: "#333",
+          bodyFontColor: "#666",
+          bodySpacing: 4,
+          xPadding: 12,
+          mode: "nearest",
+          intersect: 0,
+          position: "nearest",
+          callbacks: {
+            title: function (tooltipItem, myData) {
+              return `${myData.datasets[0].data[tooltipItem[0].index].month} de ${new Date().getFullYear()}`;
+            },
+            label: function (tooltipItem, myData) {
+              return `foram gastos ${tooltipItem.value}kW`;
+            }
+          }
+        },
+        responsive: true,
+        scales: {
+          yAxes: [
+            {
+              barPercentage: 1.6,
+              gridLines: {
+                drawBorder: false,
+                color: "rgba(29,140,248,0.0)",
+                zeroLineColor: "transparent"
+              },
+              ticks: {
+                padding: 20,
+                fontColor: "#9a9a9a",
+                callback: function (value) {
+                  if (Math.floor(value) === value) {
+                    return value
+                  }
+                }
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Watts'
+              }
+            }
+          ],
+          xAxes: [
+            {
+              barPercentage: 1.6,
+              gridLines: {
+                drawBorder: false,
+                color: "rgba(29,140,248,0.1)",
+                zeroLineColor: "transparent"
+              },
+              ticks: {
+                padding: 20,
+                fontColor: "#9a9a9a"
+              }
+            }
+          ]
+        }
+      }
+    },
+    //example
+    values: [
+      { x: "JAN", y: 15834 },
+      { x: "FEV", y: 13500 },
+      { x: "MAR", y: 14523 },
+      { x: "ABR", y: 13234 },
+      { x: "MAI", y: 12834 },
+      { x: "JUN", y: 13333 },
+      { x: "JUL", y: 12843 }
+    ]
   }
 };
 
-module.exports = {
-  chartExample1, // in src/views/Dashboard.jsx
-  chartExample2, // in src/views/Dashboard.jsx
-  chartExample3, // in src/views/Dashboard.jsx
-  chartExample4 // in src/views/Dashboard.jsx
+async function readVoltageByDay(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
+
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
+
+  let result = await query.find(),
+    arr = [],
+    sum = 0
+
+  for (let i = 0; i < result.length; i++) {
+    let thisObject = result[i], value = thisObject.get('value');
+    sum += value;
+    arr.push({ 'x': moment(thisObject.get('date')), 'y': sum, "v": value })
+  }
+
+  return arr
+}
+async function readVoltageByMonth(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
+
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
+
+  let result = await query.find(),
+    arr = []
+
+  if(result.length){
+    const groups = result.reduce((groups, result) => {
+      let thisObject = result,
+        day = thisObject.get('date'),
+        d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
+
+      if (!groups[d]) {
+        groups[d] = [];
+      }
+
+      groups[d].push(thisObject.get('value'));
+      return groups;
+    }, {});
+
+    // Edit: to add it in the array format instead
+    Object.keys(groups).forEach((date) => {
+      arr.push({
+        x: moment(date),
+        y: groups[date].reduce((x, y) => x + y, 0)
+      })
+    });
+
+    arr.sort(function (a, b) {
+      if (a.y < b.y) {
+        return -1;
+      }
+      if (a.y > b.y) {
+        return 1;
+      }
+      return 0;
+    })
+  }
+  
+  return arr;
+}
+async function readVoltageByYear(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
+
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
+
+  let result = await query.find(),
+    arr = []
+
+  if (result.length) {
+    const groups = result.reduce((groups, result) => {
+      let thisObject = result,
+        day = thisObject.get('date'),
+        d = moment(`${day.getFullYear()}/${day.getMonth()+1}/1`, "YYYY/MM/DD").format('MMM')
+
+      if (!groups[d]) {
+        groups[d] = [];
+      }
+
+      groups[d].push(thisObject.get('value'));
+      return groups;
+    }, {});
+
+    // Edit: to add it in the array format instead
+    Object.keys(groups).forEach((month) => {
+      arr.push({
+        x: month,
+        y: groups[month].reduce((x, y) => x + y, 0),
+        month: moment().month(month).format("MMMM")
+      })
+    });
+
+    arr.sort(function (a, b) {
+      if (a.y < b.y) {
+        return -1;
+      }
+      if (a.y > b.y) {
+        return 1;
+      }
+      return 0;
+    })
+  }
+
+  return arr;
+}
+
+async function readVoltage(type, device, date) {
+  switch (type) {
+    case "dia":
+      return readVoltageByDay(
+        device,
+        date, 
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59));
+    case "mes":
+      return readVoltageByMonth(
+        device, 
+        new Date(date.getFullYear(), date.getMonth(), 1), 
+        new Date(date.getFullYear(), date.getMonth() + 1, 0));
+    default:
+      date = new Date();
+      return readVoltageByYear(
+        device,
+        new Date(date.getFullYear(), 0, 1),
+        new Date(date.getFullYear(), 11, 1))
+  }
+}
+
+export {
+  mainCharts,
+  readVoltage
 };
