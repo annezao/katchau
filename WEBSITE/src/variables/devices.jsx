@@ -1,3 +1,28 @@
+
+import Parse from 'parse';
+
+async function createDevice() {
+    let Device = Parse.Object.extend('Device')
+    let device = new Device()
+
+    await device.save()
+    return device
+}
+
+async function readDevices() {
+    const Device = Parse.Object.extend('Device')
+    const query = new Parse.Query(Device)
+    let device = await query.find()
+    return device
+}
+
+async function readDevice(id) {
+    const Device = Parse.Object.extend('Device')
+    const query = new Parse.Query(Device)
+    let device = await query.get(id)
+    return device
+}
+
 let devices = [
     {
         "_id":"1",
@@ -11,4 +36,9 @@ let devices = [
     }
 ];
 
-export default devices;
+export {
+    createDevice,
+    readDevice,
+    readDevices,
+    devices
+}

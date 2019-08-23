@@ -85,7 +85,6 @@ class Admin extends React.Component {
             path={prop.layout + prop.path}
             component={prop.component}
             key={key}
-            isChecked={true}
           />
         );
       } else {
@@ -130,7 +129,7 @@ class Admin extends React.Component {
           >
             <AdminNavbar
               {...this.props}
-              brandText={ //if para se for a página de dashboard
+              brandText={ //if para se for a página de dashboard (se tirar nao aparece a o pathName)
                 this.props.location.pathname.indexOf("dashboard") !== -1 ? "Painel de controle": this.getBrandText(this.props.location.pathname)
               }
               toggleSidebar={this.toggleSidebar}

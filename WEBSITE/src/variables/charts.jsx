@@ -1,48 +1,11 @@
 import moment from "moment";
+import Parse from 'parse';
 import "moment/locale/pt-br";
 import 'hammerjs';
 import 'chartjs-plugin-zoom';
 
 moment.locale('pt-br');
-/*!
 
-=========================================================
-* Black Dashboard React v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-// ##############################
-// // // Chart variables
-// #############################
-
-// #########################################
-// // // used inside src/views/Dashboard.jsx
-// #########################################
-
-function getAccumulate(array = null) {
-
-  if(array !== null){
-    let sum = 0;
-
-    array.forEach(function (el) {
-      sum += el.v;
-      el.y = sum;
-    });
-
-    return array;
-  }
-  else return []
-}
 
 let mainCharts = {
   dia: {
@@ -67,128 +30,132 @@ let mainCharts = {
         }
       ];
     },
-    labels: [
-      moment("00:00", 'HH:mm'),
-      moment("01:00", 'HH:mm'),
-      moment("02:00", 'HH:mm'),
-      moment("03:00", 'HH:mm'),
-      moment("04:00", 'HH:mm'),
-      moment("05:00", 'HH:mm'),
-      moment("06:00", 'HH:mm'),
-      moment("07:00", 'HH:mm'),
-      moment("08:00", 'HH:mm'),
-      moment("09:00", 'HH:mm'),
-      moment("12:00", 'HH:mm'),
-      moment("13:00", 'HH:mm'),
-      moment("14:00", 'HH:mm'),
-      moment("16:00", 'HH:mm'),
-      moment("17:00", 'HH:mm'),
-      moment("18:00", 'HH:mm'),
-      moment("19:00", 'HH:mm'),
-      moment("20:00", 'HH:mm'),
-      moment("20:00", 'HH:mm'),
-      moment("21:00", 'HH:mm'),
-      moment("22:00", 'HH:mm'),
-      moment("23:00", 'HH:mm')
-    ],
-    options: (min, max) => {
-
-      console.log("charts.jsx options: (min, max)", min, max);
-      return {
-        maintainAspectRatio: false,
-        legend: {
-          display: false
-        },
-        tooltips: {
-          backgroundColor: "#f5f5f5",
-          titleFontColor: "#333",
-          bodyFontColor: "#666",
-          bodySpacing: 4,
-          xPadding: 12,
-          mode: "nearest",
-          intersect: 0,
-          position: "nearest",
-          callbacks: {
-            title: function (tooltipItem, myData) {
-              return `${myData.data[tooltipItem[0].index].x.format('LLL')}`;
-            },
-            label: function (tooltipItem, myData) {
-              return `foram gastos ${tooltipItem.value}kW`;
-            }
-          }
-        },
-        responsive: true,
-        scales: {
-          yAxes: [
-            {
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: "rgba(29,140,248,0.0)",
-                zeroLineColor: "transparent"
+    labels: (date) => {
+      return [
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 1, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 2, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 3, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 4, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 5, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 6, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 7, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 8, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 9, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 10, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 11, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 13, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 14, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 15, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 16, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 17, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 18, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 19, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 20, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 21, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 22, 0),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 0)
+      ]
+    },
+    options: (min, max, date) => {
+        console.log("charts.jsx options: (min, max)", min, max);
+        return {
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+          tooltips: {
+            backgroundColor: "#f5f5f5",
+            titleFontColor: "#333",
+            bodyFontColor: "#666",
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest",
+            callbacks: {
+              title: function (tooltipItem, myData) {
+                return `${myData.datasets[0].data[tooltipItem[0].index].x.format('LLL')}`;
               },
-              ticks: {
-                padding: 10,
-                fontColor: "#9a9a9a",
-                callback: function (value) {
-                  if (Math.floor(value) === value) {
-                    return value
+              label: function (tooltipItem, myData) {
+                return `foram gastos ${tooltipItem.value}kW`;
+              }
+            }
+          },
+          responsive: true,
+          scales: {
+            yAxes: [
+              {
+                barPercentage: 1.6,
+                gridLines: {
+                  drawBorder: false,
+                  color: "rgba(29,140,248,0.0)",
+                  zeroLineColor: "transparent"
+                },
+                ticks: {
+                  padding: 10,
+                  fontColor: "#9a9a9a",
+                  callback: function (value) {
+                    if (Math.floor(value) === value) {
+                      return value
+                    }
+                  }
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: 'Watts'
+                }
+              }
+            ],
+            xAxes: [
+              {
+                barPercentage: 1.6,
+                gridLines: {
+                  drawBorder: false,
+                  color: "rgba(29,140,248,0.1)",
+                  zeroLineColor: "transparent"
+                },
+                ticks: {
+                  padding: 30,
+                  fontColor: "#9a9a9a"
+                },
+                type: 'time',
+                time: {
+                  unit: 'hour',
+                  displayFormats: {
+                    hour: 'HH:mm'
                   }
                 }
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Watts'
               }
-            }
-          ],
-          xAxes: [
-            {
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: "rgba(29,140,248,0.1)",
-                zeroLineColor: "transparent"
-              },
-              ticks: {
-                padding: 30,
-                fontColor: "#9a9a9a"
-              },
-              type: 'time',
-              time: {
-                unit: 'hour',
-                displayFormats: {
-                  hour: 'HH:mm'
-                }
-              }
-            }
-          ]
-        },
-        pan: {
-          enabled: true,
-          mode: "xy",
-          rangeMin: {
-            x: moment("00:00", 'HH:mm').valueOf(),
-            y: 0
+            ]
           },
-          rangeMax: {
-            x: moment("23:00", 'HH:mm').valueOf(),
-            y: (max + 1000)
-          }
-        },
-        zoom: {
-          enabled: true,
-          drag: false,
-          mode: "xy",
-          rangeMin: {
-            y: 0
+          pan: {
+            enabled: true,
+            mode: "xy",
+            rangeMin: {
+              x: moment(date).valueOf(),
+              y: 0
+            },
+            rangeMax: {
+              x: moment(date).add({ hours: 23 }).valueOf(),
+              y: (max + 1000)
+            }
           },
-          rangeMax: {
-            y: (max + 400)
+          zoom: {
+            enabled: true,
+            drag: false,
+            mode: "xy",
+            rangeMin: {
+              y: 0
+            },
+            rangeMax: {
+              y: (max + 400)
+            }
           }
         }
-      }
     },
+    //example
     values: (day) => {
 
       let m = moment(),
@@ -225,7 +192,7 @@ let mainCharts = {
         { x: moment("05:30", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
         { x: moment("05:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) }
       ];
-      
+
       v[yesterdayExample] = [
         { x: moment("00:00", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
         { x: moment("00:15", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) },
@@ -257,7 +224,8 @@ let mainCharts = {
         { x: moment("06:45", 'HH:mm'), v: Math.floor((Math.random() * 300) + 50) }
       ]
 
-      return getAccumulate(v[day])
+      return v[day]
+      // return getAccumulate(v[day])
     }
   },
   mes: {
@@ -282,15 +250,15 @@ let mainCharts = {
         }
       ];
     },
-    labels: (month) => {
-      let data = [], days = moment(month, "MM").endOf("month").date();
+    labels: (date) => {
+      let data = [], month = date.getMonth()+1,
+        days = moment(month, "MM").endOf("month").date();
       for (let index = 1; index <= days; index++) {
         data.push(moment(`${index}/${month}`, "DD/MM"));
       }
       return data;
     },
     options: (min, max) => {
-
       console.log("charts.jsx options: (min, max)", min, max);
       return {
         maintainAspectRatio: false,
@@ -308,7 +276,7 @@ let mainCharts = {
           position: "nearest",
           callbacks: {
             title: function (tooltipItem, myData) {
-              return `${myData.data[tooltipItem[0].index].x.format('LL')}`;
+              return `${myData.datasets[0].data[tooltipItem[0].index].x.format('LL')}`;
             },
             label: function (tooltipItem, myData) {
               return `foram gastos ${tooltipItem.value}kW`;
@@ -363,12 +331,12 @@ let mainCharts = {
         }
       }
     },
+    //example
     values: (month) => {
       let data = [], days = moment(month, "MM").endOf("month").date();
       for (let index = 1; index <= days; index++) {
         data.push({ x: moment(`${index}/${month}`, "DD/MM"), y: Math.floor((Math.random() * 3000) + 1000) });
       }
-      console.log(data);
       return data;
     }
   },
@@ -394,22 +362,8 @@ let mainCharts = {
         }
       ];
     },
-    labels: [
-      "JAN",
-      "FEV",
-      "MAR",
-      "ABR",
-      "MAI",
-      "JUN",
-      "JUL",
-      "AGO",
-      "SET",
-      "OUT",
-      "NOV",
-      "DEZ"
-    ],
+    labels: () => moment.monthsShort(),
     options: (min, max) => {
-
       console.log("charts.jsx options: (min, max)", min, max);
       return {
         maintainAspectRatio: false,
@@ -426,6 +380,9 @@ let mainCharts = {
           intersect: 0,
           position: "nearest",
           callbacks: {
+            title: function (tooltipItem, myData) {
+              return `${myData.datasets[0].data[tooltipItem[0].index].month} de ${new Date().getFullYear()}`;
+            },
             label: function (tooltipItem, myData) {
               return `foram gastos ${tooltipItem.value}kW`;
             }
@@ -473,6 +430,7 @@ let mainCharts = {
         }
       }
     },
+    //example
     values: [
       { x: "JAN", y: 15834 },
       { x: "FEV", y: 13500 },
@@ -485,170 +443,148 @@ let mainCharts = {
   }
 };
 
-let chartExample3 = {
-  data: canvas => {
-    let ctx = canvas.getContext("2d");
+async function readVoltageByDay(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
 
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
 
-    gradientStroke.addColorStop(1, "rgba(72,72,176,0.1)");
-    gradientStroke.addColorStop(0.4, "rgba(72,72,176,0.0)");
-    gradientStroke.addColorStop(0, "rgba(119,52,169,0)"); //purple colors
+  let result = await query.find(),
+    arr = [],
+    sum = 0
 
-    return {
-      labels: ["USA", "GER", "AUS", "UK", "RO", "BR"],
-      datasets: [
-        {
-          label: "Countries",
-          fill: true,
-          backgroundColor: gradientStroke,
-          hoverBackgroundColor: gradientStroke,
-          borderColor: "#d048b6",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45]
-        }
-      ]
-    };
-  },
-  options: {
-    maintainAspectRatio: false,
-    legend: {
-      display: false
-    },
-    tooltips: {
-      backgroundColor: "#f5f5f5",
-      titleFontColor: "#333",
-      bodyFontColor: "#666",
-      bodySpacing: 4,
-      xPadding: 12,
-      mode: "nearest",
-      intersect: 0,
-      position: "nearest"
-    },
-    responsive: true,
-    scales: {
-      yAxes: [
-        {
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(225,78,202,0.1)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            suggestedMin: 60,
-            suggestedMax: 120,
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
-      ],
-      xAxes: [
-        {
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(225,78,202,0.1)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
-      ]
-    }
+  for (let i = 0; i < result.length; i++) {
+    let thisObject = result[i], value = thisObject.get('value');
+    sum += value;
+    arr.push({ 'x': moment(thisObject.get('date')), 'y': sum, "v": value })
   }
-};
 
-const chartExample4 = {
-  data: canvas => {
-    let ctx = canvas.getContext("2d");
+  return arr
+}
+async function readVoltageByMonth(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
 
-    let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
 
-    gradientStroke.addColorStop(1, "rgba(66,134,121,0.15)");
-    gradientStroke.addColorStop(0.4, "rgba(66,134,121,0.0)"); //green colors
-    gradientStroke.addColorStop(0, "rgba(66,134,121,0)"); //green colors
+  let result = await query.find(),
+    arr = []
 
-    return {
-      labels: ["JUL", "AUG", "SEP", "OCT", "NOV"],
-      datasets: [
-        {
-          label: "My First dataset",
-          fill: true,
-          backgroundColor: gradientStroke,
-          borderColor: "#00d6b4",
-          borderWidth: 2,
-          borderDash: [],
-          borderDashOffset: 0.0,
-          pointBackgroundColor: "#00d6b4",
-          pointBorderColor: "rgba(255,255,255,0)",
-          pointHoverBackgroundColor: "#00d6b4",
-          pointBorderWidth: 20,
-          pointHoverRadius: 4,
-          pointHoverBorderWidth: 15,
-          pointRadius: 4,
-          data: [90, 27, 60, 12, 80]
-        }
-      ]
-    };
-  },
-  options: {
-    maintainAspectRatio: false,
-    legend: {
-      display: false
-    },
+  if(result.length){
+    const groups = result.reduce((groups, result) => {
+      let thisObject = result,
+        day = thisObject.get('date'),
+        d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
 
-    tooltips: {
-      backgroundColor: "#f5f5f5",
-      titleFontColor: "#333",
-      bodyFontColor: "#666",
-      bodySpacing: 4,
-      xPadding: 12,
-      mode: "nearest",
-      intersect: 0,
-      position: "nearest"
-    },
-    responsive: true,
-    scales: {
-      yAxes: [
-        {
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(29,140,248,0.0)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            suggestedMin: 50,
-            suggestedMax: 125,
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
-      ],
+      if (!groups[d]) {
+        groups[d] = [];
+      }
 
-      xAxes: [
-        {
-          barPercentage: 1.6,
-          gridLines: {
-            drawBorder: false,
-            color: "rgba(0,242,195,0.1)",
-            zeroLineColor: "transparent"
-          },
-          ticks: {
-            padding: 20,
-            fontColor: "#9e9e9e"
-          }
-        }
-      ]
-    }
+      groups[d].push(thisObject.get('value'));
+      return groups;
+    }, {});
+
+    // Edit: to add it in the array format instead
+    Object.keys(groups).forEach((date) => {
+      arr.push({
+        x: moment(date),
+        y: groups[date].reduce((x, y) => x + y, 0)
+      })
+    });
+
+    arr.sort(function (a, b) {
+      if (a.y < b.y) {
+        return -1;
+      }
+      if (a.y > b.y) {
+        return 1;
+      }
+      return 0;
+    })
   }
-};
+  
+  return arr;
+}
+async function readVoltageByYear(device, start, end) {
+  const Voltage = Parse.Object.extend('Voltage')
+  const query = new Parse.Query(Voltage)
+
+  query.equalTo("source", device)
+  query.greaterThanOrEqualTo("date", start)
+  query.lessThanOrEqualTo("date", end)
+  query.include('value')
+  query.include('date')
+
+  let result = await query.find(),
+    arr = []
+
+  if (result.length) {
+    const groups = result.reduce((groups, result) => {
+      let thisObject = result,
+        day = thisObject.get('date'),
+        d = moment(`${day.getFullYear()}/${day.getMonth()+1}/1`, "YYYY/MM/DD").format('MMM')
+
+      if (!groups[d]) {
+        groups[d] = [];
+      }
+
+      groups[d].push(thisObject.get('value'));
+      return groups;
+    }, {});
+
+    // Edit: to add it in the array format instead
+    Object.keys(groups).forEach((month) => {
+      arr.push({
+        x: month,
+        y: groups[month].reduce((x, y) => x + y, 0),
+        month: moment().month(month).format("MMMM")
+      })
+    });
+
+    arr.sort(function (a, b) {
+      if (a.y < b.y) {
+        return -1;
+      }
+      if (a.y > b.y) {
+        return 1;
+      }
+      return 0;
+    })
+  }
+
+  return arr;
+}
+
+async function readVoltage(type, device, date) {
+  switch (type) {
+    case "dia":
+      return readVoltageByDay(
+        device,
+        date, 
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59));
+    case "mes":
+      return readVoltageByMonth(
+        device, 
+        new Date(date.getFullYear(), date.getMonth(), 1), 
+        new Date(date.getFullYear(), date.getMonth() + 1, 0));
+    default:
+      date = new Date();
+      return readVoltageByYear(
+        device,
+        new Date(date.getFullYear(), 0, 1),
+        new Date(date.getFullYear(), 11, 1))
+  }
+}
 
 export {
-  mainCharts, // in src/views/Dashboard.jsx
-  chartExample3,
-  chartExample4
+  mainCharts,
+  readVoltage
 };

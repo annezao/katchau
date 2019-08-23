@@ -28,6 +28,13 @@ import "assets/scss/black-dashboard-react.scss";
 import "assets/demo/demo.css";
 import "assets/css/nucleo-icons.css";
 
+import Parse from 'parse';
+Parse.serverURL = 'https://katchau-dev.back4app.io';
+Parse.initialize(
+  'H5dcONjNMNy5WTpFt9tXAHdEAeanqT8mlq9HRSPu', 
+  'WPnfXA7fjUYszyhf8SuEkcKR8X0LyRTEL6TrodJZ' 
+);
+
 const hist = createBrowserHistory();
 
 ReactDOM.render(

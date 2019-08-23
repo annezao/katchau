@@ -1,22 +1,6 @@
 import moment from "moment";
 import "moment/locale/pt-br";
-/*!
 
-=========================================================
-* Black Dashboard React v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/black-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -40,9 +24,11 @@ import {
 } from "reactstrap";
 // core components
 import {
-  mainCharts
+  mainCharts,
+  readVoltage
 } from "../../variables/charts";
 
+import { readDevice } from '../../variables/devices';
 
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -56,110 +42,106 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
-    let m = moment();
-
     this.state = {
       bigChartData: "dia",
-      id: 0,
-      chart: {
-        watts: 0
-      },
-      day: m.toDate(),
-      month: (m.month() + 1),
+      watts: 0,
+      data: [],
+      date: new Date(),
+      options: null,
       loading: true,
-      loadingMsg: "",
-      empty: false
+      progressMsg: "Buscando dados do dispositivo...",
+      device: null
     };
 
     this.getChartOptions = this.getChartOptions.bind(this);
     this._getChartDataService = this._getChartDataService.bind(this);
-    this.getData = this.getData.bind(this);
     this.getChartData = this.getChartData.bind(this);
     this.setBgChartData = this.setBgChartData.bind(this);
     this.changeChartMonth = this.changeChartMonth.bind(this);
     this.handleChange = this.handleChange.bind(this);
+
   }
+
   componentDidMount() {
     moment.locale('pt-br');
     console.log("componentDidMount");
-    this.setState({
-      loadingMsg: "Carregando dados..."
-    });
-    this._getChartDataService();
-  }
 
-  _getChartDataService() {
-    //  timeout para simular loading
-    setTimeout(() => {
+    const { id } = this.props.match.params;
+    console.log("id device: ", id);
 
-      this.setState({
-        loadingMsg: "Construindo gráfico..."
-      });
+    let component = this;
 
-      const { id } = this.props.match.params;
-      console.log("id device: ", id);
+    readDevice(id)
+      .then(function (device) {
 
-      let result = [];
+        console.log("device: ", device);
 
-      switch (this.state.bigChartData) {
-        case "dia":
-          result = mainCharts[this.state.bigChartData].values(this.state.day)
-          break;
-        case "mes":
-          result = mainCharts[this.state.bigChartData].values(this.state.month)
-          break;
-        default:
-          result = mainCharts[this.state.bigChartData].values;
-          break;
-      }
-
-      if(result.length > 0){
-          let min = result.length > 0 ? result[0].y : 0,
-            max = result.length > 0 ? result[result.length - 1].y : 0;
-
-          this.setState({
-            id,
-            chart: {
-              data: result,
-              options: this.getChartOptions(min, max),
-              minWatts: min,
-              maxWatts: max,
-              watts: max
-            },
-            loading: false,
-            empty: false
-          });
-      }
-      else {
-        this.setState({
-          id,
-          loading: false,
-          empty: true,
-          chart: {
-            watts: 0
-          }
+        component.setState({
+          device: device,
+          progressMsg: "Carregando dados do dispositivo..."
         });
-      }
 
-      }, 2000);
+        component._getChartDataService();
+
+      }).catch(function (error) {
+        console.log("Error: ", error);
+
+        component.setState({
+          loading: false,
+          data: [],
+          progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+        });
+      });
   }
 
+  //método que pega dados do parse
+  _getChartDataService() {
+
+    let component = this;
+
+    readVoltage(component.state.bigChartData, this.state.device, component.state.date)
+      .then(function (voltages) {
+
+        console.log("voltages: ", voltages);
+
+        if (voltages.length > 0) {
+          let min = voltages.length > 0 ? voltages[0].y : 0,
+            max = voltages.length > 0 ? voltages[voltages.length - 1].y : 0;
+
+          component.setState({
+            data: voltages,
+            options: component.getChartOptions(min, max),
+            watts: max,
+            loading: false
+          });
+        }
+        else {
+          component.setState({
+            data: [],
+            options: null,
+            loading: false,
+            watts: 0
+          });
+        }
+
+      }).catch(function (error) {
+        console.log("Error: " + error);
+
+        component.setState({
+          data: [],
+          options: null,
+          loading: false,
+          watts: 0
+        });
+      });
+  }
+
+  //método auxiliar para pegar opções do charts (o plugin pega as options e data separadamente)
   getChartOptions(min, max) {
-    return mainCharts[this.state.bigChartData].options(min, max);
+    return mainCharts[this.state.bigChartData].options(min, max, this.state.date);
   }
 
-  getData(gradientStroke) {
-    console.log("getData - current month: ", this.state.month)
-    let config = this.state.chart;
-    config.datasets = mainCharts[this.state.bigChartData].datasets(this.state.chart.data, gradientStroke);
-
-    if (this.state.bigChartData !== "mes") config.labels = mainCharts[this.state.bigChartData].labels;
-    else config.labels = mainCharts[this.state.bigChartData].labels(this.state.month);
-
-    console.log(config.labels);
-    return config;
-  }
-
+  //roda quando renderiza o componente do chart
   getChartData(canvas) {
     console.log("getChartData")
     let ctx = canvas.getContext("2d");
@@ -169,9 +151,14 @@ class Dashboard extends React.Component {
     gradientStroke.addColorStop(0.4, "rgba(208, 72, 182, 0.0)");
     gradientStroke.addColorStop(0, "rgba(208, 72, 182, 0)"); //purple colors
 
-    return this.getData(gradientStroke);
+    let config = {}
+    config.datasets = mainCharts[this.state.bigChartData].datasets(this.state.data, gradientStroke);
+    config.labels = mainCharts[this.state.bigChartData].labels(this.state.date);
+
+    return config;
   }
 
+  //roda quando seleciona dia, mês ou ano
   setBgChartData = (e, name) => {
     e.preventDefault()
     console.log("setBgChartData - ", name)
@@ -179,85 +166,80 @@ class Dashboard extends React.Component {
     this.setState({
       bigChartData: name,
       loading: true,
-      empty: false,
-      loadingMsg: "Carregando dados...",
-      chart: {
-        watts: 0
-      }
+      data: [],
+      progressMsg: "Carregando dados...",
+      watts: 0
+    }, function () {
+      this._getChartDataService();
     });
-
-    this._getChartDataService();
   }
 
+  //roda quando seleciona o mês no dropdown
   changeChartMonth(event) {
     this.setState({
-      month: event.target.value,
+      date: moment(event.target.value, "MM").toDate(),
       loading: true,
-      empty: false,
-      loadingMsg: "Carregando dados...",
-      chart: {
-        watts: 0
-      }
+      progressMsg: "Carregando dados...",
+      watts: 0,
+      data: []
+    }, function(){
+        this._getChartDataService();
     });
-
-    this._getChartDataService();
   }
 
+  //roda quando seleciona a data no datepicker
   handleChange(date) {
     this.setState({
-      day: date,
+      date: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
       loading: true,
-      empty: false,
-      loadingMsg: "Carregando dados...",
-      chart: {
-        watts: 0
-      }
+      data: [],
+      watts: 0,
+      progressMsg: "Carregando dados...",
+    }, function () {
+      this._getChartDataService();
     });
-
-    this._getChartDataService();
   }
 
   render() {
 
     const component = this;
     let element = "", legend = "";
-    console.log("render() - state:", component.state)
 
-    if(!component.state.empty){
-      if (component.state.loading) {
-        element =
-          <div className="loading mx-auto text-center row align-items-center" style={{ height: 100 + '%' }}>
-            <h3 className="col">{component.state.loadingMsg}</h3>
-          </div>;
-      } else {
-        element = <Line
-          data={component.getChartData}
-          options={component.state.chart.options}
-        />
-      }
-    }
-    else {
+    if (component.state.loading) {
       element =
         <div className="loading mx-auto text-center row align-items-center" style={{ height: 100 + '%' }}>
-          <h3 className="col">Não há dados para serem mostrados.</h3>
+          <h3 className="col">{component.state.progressMsg}</h3>
         </div>;
+    } else {
+      if (component.state.data.length) {
+        element = <Line
+          data={component.getChartData}
+          options={component.state.options}
+        />
+      }
+      else {
+        element =
+          <div className="loading mx-auto text-center row align-items-center" style={{ height: 100 + '%' }}>
+            <h3 className="col">Não há dados para serem mostrados.</h3>
+          </div>;
+      }
     }
 
     if (component.state.bigChartData === "dia") {
       legend = <>
         <DatePicker
-          selected={this.state.day}
-          onChange={this.handleChange}
+          selected={component.state.date}
+          onChange={component.handleChange}
           locale="pt"
           dateFormat="d MMMM, yyyy"
           showYearDropdown
           withPortal
-          maxDate={moment().toDate()}
+          maxDate={new Date()}
         />
         <h5 className="mt-2 card-category text-lowercase">já foram gastos</h5>
         <CardTitle tag="h2">
           <i className="tim-icons icon-bulb-63 text-primary"></i>
-          {component.state.chart.watts} <small style={{ fontSize: 1 + 'rem' }}>kW</small>
+          {component.state.watts} <small style={{ fontSize: 1 + 'rem' }}>kW</small>
         </CardTitle>
       </>
     }
@@ -265,10 +247,19 @@ class Dashboard extends React.Component {
       if (component.state.bigChartData === "mes") {
         legend = <div className="col-md-6 mb-3">
           <Label for="mes">Mês</Label>
-          <Input type="select" name="select" id="mes" defaultValue={component.state.month} onChange={component.changeChartMonth} >
-            <option value={moment().add(-2, 'M').month() + 1}>{moment().add(-2, 'M').format("MMMM")}</option>
-            <option value={moment().add(-1, 'M').month() + 1}>{moment().add(-1, 'M').format("MMMM")}</option>
-            <option value={moment().month() + 1}>{moment().format("MMMM")}</option>
+          <Input type="select" name="select" id="mes" defaultValue={(component.state.date.getMonth()+1).toString()} onChange={component.changeChartMonth} >
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+            <option value="7">Julho</option>
+            <option value="8">Agosto</option>
+            <option value="9">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
           </Input>
         </div>
       }

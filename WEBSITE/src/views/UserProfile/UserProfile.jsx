@@ -24,7 +24,7 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  CardText,
+ // CardText,
   FormGroup,
   Form,
   Input,
@@ -38,7 +38,7 @@ class UserProfile extends React.Component {
       <>
         <div className="content">
           <Row>
-            <Col md="8">
+            <Col>
               <Card>
                 <CardHeader>
                   <h5 className="title">Edit Profile</h5>
@@ -162,7 +162,7 @@ class UserProfile extends React.Component {
                 </CardFooter>
               </Card>
             </Col>
-            <Col md="4">
+            {/* <Col md="4">
               <Card className="card-user">
                 <CardBody>
                   <CardText />
@@ -201,7 +201,7 @@ class UserProfile extends React.Component {
                   </div>
                 </CardFooter>
               </Card>
-            </Col>
+            </Col> */}
           </Row>
         </div>
       </>

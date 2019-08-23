@@ -3,14 +3,14 @@ import Switch from "react-switch";
 import './style.css'
 
 /*Icones*/
-import { FiMail, FiBell, FiVolume2 } from 'react-icons/fi';
-import { MdVibration } from 'react-icons/md';
+import { FiMail, FiVolume2 } from 'react-icons/fi';
+import { MdVibration, MdNotifications, MdNotificationsActive } from 'react-icons/md';
 
 // reactstrap components
 import {
   Card,
-  CardHeader,
-  CardTitle,
+ // CardHeader,
+ // CardTitle,
   CardBody,
   CardText,
   Row,
@@ -18,15 +18,21 @@ import {
 } from "reactstrap";
 
 class Settings extends React.Component {
-	
+	// roxo"#a85bd5"
+    // "#8b1acc"
+    // verde "#d3d3d3",
+    // "#4CAF50"
     constructor() {
         super();
         this.state = {
-             checkedEmail: false,
-             checkedPush: false,
-             checkedVibrate: false,
-             checkedSound: false,
-             checkedInterval: false,
+            checkedEmail: true,
+            checkedPush: true,
+            checkedVibrate: true,
+            checkedSound: true,
+            checkedInterval: true,
+            onColor: "#a85bd5",
+            onHandleColor: "#8b1acc",
+            value: 1
             };
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.handleChangePush = this.handleChangePush.bind(this);
@@ -58,9 +64,6 @@ class Settings extends React.Component {
             <div className="content">
                 <Row>
                     <Card className="card">
-                        <CardHeader>
-                        <CardTitle tag="h2">Configurações</CardTitle>
-                        </CardHeader>
                         <CardBody className="body-style">
                             <Row>
                                 <Col sm="6" xs="8" >
@@ -71,8 +74,8 @@ class Settings extends React.Component {
                                         <Switch
                                             checked={this.state.checkedEmail}
                                             onChange={this.handleChangeEmail}
-                                            onColor="#a85bd5"
-                                            onHandleColor="#8b1acc"
+                                            onColor={this.state.onColor}
+                                            onHandleColor={this.state.onHandleColor}
                                             handleDiameter={30}
                                             uncheckedIcon={false}
                                             checkedIcon={false}
@@ -87,15 +90,15 @@ class Settings extends React.Component {
                             </Row>
                             <Row>
                                 <Col sm="6" xs="8">
-                                    <CardText><FiBell/> Notificar via push</CardText>
+                                    <CardText><MdNotifications/> Notificar via push</CardText>
                                 </Col>
                                 <Col>
                                 <label>
                                         <Switch
                                             checked={this.state.checkedPush}
                                             onChange={this.handleChangePush}
-                                            onColor="#a85bd5"
-                                            onHandleColor="#8b1acc"
+                                            onColor={this.state.onColor}
+                                            onHandleColor={this.state.onHandleColor}
                                             handleDiameter={30}
                                             uncheckedIcon={false}
                                             checkedIcon={false}
@@ -117,8 +120,8 @@ class Settings extends React.Component {
                                         <Switch
                                             checked={this.state.checkedVibrate}
                                             onChange={this.handleChangeVibrate}
-                                            onColor="#a85bd5"
-                                            onHandleColor="#8b1acc"
+                                            onColor={this.state.onColor}
+                                            onHandleColor={this.state.onHandleColor}
                                             handleDiameter={30}
                                             uncheckedIcon={false}
                                             checkedIcon={false}
@@ -136,12 +139,12 @@ class Settings extends React.Component {
                                 <CardText><FiVolume2/> Som</CardText>
                                 </Col>
                                 <Col>
-                                    <label>
+                                    <label> 
                                         <Switch
                                             checked={this.state.checkedSound}
                                             onChange={this.handleChangeSound}
-                                            onColor="#a85bd5"
-                                            onHandleColor="#8b1acc"
+                                            onColor={this.state.onColor}
+                                            onHandleColor={this.state.onHandleColor}
                                             handleDiameter={30}
                                             uncheckedIcon={false}
                                             checkedIcon={false}
@@ -156,10 +159,19 @@ class Settings extends React.Component {
                             </Row>
                             <Row>
                                 <Col>
-                                <CardText>Intervalo de notificação</CardText>
+                                <CardText><MdNotificationsActive/> Intervalo de notificação</CardText>
                                 </Col>
                                 <Col>
-                                
+                                <div className="slidecontainer">
+                                    <input type="range" min={1} max={24} value={this.state.value} className="slider" id="myRange" onChange={this.onChangeValue}>
+                                    </input> 
+                                    
+                                    
+                                    <Row>
+                                        <Col><p>{this.state.value}h</p></Col>
+                                        <Col><p style={{textAlign: 'right'}}>24h</p></Col>
+                                    </Row>
+                                </div>
                                 </Col>
                             </Row>
                         </CardBody>
@@ -169,7 +181,7 @@ class Settings extends React.Component {
             </>
         );
     }
-
+    onChangeValue = (e) => this.setState({value: e.target.value});
 }
 
 export default Settings;
