@@ -26,7 +26,8 @@ import PerfectScrollbar from "perfect-scrollbar";
 
 // reactstrap components
 import { Nav } from "reactstrap";
-import './style.css'
+import './style.css';
+
 var ps;
 
 class Sidebar extends React.Component {
@@ -67,6 +68,8 @@ class Sidebar extends React.Component {
             </div>
           <Nav>
             {routes.map((prop, key) => {
+              //Don't show our dashboard
+              if (prop.invisible) return null;
               if (prop.redirect) return null;
               return (
                 <li

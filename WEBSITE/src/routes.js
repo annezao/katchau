@@ -15,16 +15,17 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.jsx";
-import UserProfile from "views/UserProfile.jsx";
-import Settings from "views/Settings.jsx";
+import Dashboard from "views/Dashboard/Dashboard.jsx";
+import UserProfile from "views/UserProfile/UserProfile.jsx";
+import Settings from "views/Settings/Settings.jsx";
+import Divices from "./views/Devices/Devices";
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Painel de controle",
-    icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    path: "/devices",
+    name: "Dispositivos",
+    icon: "tim-icons icon-mobile",
+    component: Divices,
     layout: "/admin"
   },
   {
@@ -39,6 +40,14 @@ var routes = [
     name: "Configurações",
     icon: "tim-icons icon-settings-gear-63",
     component: Settings,
+    layout: "/admin"
+  },
+  {
+    path: "/dashboard/:id",
+    name: "Painel de controle",
+    icon: "tim-icons icon-settings-gear-63",
+    component: Dashboard,
+    invisible: true,
     layout: "/admin"
   },
 ];

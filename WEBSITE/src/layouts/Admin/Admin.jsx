@@ -129,7 +129,9 @@ class Admin extends React.Component {
           >
             <AdminNavbar
               {...this.props}
-              brandText={this.getBrandText(this.props.location.pathname)}
+              brandText={ //if para se for a página de dashboard (se tirar nao aparece a o pathName)
+                this.props.location.pathname.indexOf("dashboard") !== -1 ? "Painel de controle": this.getBrandText(this.props.location.pathname)
+              }
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}
             />
@@ -140,10 +142,6 @@ class Admin extends React.Component {
             )}
           </div>
         </div>
-        {/* <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          handleBgClick={this.handleBgClick}
-        /> */}
       </>
     );
   }
