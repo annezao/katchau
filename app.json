@@ -1,0 +1,28 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/timanovsky/subdir-heroku-buildpack.git"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "description": "",
+  "env": {
+    "PROJECT_PATH": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "katchau-dev",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
