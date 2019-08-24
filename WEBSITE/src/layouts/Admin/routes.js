@@ -15,10 +15,10 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard/Dashboard.jsx";
-import UserProfile from "views/UserProfile/UserProfile.jsx";
-import Settings from "views/Settings/Settings.jsx";
-import Divices from "./views/Devices/Devices";
+import Dashboard from "../../views/Dashboard/Dashboard.jsx";
+import UserProfile from "../../views/UserProfile/UserProfile.jsx";
+import Settings from "../../views/Settings/Settings.jsx";
+import Divices from "../../views/Devices/Devices";
 
 var routes = [
   {

@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 
@@ -26,7 +26,8 @@ import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 // import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 
-import routes from "routes.js";
+import Auth from '../../services/auth';
+import routes from "./routes.js";
 
 import logo from "assets/img/react-logo.png";
 
@@ -107,7 +108,37 @@ class Admin extends React.Component {
     }
     return "Brand";
   };
+
+  signOutClick = (e) => {
+
+    e.preventDefault();
+
+    var _class = this;
+    console.log("Signing out...");
+
+    Auth.signOut()
+      .then(function () {
+
+        console.log("Signed out.");
+
+        const { history } = _class.props;
+        history.push("/login");
+
+      }).catch(function (error) {
+
+        _class.notify({
+          place: "tr",
+          message: ("Error: " + error.code + " " + error.message),
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc"
+        });
+        console.log("Error: " + error.code + " " + error.message);
+
+      });
+  };
+
   render() {
+
     return (
       <>
         <div className="wrapper">
@@ -120,6 +151,7 @@ class Admin extends React.Component {
               text: "Creative Tim",
               imgSrc: logo
             }}
+            username={this.props.user.username}
             toggleSidebar={this.toggleSidebar}
           />
           <div
@@ -134,8 +166,12 @@ class Admin extends React.Component {
               }
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}
+              signOutClick={this.signOutClick}
             />
-            <Switch>{this.getRoutes(routes)}</Switch>
+            <Switch>
+              {this.getRoutes(routes)}
+              <Redirect from="/admin" to="/admin/devices" />
+            </Switch>
             {// we don't want the Footer to be rendered on map page
             this.props.location.pathname.indexOf("maps") !== -1 ? null : (
               <Footer fluid />
