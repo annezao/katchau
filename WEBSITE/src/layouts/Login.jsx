@@ -3,6 +3,7 @@ import Auth from '../services/auth';
 import errors from '../variables/errors';
 
 import NotificationAlert from "react-notification-alert";
+// import errorCode from "../variables/errors.jsx";
 
 import {
     FormGroup,
@@ -44,12 +45,13 @@ class Login extends React.Component {
     };
 
     componentDidMount() {
-        if (this.state.redirectUrl !== null) 
+        if (this.state.redirectUrl !== null || !!this.props.errorCode) {
             this.notify({
                 icon: "tim-icons icon-bell-55",
                 message: "Faça login para continuar.",
                 type: "primary"
             });
+        }
     };
 
     handleRememberMeClick() {

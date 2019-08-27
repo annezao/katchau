@@ -41,9 +41,14 @@ class Divices extends React.Component{
         }).catch(function (error) {
             console.log("Error: " + error.code);
 
-            component.setState({
-                loading: false
-            });
+            if(error.code === 209){
+                component.props.history.push('/login');
+            }
+            else {
+                component.setState({
+                    loading: false
+                });
+            }
         });
 
     }
@@ -86,7 +91,7 @@ class Divices extends React.Component{
                                     )
                                     :
                                     <div className="loading mx-auto text-center row align-items-center" style={{ height: 100 + '%' }}>
-                                        <h3 className="col">no devices ~</h3>
+                                        <h3 className="col">Não há dispositivos cadastrados.</h3>
                                     </div>
                             )
                             

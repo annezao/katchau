@@ -10,7 +10,8 @@ class PublicRoute extends React.Component {
 
         this.state = {
             loading: true,
-            isAuthenticated: false
+            isAuthenticated: false,
+            errorCode: null
         }
     }
 
@@ -34,12 +35,13 @@ class PublicRoute extends React.Component {
 
                 _class.setState({
                     loading: false,
-                    isAuthenticated: response.authenticated
+                    isAuthenticated: response.authenticated,
+                    errorCode: response.errorCode
                 }); 
             }); 
     }
 
-    render() {
+    render() { 
         const { component: Component, ...rest } = this.props,
             state = this.state,
             msg = this.state.isAuthenticated ? "Redirecionando..." : "Autenticando...";
@@ -57,11 +59,11 @@ class PublicRoute extends React.Component {
                             (
                                 props.location.pathname.includes("login") ?
                                     (
-                                        <Login {...props} />
+                                        <Login {...props} errorCode={state.errorCode} />
                                     )
                                     :
                                     (
-                                        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+                                        <Redirect to={{ pathname: '/login', state: { from: props.location, errorCode: state.errorCode } }} />
                                     )
                             )
                     }
