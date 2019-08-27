@@ -10,7 +10,8 @@ class PrivateRoute extends React.Component {
         this.state = {
             loading: true,
             isAuthenticated: false,
-            user: null
+            user: null,
+            errorCode: null
         }
     }
 
@@ -35,7 +36,8 @@ class PrivateRoute extends React.Component {
 
                 _class.setState({
                     loading: false,
-                    isAuthenticated: response.authenticated
+                    isAuthenticated: response.authenticated,
+                    errorCode: response.errorCode
                 });
             }); 
     }

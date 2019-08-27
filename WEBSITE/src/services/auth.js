@@ -17,7 +17,7 @@ const Auth = {
                 }).catch(function (error) {
 
                     console.log("Error: " + error.code + " " + error.message);
-                    reject({message: error.message, authenticated:false});
+                    reject({message: error.message, authenticated:false, errorCode: error.code});
 
                 });
             }
