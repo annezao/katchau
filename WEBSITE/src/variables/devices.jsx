@@ -12,6 +12,7 @@ async function createDevice() {
 async function readDevices() {
     const Device = Parse.Object.extend('Device')
     const query = new Parse.Query(Device)
+    query.equalTo("user", Parse.User.current())
     let device = await query.find()
     return device
 }

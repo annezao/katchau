@@ -56,13 +56,13 @@ class Sidebar extends React.Component {
     document.documentElement.classList.remove("nav-open");
   };
   render() {
-    const { bgColor, routes, rtlActive, logo } = this.props;
+    const { bgColor, routes, rtlActive, logo, username } = this.props;
     
     return (
       <div className="sidebar" data={bgColor}>
         <div className="sidebar-wrapper" ref="sidebar">
             <p className="userText">
-             Olá, Marquinhos
+            Olá, {username}
             </p>
             <div className="logo">
             </div>

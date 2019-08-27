@@ -86,11 +86,16 @@ class Dashboard extends React.Component {
       }).catch(function (error) {
         console.log("Error: ", error);
 
-        component.setState({
-          loading: false,
-          data: [],
-          progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-        });
+        if (error.code === 209) {
+          component.props.history.push('/login');
+        }
+        else {
+          component.setState({
+            loading: false,
+            data: [],
+            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+          });
+        }
       });
   }
 
@@ -127,12 +132,17 @@ class Dashboard extends React.Component {
       }).catch(function (error) {
         console.log("Error: " + error);
 
-        component.setState({
-          data: [],
-          options: null,
-          loading: false,
-          watts: 0
-        });
+        if (error.code === 209) {
+          component.props.history.push('/login');
+        }
+        else {          
+          component.setState({
+            data: [],
+            options: null,
+            loading: false,
+            watts: 0
+          });
+        }
       });
   }
 
