@@ -29,6 +29,9 @@ import Sidebar from "components/Sidebar/Sidebar.jsx";
 import Auth from '../../services/auth';
 import routes from "./routes.js";
 
+import Progress from 'components/ProgressBar/Progress'
+import NotificationAlert from "react-notification-alert";
+
 import logo from "assets/img/react-logo.png";
 
 var ps;
@@ -37,11 +40,23 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       backgroundColor: "blue",
       sidebarOpened:
         document.documentElement.className.indexOf("nav-open") !== -1
     };
+
+    this.handleLoadingStatus = this.handleLoadingStatus.bind(this);      
+    this.notify = this.notify.bind(this);
   }
+  notify = (options) => {
+    var _options = {
+      place: "tr",
+      autoDismiss: 6,
+      ...options
+    };
+    this.refs.notificationAlert.notificationAlert(_options);
+  };
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
@@ -79,12 +94,19 @@ class Admin extends React.Component {
     this.setState({ sidebarOpened: !this.state.sidebarOpened });
   };
   getRoutes = routes => {
+
+    var component = this;
+
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
         return (
           <Route
             path={prop.layout + prop.path}
-            component={prop.component}
+            render={
+              props => <prop.component {...props} 
+              handleLoadingStatus={component.handleLoadingStatus} 
+              notify={component.notify}/>
+            }
             key={key}
           />
         );
@@ -109,6 +131,7 @@ class Admin extends React.Component {
     return "Brand";
   };
 
+  //custom
   signOutClick = (e) => {
 
     e.preventDefault();
@@ -136,47 +159,56 @@ class Admin extends React.Component {
 
       });
   };
+  handleLoadingStatus(value) {
+    this.setState({
+      isLoading: value
+    })
+  }
 
   render() {
 
     return (
       <>
-        <div className="wrapper">
-          <Sidebar
-            {...this.props}
-            routes={routes}
-            bgColor={this.state.backgroundColor}
-            logo={{
-              outterLink: "https://www.creative-tim.com/",
-              text: "Creative Tim",
-              imgSrc: logo
-            }}
-            username={this.props.user.username}
-            toggleSidebar={this.toggleSidebar}
-          />
-          <div
-            className="main-panel"
-            ref="mainPanel"
-            data={this.state.backgroundColor}
-          >
-            <AdminNavbar
-              {...this.props}
-              brandText={ //if para se for a página de dashboard (se tirar nao aparece a o pathName)
-                this.props.location.pathname.indexOf("dashboard") !== -1 ? "Painel de controle": this.getBrandText(this.props.location.pathname)
-              }
-              toggleSidebar={this.toggleSidebar}
-              sidebarOpened={this.state.sidebarOpened}
-              signOutClick={this.signOutClick}
-            />
-            <Switch>
-              {this.getRoutes(routes)}
-              <Redirect from="/admin" to="/admin/devices" />
-            </Switch>
-            {// we don't want the Footer to be rendered on map page
-            this.props.location.pathname.indexOf("maps") !== -1 ? null : (
-              <Footer fluid />
-            )}
+        <div className="wrapper" style={this.state.isLoading ? { pointerEvents: "none" } : { pointerEvents: "auto" }}>
+          <Progress isAnimating={this.state.isLoading} />
+          <div className="react-notification-alert-container">
+            <NotificationAlert ref="notificationAlert" />
           </div>
+            <Sidebar
+              {...this.props}
+              routes={routes}
+              bgColor={this.state.backgroundColor}
+              logo={{
+                outterLink: "https://www.creative-tim.com/",
+                text: "Creative Tim",
+                imgSrc: logo
+              }}
+              username={this.props.user.username}
+              toggleSidebar={this.toggleSidebar}
+            />
+            <div
+              className="main-panel border-0"
+              ref="mainPanel"
+              data={this.state.backgroundColor}
+            >
+              <AdminNavbar
+                {...this.props}
+                brandText={ //if para se for a página de dashboard (se tirar nao aparece a o pathName)
+                  this.props.location.pathname.indexOf("dashboard") !== -1 ? "Painel de controle": this.getBrandText(this.props.location.pathname)
+                }
+                toggleSidebar={this.toggleSidebar}
+                sidebarOpened={this.state.sidebarOpened}
+                signOutClick={this.signOutClick}
+              />
+              <Switch>
+                {this.getRoutes(routes)}
+                <Redirect from="/admin" to="/admin/devices" />
+              </Switch>
+              {// we don't want the Footer to be rendered on map page
+              this.props.location.pathname.indexOf("maps") !== -1 ? null : (
+                <Footer fluid />
+              )}
+            </div>
         </div>
       </>
     );

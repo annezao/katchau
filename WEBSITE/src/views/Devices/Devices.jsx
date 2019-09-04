@@ -38,6 +38,8 @@ class Divices extends React.Component{
                 devices: devices
             });
 
+            component.props.handleLoadingStatus(false);
+
         }).catch(function (error) {
             console.log("Error: " + error.code);
 
@@ -49,6 +51,7 @@ class Divices extends React.Component{
                     loading: false
                 });
             }
+            component.props.handleLoadingStatus(false);
         });
 
     }
