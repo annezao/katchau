@@ -128,6 +128,7 @@ class Dashboard extends React.Component {
             watts: 0
           });
         }
+        component.props.handleLoadingStatus(false);
 
       }).catch(function (error) {
         console.log("Error: " + error);
@@ -143,6 +144,7 @@ class Dashboard extends React.Component {
             watts: 0
           });
         }
+        component.props.handleLoadingStatus(false);
       });
   }
 
