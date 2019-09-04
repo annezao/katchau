@@ -33,6 +33,7 @@ var routes = [
     name: "Perfil do usário",
     icon: "tim-icons icon-single-02",
     component: UserProfile,
+    invisible: true,
     layout: "/admin"
   },
   {
