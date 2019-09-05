@@ -2,7 +2,7 @@ import React from "react";
 
 // nodejs library that concatenates classes
 // import classNames from "classnames";
-import "./style.css";
+// import "./style.css";
 
 // nodejs library that concatenates classes
 import classNames from "classnames";
@@ -62,7 +62,7 @@ export default class ChartFrame extends React.Component {
             <CardHeader>
               <Row>
                 <Col className="text-left" sm="6" xs="12">
-                <CardTitle tag="h2">Gráficos</CardTitle>
+                <CardTitle tag="h2" className="m-0">Gráficos</CardTitle>
                 </Col>
                 <Col sm="6" xs="12">
                   <ButtonGroup
@@ -126,18 +126,22 @@ export default class ChartFrame extends React.Component {
             </CardHeader>
             <CardBody>
               <div className={this.state.bigChartData === "data1" ? '' : 'hidden'}>
-                <Dia 
-                device={this.props.device}/>
+                  <Dia 
+                      handleLoadingStatus={this.props.handleLoadingStatus}
+                      device={this.props.device}/>
               </div>
               <div className={this.state.bigChartData === "data2" ? '' : 'hidden'}>
-              {this.state.chart2 ? <Mes 
-                device={this.props.device}/> : <></>}
-                
+                  {this.state.chart2 ? 
+                    <Mes handleLoadingStatus={this.props.handleLoadingStatus} device={this.props.device}/> : 
+                    <></>
+                  }                
               </div>
               <div className={this.state.bigChartData === "data3" ? '' : 'hidden'}>
-              {this.state.chart3 ? <Ano 
-                device={this.props.device}/> : <></>
-              }
+                  {
+                    this.state.chart3 ? 
+                      <Ano handleLoadingStatus={this.props.handleLoadingStatus} device={this.props.device}/> : 
+                      <></>
+                  }
               </div>
             </CardBody>
           </Card>

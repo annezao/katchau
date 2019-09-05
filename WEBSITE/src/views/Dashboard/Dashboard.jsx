@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./style.css";
+// import "./style.css";
 import ChartFrame from "./ChartFrame";
 
 class Dashboard extends React.Component {
@@ -10,7 +10,8 @@ class Dashboard extends React.Component {
       <>
         <div className="content pb-0">
         <ChartFrame
-          device={this.props.match.params}/>
+            handleLoadingStatus={this.props.handleLoadingStatus}
+            device={this.props.match.params}/>
         </div>
       </>
     )

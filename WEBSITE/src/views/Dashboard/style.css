@@ -14,7 +14,7 @@ select.form-control option, select.form-control option:hover, select.form-contro
     border-bottom: 1px solid;
     color: #dadada;
     font-size: 18px;
-    width: 60%;
+    width: 70%;
 }
 
 .react-datepicker {

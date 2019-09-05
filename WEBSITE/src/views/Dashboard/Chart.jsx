@@ -5,7 +5,7 @@ import "moment/locale/pt-br";
 
 import {
   CardTitle,
-  Col
+  CardHeader
 } from "reactstrap";
 
 // core components
@@ -84,7 +84,8 @@ export default class Chart extends React.Component {
    //método que pega dados do parse
    _getChartDataService() {
 
-    let component = this;
+     let component = this;
+     component.props.handleLoadingStatus(true);
 
     readVoltage(component.props.state.bigChartData, component.state.device, component.state.date)
       .then(function (voltages) {
@@ -111,6 +112,8 @@ export default class Chart extends React.Component {
           });
         }
 
+        component.props.handleLoadingStatus(false);
+
       }).catch(function (error) {
         console.log("Error: " + error);
 
@@ -125,6 +128,8 @@ export default class Chart extends React.Component {
             watts: 0
           });
         }
+
+        component.props.handleLoadingStatus(false);
       });
   }
 
@@ -170,19 +175,19 @@ export default class Chart extends React.Component {
     let legend = this.props.legend;
     //para mostrar kW apenas de Dia
     let cardTitle = this.props.state.bigChartData === "dia" ? 
-      <Col  className="text-left" sm="6" xs="12">
+      <>
         <CardTitle tag="h2">
           <i className="tim-icons icon-bulb-63 text-primary"></i>
           {this.state.watts} <small style={{ fontSize: 1 + 'rem' }}>kW</small>
         </CardTitle> 
-      </Col>: <></>;
+      </>: <></>;
      
     return (
       <>
-      <div>
+      <CardHeader className="pt-0">
         {this.props.value ? legend :<></>}
         {cardTitle}
-      </div>
+      </CardHeader>
       <div className="chart-area custom">
         {element}
       </div>

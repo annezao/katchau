@@ -18,12 +18,13 @@ export default class Ano extends React.Component{
         
     console.log("ano")
         return ( 
-        <Chart
-        legend={this.props.legend}
-        state={this.state}
-        device={this.props.device}
-        value={false}
-        />
+            <Chart
+                handleLoadingStatus={this.props.handleLoadingStatus}
+                legend={this.props.legend}
+                state={this.state}
+                device={this.props.device}
+                value={false}
+            />
         );
     }
 }

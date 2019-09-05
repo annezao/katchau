@@ -5,15 +5,9 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {pt} from 'date-fns/locale';
 
-import {
-  Col,
-} from "reactstrap";
-
 import "./style.css";
 
 registerLocale('pt', pt);
-
-
 
 export default class Dia extends React.Component{
 
@@ -49,7 +43,7 @@ export default class Dia extends React.Component{
 
     render(){
       const component = this;
-      let legend = <Col className="text-left" sm="6" xs="12">
+      let legend = <>
         <DatePicker
             selected={this.state.date}
             onChange={component.handleChange}
@@ -60,9 +54,10 @@ export default class Dia extends React.Component{
             maxDate={new Date()}
           />
         <h5 className="mt-2 card-category text-lowercase">já foram gastos</h5>
-        </Col>;
+        </>;
       return ( <>
           <Chart
+          handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}
           device={this.props.device}
