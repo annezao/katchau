@@ -2,6 +2,7 @@ import React from 'react';
 import Auth from '../services/auth';
 import errors from '../variables/errors';
 
+import Progress from 'components/ProgressBar/Progress'
 import NotificationAlert from "react-notification-alert";
 // import errorCode from "../variables/errors.jsx";
 
@@ -26,6 +27,7 @@ class Login extends React.Component {
             email: 'usuario@katchau.com.br',
             password: 'secret',
             rememberMe: false,
+            isLoading: true,
             redirectUrl: (props.location.redirectFrom ? props.location.redirectFrom : null )
         };
 
@@ -33,6 +35,7 @@ class Login extends React.Component {
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRememberMeClick = this.handleRememberMeClick.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLoadingStatus = this.handleLoadingStatus.bind(this);    
     }
 
     notify = (options) => {
@@ -44,6 +47,12 @@ class Login extends React.Component {
         this.refs.notificationAlert.notificationAlert(_options);
     };
 
+    handleLoadingStatus(value) {
+        this.setState({
+            isLoading: value
+        })
+    }
+
     componentDidMount() {
         if (this.state.redirectUrl !== null || !!this.props.errorCode) {
             this.notify({
@@ -52,7 +61,8 @@ class Login extends React.Component {
                 type: "primary"
             });
         }
-    };
+        this.handleLoadingStatus(false);
+    }
 
     handleRememberMeClick() {
         this.setState({ rememberMe: !this.state.rememberMe });
@@ -70,11 +80,13 @@ class Login extends React.Component {
         event.preventDefault();
 
         var _class = this;
+        _class.handleLoadingStatus(true);
 
         Auth.signIn(this.state.email, this.state.password)
             .then((user) => {
                 console.log('User logged with name: ' + user.get("username") + ' and email: ' + user.get("email"));
                 const { history } = this.props;
+                _class.handleLoadingStatus(false);
                 history.push("/admin/dashboard");
         }, 
         (error) => {
@@ -85,6 +97,7 @@ class Login extends React.Component {
                 icon: "tim-icons icon-alert-circle-exc"
             });
             console.log("Error on login: " + error.code + " " + error.message);
+            _class.handleLoadingStatus(false);
         });
 
         return false;
@@ -101,6 +114,7 @@ class Login extends React.Component {
         return (
 
             <div className="content">
+                <Progress isAnimating={this.state.isLoading} />
                 {/* {console.log(state.props)} */}
                 {/* {console.log(Auth.isAuthenticated)} */}
                 {/* <button onClick={this.verifyUser}>Current User</button> */}

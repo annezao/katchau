@@ -42,6 +42,7 @@ export default class Dia extends React.Component{
     }
 
     render(){
+      console.log("dia");
       const component = this;
       let legend = <>
         <DatePicker
