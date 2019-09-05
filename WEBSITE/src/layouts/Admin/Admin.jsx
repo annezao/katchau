@@ -137,6 +137,7 @@ class Admin extends React.Component {
     e.preventDefault();
 
     var _class = this;
+    _class.handleLoadingStatus(true);
     console.log("Signing out...");
 
     Auth.signOut()
@@ -145,6 +146,7 @@ class Admin extends React.Component {
         console.log("Signed out.");
 
         const { history } = _class.props;
+        _class.handleLoadingStatus(false);
         history.push("/login");
 
       }).catch(function (error) {
@@ -156,6 +158,7 @@ class Admin extends React.Component {
           icon: "tim-icons icon-alert-circle-exc"
         });
         console.log("Error: " + error.code + " " + error.message);
+        _class.handleLoadingStatus(false);
 
       });
   };
