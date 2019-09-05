@@ -4,7 +4,8 @@ import moment from "moment";
 import "moment/locale/pt-br";
 
 import {
-  CardTitle
+  CardTitle,
+  Col
 } from "reactstrap";
 
 // core components
@@ -167,10 +168,14 @@ export default class Chart extends React.Component {
     }
 
     let legend = this.props.legend;
-    let cardTitle = <CardTitle tag="h2">
-    <i className="tim-icons icon-bulb-63 text-primary"></i>
-    {this.state.watts} <small style={{ fontSize: 1 + 'rem' }}>kW</small>
-  </CardTitle>;
+    //para mostrar kW apenas de Dia
+    let cardTitle = this.props.state.bigChartData === "dia" ? 
+      <Col  className="text-left" sm="6" xs="12">
+        <CardTitle tag="h2">
+          <i className="tim-icons icon-bulb-63 text-primary"></i>
+          {this.state.watts} <small style={{ fontSize: 1 + 'rem' }}>kW</small>
+        </CardTitle> 
+      </Col>: <></>;
      
     return (
       <>

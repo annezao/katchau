@@ -29,13 +29,29 @@ export default class ChartFrame extends React.Component {
     super(props);
     this.state = {
       bigChartData: "data1",
+      chat1:true,
+      chart2:false,
+      chart3:false,
       id: 0
     };
   }
 
-  setBgChartData = name => {
+  setBgChartData1 = name => {
     this.setState({
-      bigChartData: name
+      bigChartData: name,
+    });
+  };
+
+  setBgChartData2 = name => {
+    this.setState({
+      bigChartData: name,
+      chart2:true,
+    });
+  };
+  setBgChartData3 = name => {
+    this.setState({
+      bigChartData: name,
+      chart3:true,
     });
   };
     render(){      
@@ -51,8 +67,7 @@ export default class ChartFrame extends React.Component {
                 <Col sm="6" xs="12">
                   <ButtonGroup
                     className="btn-group-toggle float-right"
-                    data-toggle="buttons"
-                  >
+                    data-toggle="buttons">
                     <Button
                       tag="label"
                       className={classNames("btn-simple", {
@@ -61,7 +76,7 @@ export default class ChartFrame extends React.Component {
                       color="info"
                       id="0"
                       size="sm"
-                      onClick={() => this.setBgChartData("data1")}
+                      onClick={() => this.setBgChartData1("data1")}
                     >
                       <input
                         defaultChecked
@@ -69,12 +84,7 @@ export default class ChartFrame extends React.Component {
                         name="options"
                         type="radio"
                       />
-                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        Dias
-                      </span>
-                      <span className="d-block d-sm-none">
-                        <i className="tim-icons icon-single-02" />
-                      </span>
+                      <span>Dias</span>
                     </Button>
                     <Button
                       color="info"
@@ -84,19 +94,14 @@ export default class ChartFrame extends React.Component {
                       className={classNames("btn-simple", {
                         active: this.state.bigChartData === "data2"
                       })}
-                      onClick={() => this.setBgChartData("data2")}
+                      onClick={() => this.setBgChartData2("data2", true)}
                     >
                       <input
                         className="d-none"
                         name="options"
                         type="radio"
                       />
-                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        Mês
-                      </span>
-                      <span className="d-block d-sm-none">
-                        <i className="tim-icons icon-gift-2" />
-                      </span>
+                      <span>Mês</span>
                     </Button>
                     <Button
                       color="info"
@@ -106,19 +111,14 @@ export default class ChartFrame extends React.Component {
                       className={classNames("btn-simple", {
                         active: this.state.bigChartData === "data3"
                       })}
-                      onClick={() => this.setBgChartData("data3")}
+                      onClick={() => this.setBgChartData3("data3", true)}
                     >
                       <input
                         className="d-none"
                         name="options"
                         type="radio"
                       />
-                      <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
-                        Ano
-                      </span>
-                      <span className="d-block d-sm-none">
-                        <i className="tim-icons icon-tap-02" />
-                      </span>
+                      <span>Ano</span>
                     </Button>
                   </ButtonGroup>
                 </Col>
@@ -130,12 +130,14 @@ export default class ChartFrame extends React.Component {
                 device={this.props.device}/>
               </div>
               <div className={this.state.bigChartData === "data2" ? '' : 'hidden'}>
-                <Mes 
-                device={this.props.device}/>
+              {this.state.chart2 ? <Mes 
+                device={this.props.device}/> : <></>}
+                
               </div>
               <div className={this.state.bigChartData === "data3" ? '' : 'hidden'}>
-                <Ano 
-                device={this.props.device}/>
+              {this.state.chart3 ? <Ano 
+                device={this.props.device}/> : <></>
+              }
               </div>
             </CardBody>
           </Card>

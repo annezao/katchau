@@ -8,6 +8,7 @@ import "moment/locale/pt-br";
 import {
     Input,
     Label,
+    Col,
   } from "reactstrap";
 
 export default class Mes extends React.Component{
@@ -45,7 +46,7 @@ export default class Mes extends React.Component{
 
     render(){
       console.log('mes');
-      const legend = <div className="col-md-6 mb-3">
+      const legend =  <Col className="text-left" sm="6" xs="12">
       <Label for="mes">Mês</Label>
       <Input type="select" name="select" id="mes" defaultValue={(this.state.date.getMonth()+1).toString()} onChange={this.changeChartMonth} >
         <option value="1">Janeiro</option>
@@ -61,7 +62,7 @@ export default class Mes extends React.Component{
         <option value="11">Novembro</option>
         <option value="12">Dezembro</option>
       </Input>
-    </div>;
+      </Col>;
       return (
       <Chart
        legend={legend}
