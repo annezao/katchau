@@ -2,6 +2,8 @@ select.form-control option, select.form-control option:hover, select.form-contro
     background: #27293d;
 }
 
+.hidden { display:none; }
+
 .card-chart .chart-area.custom {
     height: 250px;
 }
