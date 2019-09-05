@@ -1,0 +1,22 @@
+#header{
+    margin-bottom: 0px;
+}
+#iconNotification{
+    font-size: 23px;
+    color: #fff;
+}
+#modalNoti{
+    transform: translate(0, 15%);
+    position: relative;
+    float: right;
+    background: rgb(145, 170, 182);
+    margin: 0.3rem 1rem;
+}
+/* #floating{
+    position: absolute;
+}*/
+@media screen and (max-width: 991px) {
+    #iconNotification{
+        font-size: 20px;
+    }
+    } 

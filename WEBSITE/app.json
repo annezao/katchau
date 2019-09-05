@@ -1,0 +1,14 @@
+{
+  "addons": [
+
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "katchau",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
