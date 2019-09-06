@@ -38,16 +38,8 @@ export default class ChartFrame extends React.Component {
       title: "",
       body: ""
     };
-
-    this.showPushNotification = this.showPushNotification.bind(this);
   }
 
-  showPushNotification() {
-    console.log("oi");
-    // If the Notifications API is supported by the browser
-    // then show the notification
-    if (this.n.supported()) this.n.show();
-  }
 
   setBgChartData1 = name => {
     this.setState({
@@ -145,7 +137,6 @@ export default class ChartFrame extends React.Component {
             <CardBody>
               <div className={this.state.bigChartData === "dia" ? '' : 'hidden'}>
                   <Dia 
-                      showPushNotification={this.showPushNotification}
                       selectedChart={this.state.bigChartData}
                       handleLoadingStatus={this.props.handleLoadingStatus}
                       device={this.props.device}/>

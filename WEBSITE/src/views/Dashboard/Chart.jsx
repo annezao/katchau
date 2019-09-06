@@ -3,6 +3,8 @@ import React from "react";
 import moment from "moment";
 import "moment/locale/pt-br";
 
+import spawnNotification from '../../services/notification'
+
 import {
   CardTitle,
   CardHeader
@@ -111,11 +113,10 @@ export default class Chart extends React.Component {
           let min = voltages.length > 0 ? voltages[0].y : 0,
             max = voltages.length > 0 ? voltages[voltages.length - 1].y : 0;
 
-          let config = JSON.parse(localStorage.getItem("config"));
-
+          let config = JSON.parse(localStorage.getItem("config"));       
           if(config.notificar_push){
             if (max > config.limite) {
-              component.props.showPushNotification();
+              spawnNotification('Alerta!', 'Identificamos que seu limite foi ultrapassada '+max);
             }
           }
 
