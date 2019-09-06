@@ -76,7 +76,7 @@ class Divices extends React.Component{
                                                         <CardHeader id="cardheader-list">
                                                             <Row>
                                                                 <Col>
-                                                                <p className="header-title">{devices.attributes.name}</p>
+                                                                <p className="header-title">Dispositivo {key}</p>
                                                                 </Col>
                                                                 <Col>
                                                                     <img src={logo} alt="logo" className="logo"></img>
@@ -84,7 +84,7 @@ class Divices extends React.Component{
                                                             </Row>
                                                         </CardHeader>
                                                         <CardBody className="cardbody-list">
-                                                        <CardText className="card-description">{devices.attributes.description}</CardText>
+                                                        <CardText className="card-description"></CardText>
                                                         <Link to={`dashboard/${devices.id}`} id="dash-btn">Acessar Dashboard</Link>
                                                         </CardBody>
                                                     </Card>
