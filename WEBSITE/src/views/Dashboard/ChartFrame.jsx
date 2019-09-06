@@ -12,8 +12,6 @@ import Dia from './Dia';
 import Mes from './Mes';
 import Ano from './Ano';
 
-import ReactNotifications from 'react-browser-notifications';
-
 // reactstrap components
 import {
   Button,
@@ -38,15 +36,6 @@ export default class ChartFrame extends React.Component {
       title: "",
       body: ""
     };
-
-    this.showPushNotification = this.showPushNotification.bind(this);
-  }
-
-  showPushNotification() {
-    console.log("oi");
-    // If the Notifications API is supported by the browser
-    // then show the notification
-    if (this.n.supported()) this.n.show();
   }
 
   setBgChartData1 = name => {
@@ -70,11 +59,6 @@ export default class ChartFrame extends React.Component {
     render(){     
       return (
         <Row>
-          <ReactNotifications
-            onRef={ref => (this.n = ref)} // Required
-            title={this.state.title} // Required
-            body={this.state.body}
-          />
         <Col xs="12">
           <Card className="card-chart mb-0">
             <CardHeader>
@@ -144,8 +128,7 @@ export default class ChartFrame extends React.Component {
             </CardHeader>
             <CardBody>
               <div className={this.state.bigChartData === "dia" ? '' : 'hidden'}>
-                  <Dia 
-                      showPushNotification={this.showPushNotification}
+                  <Dia x
                       selectedChart={this.state.bigChartData}
                       handleLoadingStatus={this.props.handleLoadingStatus}
                       device={this.props.device}/>

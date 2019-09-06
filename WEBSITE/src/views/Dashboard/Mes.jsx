@@ -65,7 +65,6 @@ export default class Mes extends React.Component{
       </Col>;
       return (
         <Chart
-          selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}

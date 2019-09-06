@@ -97,15 +97,15 @@ export default class Chart extends React.Component {
           clearInterval(component.state.interval);
         }
 
-        var interval =
-          setInterval(() => {
-            if (component.props.state.bigChartData === component.props.selectedChart) {
-              console.log("reloading with interval");
-              component._getChartDataService();
-            }
-            else
-              clearInterval(component.state.interval);
-          }, 60000); //1min
+        // var interval =
+        //   setInterval(() => {
+        //     if (component.props.state.bigChartData === component.props.selectedChart) {
+        //       console.log("reloading with interval");
+        //       component._getChartDataService();
+        //     }
+        //     else
+        //       clearInterval(component.state.interval);
+        //   }, 60000); //1min
 
         if (voltages.length > 0) {
           let min = voltages.length > 0 ? voltages[0].y : 0,
@@ -115,7 +115,7 @@ export default class Chart extends React.Component {
 
           if(config.notificar_push){
             if (max > config.limite) {
-              component.props.showPushNotification();
+              
             }
           }
 
@@ -124,7 +124,7 @@ export default class Chart extends React.Component {
             options: component.getChartOptions(min, max),
             watts: max,
             loading: false,
-            interval
+            // interval
           });
         }
         else {
@@ -136,7 +136,7 @@ export default class Chart extends React.Component {
             options: null,
             loading: false,
             watts: 0,
-            interval
+            // interval
           });
         }
 

@@ -63,7 +63,7 @@ class Settings extends React.Component {
                     notificar_push: config.get("notificar_push"),
                     limite: config.get("limite")
                 }));
-                
+
                 component.setState({
                     id: config.id,
                     checkedEmail: config.attributes.notificar_email,
@@ -120,6 +120,15 @@ class Settings extends React.Component {
             .then(function (config) {
                 if (!!config) {
                     console.log(config);
+                    component.setState({
+                        id: config.id,
+                        checkedEmail: config.attributes.notificar_email,
+                        checkedPush: config.attributes.notificar_push,
+                        checkedVibrate: config.attributes.vibrate,
+                        checkedSound: config.attributes.som,
+                        // value: config.attributes.intervalo_notificar,
+                        limit: config.attributes.limite
+                    });
                     callback();
                 }
                 component.props.handleLoadingStatus(false);

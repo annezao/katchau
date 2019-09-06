@@ -57,7 +57,6 @@ export default class Dia extends React.Component{
         </>;
       return ( <>
           <Chart
-          showPushNotification={this.props.showPushNotification}
           selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
