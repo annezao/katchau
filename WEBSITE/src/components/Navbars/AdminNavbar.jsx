@@ -3,7 +3,7 @@ import React from "react";
 import classNames from "classnames";
 import Notification from "./Notification";
 
-import { MdClose } from 'react-icons/md';
+//import { MdClose } from 'react-icons/md';
 
 import './style.css'
 
@@ -150,16 +150,6 @@ class AdminNavbar extends React.Component {
           toggle={this.toggleModalNotification}
           id="modalNoti">
           <div className="modal-header white-content">
-            <button
-              aria-label="Toggle navigation"
-              className="btn btn-link"
-              data-toggle="modal"
-              id="buttonClose"
-              type="button"
-              onClick={this.toggleModalNotification}
-            >
-              <MdClose />
-            </button>
             <p>Notificações</p>
           </div>
           <div className="modal-body  white-content">
