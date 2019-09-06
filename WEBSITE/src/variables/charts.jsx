@@ -443,7 +443,11 @@ let mainCharts = {
   }
 };
 
-async function readVoltageByDay(device, start, end) {
+function returnFormatedDate(date) {
+  return moment(date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + " " + date.getUTCHours() + ":" + date.getUTCMinutes(), "YYYY-MM-DD HH:mm");
+}
+
+async function readVoltageByDay(device, start, end, willUpdate) {
   const Voltage = Parse.Object.extend('Voltage')
   const query = new Parse.Query(Voltage)
 
@@ -460,7 +464,7 @@ async function readVoltageByDay(device, start, end) {
   for (let i = 0; i < result.length; i++) {
     let thisObject = result[i], value = thisObject.get('value');
     sum += value;
-    arr.push({ 'x': moment(thisObject.get('date')), 'y': sum, "v": value })
+    arr.push({ 'x': returnFormatedDate(thisObject.get("date")), 'y': sum, "v": value })
   }
 
   return arr
@@ -568,7 +572,7 @@ async function readVoltage(type, device, date) {
     case "dia":
       return readVoltageByDay(
         device,
-        date, 
+        new Date(date.getFullYear(), date.getMonth(), date.getDate()), 
         new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59));
     case "mes":
       return readVoltageByMonth(

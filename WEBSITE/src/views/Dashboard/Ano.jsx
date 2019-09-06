@@ -15,9 +15,9 @@ export default class Ano extends React.Component{
     }
     
     render(){        
-        console.log("ano")
         return ( 
             <Chart
+                selectedChart={this.props.selectedChart}
                 handleLoadingStatus={this.props.handleLoadingStatus}
                 legend={this.props.legend}
                 state={this.state}

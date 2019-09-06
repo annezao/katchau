@@ -29,7 +29,8 @@ export default class Chart extends React.Component {
       options: null,
       loading: true,
       progressMsg: "Buscando dados do dispositivo...",
-      device: null
+      device: null,
+      interval: null
     };
     console.log(props);    
   //   this._getChartDataService = this._getChartDataService.bind(this);
@@ -46,7 +47,6 @@ export default class Chart extends React.Component {
   //primeira chamada de função ao criar o componente
   componentDidMount() {
     moment.locale('pt-br');
-    console.log("componentDidMount");
 
     const { id } = this.props.device;
     console.log("id device: ", id);
@@ -85,12 +85,27 @@ export default class Chart extends React.Component {
    _getChartDataService() {
 
      let component = this;
+     console.log("getting ", component.props.state.bigChartData);
      component.props.handleLoadingStatus(true);
 
     readVoltage(component.props.state.bigChartData, component.state.device, component.state.date)
       .then(function (voltages) {
 
         console.log("voltages: ", voltages);
+
+        if (!!component.state.interval) {
+          clearInterval(component.state.interval);
+        }
+
+        var interval =
+          setInterval(() => {
+            if (component.props.state.bigChartData === component.props.selectedChart) {
+              console.log("reloading with interval");
+              component._getChartDataService();
+            }
+            else
+              clearInterval(component.state.interval);
+          }, 60000); //1min
 
         if (voltages.length > 0) {
           let min = voltages.length > 0 ? voltages[0].y : 0,
@@ -100,15 +115,20 @@ export default class Chart extends React.Component {
             data: voltages,
             options: component.getChartOptions(min, max),
             watts: max,
-            loading: false
+            loading: false,
+            interval
           });
         }
         else {
+          if(!!component.state.interval){
+            clearInterval(component.state.interval);
+          }
           component.setState({
             data: [],
             options: null,
             loading: false,
-            watts: 0
+            watts: 0,
+            interval
           });
         }
 
@@ -116,6 +136,10 @@ export default class Chart extends React.Component {
 
       }).catch(function (error) {
         console.log("Error: " + error);
+
+        if (!!component.state.interval) {
+          clearInterval(component.state.interval);
+        }
 
         if (error.code === 209) {
           component.props.history.push('/login');
@@ -140,7 +164,6 @@ export default class Chart extends React.Component {
 
   //roda quando renderiza o componente do chart
   getChartData(canvas) {
-    console.log("getChartData")
     let ctx = canvas.getContext("2d");
     let gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
@@ -156,7 +179,6 @@ export default class Chart extends React.Component {
   }
   
   render(){
-    console.log('chart');
     const component = this;
     let element = "";
     if (component.state.data.length) {

@@ -4,7 +4,7 @@ import './style.css'
 
 /*Icones*/
 import { FiMail, FiVolume2 } from 'react-icons/fi';
-import { MdVibration, MdNotifications, MdNotificationsActive } from 'react-icons/md';
+import { MdVibration, MdNotifications } from 'react-icons/md';
 
 // reactstrap components
 import {

@@ -45,7 +45,6 @@ export default class Mes extends React.Component{
   }
 
     render(){
-      console.log('mes');
       const legend =  
       <Col className="mb-3 p-0" sm="3">
           <Label for="mes">Mês</Label>
@@ -66,6 +65,7 @@ export default class Mes extends React.Component{
       </Col>;
       return (
         <Chart
+          selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}

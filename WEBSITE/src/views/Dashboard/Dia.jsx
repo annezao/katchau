@@ -42,7 +42,6 @@ export default class Dia extends React.Component{
     }
 
     render(){
-      console.log("dia");
       const component = this;
       let legend = <>
         <DatePicker
@@ -58,6 +57,7 @@ export default class Dia extends React.Component{
         </>;
       return ( <>
           <Chart
+          selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}

@@ -140,7 +140,7 @@ class Login extends React.Component {
                                     </div>
                                     <Form onSubmit={this.handleSubmit}>
                                         <FormText color="muted text-center mb-4">
-                                            Para testes use o email <b>usuario@katchau.com.br </b> 
+                                            Para testes use o email <b>katchaumarquinhos@gmail.com </b> 
                                             e a senha <b>secret</b>
                                         </FormText>
                                         <FormGroup>

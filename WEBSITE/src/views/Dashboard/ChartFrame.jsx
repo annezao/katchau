@@ -28,7 +28,7 @@ export default class ChartFrame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bigChartData: "data1",
+      bigChartData: "dia",
       chat1:true,
       chart2:false,
       chart3:false,
@@ -38,7 +38,7 @@ export default class ChartFrame extends React.Component {
 
   setBgChartData1 = name => {
     this.setState({
-      bigChartData: name,
+      bigChartData: name
     });
   };
 
@@ -54,7 +54,7 @@ export default class ChartFrame extends React.Component {
       chart3:true,
     });
   };
-    render(){      
+    render(){     
         return (
       <Row>
         <Col xs="12">
@@ -71,12 +71,12 @@ export default class ChartFrame extends React.Component {
                     <Button
                       tag="label"
                       className={classNames("btn-simple", {
-                        active: this.state.bigChartData === "data1"
+                        active: this.state.bigChartData === "dia"
                       })}
                       color="info"
                       id="0"
                       size="sm"
-                      onClick={() => this.setBgChartData1("data1")}
+                      onClick={() => this.setBgChartData1("dia")}
                     >
                       <input
                         defaultChecked
@@ -92,9 +92,9 @@ export default class ChartFrame extends React.Component {
                       size="sm"
                       tag="label"
                       className={classNames("btn-simple", {
-                        active: this.state.bigChartData === "data2"
+                        active: this.state.bigChartData === "mes"
                       })}
-                      onClick={() => this.setBgChartData2("data2", true)}
+                      onClick={() => this.setBgChartData2("mes", true)}
                     >
                       <input
                         className="d-none"
@@ -109,9 +109,9 @@ export default class ChartFrame extends React.Component {
                       size="sm"
                       tag="label"
                       className={classNames("btn-simple", {
-                        active: this.state.bigChartData === "data3"
+                        active: this.state.bigChartData === "ano"
                       })}
-                      onClick={() => this.setBgChartData3("data3", true)}
+                      onClick={() => this.setBgChartData3("ano", true)}
                     >
                       <input
                         className="d-none"
@@ -125,21 +125,28 @@ export default class ChartFrame extends React.Component {
               </Row>
             </CardHeader>
             <CardBody>
-              <div className={this.state.bigChartData === "data1" ? '' : 'hidden'}>
+              <div className={this.state.bigChartData === "dia" ? '' : 'hidden'}>
                   <Dia 
+                      selectedChart={this.state.bigChartData}
                       handleLoadingStatus={this.props.handleLoadingStatus}
                       device={this.props.device}/>
               </div>
-              <div className={this.state.bigChartData === "data2" ? '' : 'hidden'}>
+              <div className={this.state.bigChartData === "mes" ? '' : 'hidden'}>
                   {this.state.chart2 ? 
-                    <Mes handleLoadingStatus={this.props.handleLoadingStatus} device={this.props.device}/> : 
+                      <Mes
+                        selectedChart={this.state.bigChartData}
+                        handleLoadingStatus={this.props.handleLoadingStatus} 
+                        device={this.props.device}/> : 
                     <></>
                   }                
               </div>
-              <div className={this.state.bigChartData === "data3" ? '' : 'hidden'}>
+              <div className={this.state.bigChartData === "ano" ? '' : 'hidden'}>
                   {
                     this.state.chart3 ? 
-                      <Ano handleLoadingStatus={this.props.handleLoadingStatus} device={this.props.device}/> : 
+                        <Ano
+                          selectedChart={this.state.bigChartData}
+                          handleLoadingStatus={this.props.handleLoadingStatus}
+                          device={this.props.device}/> : 
                       <></>
                   }
               </div>
