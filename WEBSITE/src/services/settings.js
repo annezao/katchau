@@ -8,7 +8,7 @@ const configServices = {
         let config = await query.find()
         return config[0];
     },
-    async updatingConfig(id, notificar_email, notificar_push, vibrate, som, intervalo_notificar) {
+    async updatingConfig(id, notificar_email, notificar_push, vibrate, som, intervalo_notificar, limite) {
         let Config = Parse.Object.extend('Config')
         const query = new Parse.Query(Config);
         let config = await query.get(id); 
@@ -18,6 +18,7 @@ const configServices = {
         config.set('vibrate', vibrate)
         config.set('som', som)
         config.set('intervalo_notificar', intervalo_notificar)
+        config.set('limite', limite)
         return config.save();
     }
 };

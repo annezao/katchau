@@ -35,7 +35,8 @@ class Settings extends React.Component {
             checkedInterval: false,
             onColor: "#a85bd5",
             onHandleColor: "#8b1acc",
-            value: 0,
+            // value: 0,
+            limit: 0,
             id: null
         };
             
@@ -43,7 +44,8 @@ class Settings extends React.Component {
         this.handleChangePush = this.handleChangePush.bind(this);
         this.handleChangeVibrate = this.handleChangeVibrate.bind(this);
         this.handleChangeSound = this.handleChangeSound.bind(this);
-        this.handleChangeInterval = this.handleChangeInterval.bind(this);
+        // this.handleChangeInterval = this.handleChangeInterval.bind(this);
+        this.handleChangeLimit = this.handleChangeLimit.bind(this);
         //
         this.handleLoadingStatus = this.handleLoadingStatus.bind(this)
       }
@@ -61,7 +63,8 @@ class Settings extends React.Component {
                     checkedPush: config.attributes.notificar_push,
                     checkedVibrate: config.attributes.vibrate,
                     checkedSound: config.attributes.som,
-                    value: config.attributes.intervalo_notificar
+                    // value: config.attributes.intervalo_notificar,
+                    limit: config.attributes.limite
                 });
             }
             else {
@@ -94,7 +97,7 @@ class Settings extends React.Component {
           this.props.handleLoadingStatus(value);
     }      
 
-    updateConfig(checkedEmail, checkedPush, checkedVibrate, checkedSound, value, callback) {
+    updateConfig(checkedEmail, checkedPush, checkedVibrate, checkedSound, limit, callback) {
 
         var component = this;
 
@@ -105,7 +108,8 @@ class Settings extends React.Component {
                 checkedPush,
                 checkedVibrate,
                 checkedSound,
-                value)
+                // value,
+                limit)
             .then(function (config) {
                 if (!!config) {
                     console.log(config);
@@ -134,7 +138,8 @@ class Settings extends React.Component {
             this.state.checkedPush,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedEmail: checked })
         );
     }
@@ -146,7 +151,8 @@ class Settings extends React.Component {
             checked,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedPush: checked })
         );
     }
@@ -158,7 +164,8 @@ class Settings extends React.Component {
             this.state.checkedPush,
             checked,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedVibrate: checked })
         );
     }
@@ -170,21 +177,37 @@ class Settings extends React.Component {
             this.state.checkedPush,
             this.state.checkedVibrate,
             checked,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedSound: checked })
         );
     }
-    handleChangeInterval(e) {
+    // handleChangeInterval(e) {
+    //     this.handleLoadingStatus(true);
+    //     let value = parseInt(e.target.value);
+
+    //     this.updateConfig(
+    //         this.state.checkedEmail,
+    //         this.state.checkedPush,
+    //         this.state.checkedVibrate,
+    //         this.state.checkedSound,
+    //         value,
+    //         this.state.limit,
+    //         () => this.setState({ value })
+    //     );
+    // }
+    handleChangeLimit(e) {
         this.handleLoadingStatus(true);
-        let value = parseInt(e.target.value);
+        let limit = parseInt(e.target.parentElement.parentNode.querySelector("input").value);
 
         this.updateConfig(
             this.state.checkedEmail,
             this.state.checkedPush,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            value,
-            () => this.setState({ value })
+            // this.state.value,
+            limit,
+            () => this.setState({ limit })
         );
     }
     
@@ -290,7 +313,7 @@ class Settings extends React.Component {
                                         </label>
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col>
                                         <CardText><MdNotificationsActive /> Intervalo de notificação</CardText>
                                     </Col>
@@ -306,21 +329,22 @@ class Settings extends React.Component {
                                             </Row>
                                         </div>
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 <Row>
                                     <Col className="pr-md-1" sm="3" xs="3">
                                         <FormGroup>
-                                        <label>Limite</label>
+                                        <p>Limite</p>
                                         <Input
-                                            defaultValue=""
-                                            placeholder="0000"
-                                            type="text"/>
+                                            defaultValue={this.state.limit}
+                                            placeholder="0 kW"
+                                            type="number"/>
                                         </FormGroup>
                                     </Col>
                                     <Col className="botao">
-                                    <Button className="btn-fill" color="primary" type="button">
-                                        Save
-                                    </Button>
+                                        <Button onClick={this.handleChangeLimit}
+                                        className="btn-fill" color="primary" type="button">
+                                            Salvar limite
+                                        </Button>
                                     </Col>
                                 </Row>
                             </>

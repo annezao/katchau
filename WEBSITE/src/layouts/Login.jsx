@@ -24,7 +24,7 @@ class Login extends React.Component {
         super(props);
         
         this.state = {
-            email: 'usuario@katchau.com.br',
+            email: 'katchaumarquinhos@gmail.com',
             password: 'secret',
             rememberMe: false,
             isLoading: true,
