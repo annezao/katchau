@@ -1,4 +1,5 @@
 import Parse from 'parse';
+import configService from "./settings";
 
 const Auth = {
     isAuthenticated() {
@@ -8,11 +9,41 @@ const Auth = {
             if (!!cu) {
                 console.log("Verificando autenticidade...");
                 cu.fetch().then(function (User) {
-
                     console.log("User:", User)
-                    resolve({
-                        message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") }, 
-                        authenticated: User.authenticated() });
+
+                    var configStorage = localStorage.getItem("config");
+
+                    if (!!configStorage) {
+                        resolve({
+                            message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
+                            authenticated: User.authenticated()
+                        });
+                    }
+                    else {
+                        configService.readConfig().then(function (config) {
+                            console.log(config);
+
+                            localStorage.setItem("config", JSON.stringify({
+                                notificar_email: config.get("notificar_email"),
+                                notificar_push: config.get("notificar_push"),
+                                limite: config.get("limite")
+                            }));
+
+                            resolve({
+                                message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
+                                authenticated: User.authenticated()
+                            });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            resolve({
+                                message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
+                                authenticated: User.authenticated()
+                            });
+                        });
+                    }
+
 
                 }).catch(function (error) {
 

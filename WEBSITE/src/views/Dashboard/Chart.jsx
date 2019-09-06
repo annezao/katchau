@@ -111,6 +111,14 @@ export default class Chart extends React.Component {
           let min = voltages.length > 0 ? voltages[0].y : 0,
             max = voltages.length > 0 ? voltages[voltages.length - 1].y : 0;
 
+          let config = JSON.parse(localStorage.getItem("config"));
+
+          if(config.notificar_push){
+            if (max > config.limite) {
+              component.props.showPushNotification();
+            }
+          }
+
           component.setState({
             data: voltages,
             options: component.getChartOptions(min, max),

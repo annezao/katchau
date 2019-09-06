@@ -57,6 +57,13 @@ class Settings extends React.Component {
         configServices.readConfig()
             .then(function (config) {
             if (!!config) {
+
+                localStorage.setItem("config", JSON.stringify({
+                    notificar_email: config.get("notificar_email"),
+                    notificar_push: config.get("notificar_push"),
+                    limite: config.get("limite")
+                }));
+                
                 component.setState({
                     id: config.id,
                     checkedEmail: config.attributes.notificar_email,
