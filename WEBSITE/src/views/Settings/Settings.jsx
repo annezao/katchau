@@ -9,8 +9,9 @@ import { MdVibration, MdNotifications, MdNotificationsActive } from 'react-icons
 // reactstrap components
 import {
   Card,
- // CardHeader,
- // CardTitle,
+  Input,
+  Button,
+  FormGroup,
   CardBody,
   CardText,
   Row,
@@ -304,6 +305,22 @@ class Settings extends React.Component {
                                                 <Col><p style={{ textAlign: 'right' }}>24h</p></Col>
                                             </Row>
                                         </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col className="pr-md-1" sm="3" xs="3">
+                                        <FormGroup>
+                                        <label>Limite</label>
+                                        <Input
+                                            defaultValue=""
+                                            placeholder="0000"
+                                            type="text"/>
+                                        </FormGroup>
+                                    </Col>
+                                    <Col className="botao">
+                                    <Button className="btn-fill" color="primary" type="button">
+                                        Save
+                                    </Button>
                                     </Col>
                                 </Row>
                             </>
