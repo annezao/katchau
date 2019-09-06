@@ -456,6 +456,7 @@ async function readVoltageByDay(device, start, end, willUpdate) {
   query.lessThanOrEqualTo("date", end)
   query.include('value')
   query.include('date')
+  query.ascending("date");
 
   let result = await query.find(),
     arr = [],
@@ -478,6 +479,7 @@ async function readVoltageByMonth(device, start, end) {
   query.lessThanOrEqualTo("date", end)
   query.include('value')
   query.include('date')
+  query.ascending("date");
 
   let result = await query.find(),
     arr = []
@@ -526,6 +528,7 @@ async function readVoltageByYear(device, start, end) {
   query.lessThanOrEqualTo("date", end)
   query.include('value')
   query.include('date')
+  query.ascending("date");
 
   let result = await query.find(),
     arr = []
