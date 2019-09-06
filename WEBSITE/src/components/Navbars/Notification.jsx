@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert   } from 'reactstrap';
 // import './style.css'
-import {readNotifications, notifications} from '../../variables/notification'
+import {readNotifications} from '../../variables/notification'
 
 class Notification extends React.Component {
     constructor(props) {
@@ -9,65 +9,60 @@ class Notification extends React.Component {
         this.state = {
           loading: true,
           notifications: [],
-          loadingMsg: "loading..."
+          loadingMsg: "Carregando..."
         }
       }
 
-  componentDidMount(){
+  componentDidMount() {
       this.loadNotifications();
   }
 
   loadNotifications(){
-    this.setState({
-      notifications: notifications
-    })
-    // let component = this;
-    // console.log("notifications");
-    // readNotifications()
-    // .then(function (notifications) {
 
-    //     console.log(notifications);
+    let component = this;
 
-    //     component.setState({
-    //         loading: false,
-    //         notifications: notifications
-    //     });
+    readNotifications()
+    .then(function (notifications) {
 
-    //     // component.props.handleLoadingStatus(false);
+        console.log(notifications);
 
-    // }).catch(function (error) {
-    //     console.log("Error: " + error.code);
+        component.setState({
+            loading: false,
+            notifications: notifications
+        });
 
-    //     if(error.code === 209){
-    //         component.props.history.push('/login');
-    //     }
-    //     else {
-    //         component.setState({
-    //             loading: false
-    //         });
-    //     }
-    //     // component.props.handleLoadingStatus(false);
-    // });
+    }).catch(function (error) {
+        console.log("Error: " + error.code);
+
+        if(error.code === 209){
+            component.props.history.push('/login');
+        }
+        else {
+            component.setState({
+                loading: false
+            });
+        }
+    });
   }
       
   render() {
     return (
-      this.state.loading ? 
-      <div>
-            {
-              this.state.notifications.length > 0 ? (
-                this.state.notifications.map((notification, index) =>(
-                  <Alert color="danger">
-                    <p>{notification.title}:</p>
-                    <p>{notification.description}</p>
-                    </Alert>
-                  )
+      this.state.loading ?
+        <p>{this.state.loadingMsg}</p> :
+        <div>
+          {
+            this.state.notifications.length > 0 ? (
+                this.state.notifications.map((notification, index) => (
+                  <Alert color="danger" key={index}>
+                    <p><strong>{notification.get("title")}</strong></p>
+                    <p>{notification.get("description")}</p>
+                  </Alert>
                 )
-               
-              ): <></>
-            }
-      </div>:
-      <p>{this.state.loadingMsg}</p>
+              )
+
+            ) : <></>
+          }
+        </div>
       );
   }
 }

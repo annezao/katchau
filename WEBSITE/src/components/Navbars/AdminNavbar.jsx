@@ -153,7 +153,12 @@ class AdminNavbar extends React.Component {
             <p>Notificações</p>
           </div>
           <div className="modal-body  white-content">
-            <Notification />
+            {
+              this.state.modalNotification ?
+              <Notification />
+              :
+              <></>
+            }
           </div>
         </Modal>
       </>
