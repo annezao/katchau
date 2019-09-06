@@ -132,14 +132,14 @@ let mainCharts = {
           },
           pan: {
             enabled: true,
-            mode: "xy",
+            mode: "y",
             rangeMin: {
               x: moment(date).valueOf(),
               y: 0
             },
             rangeMax: {
               x: moment(date).add({ hours: 23 }).valueOf(),
-              y: (max + 1000)
+              y: (parseInt(max) + 1000)
             }
           },
           zoom: {
@@ -150,7 +150,7 @@ let mainCharts = {
               y: 0
             },
             rangeMax: {
-              y: (max + 400)
+              y: (parseInt(max) + 400)
             }
           }
         }
@@ -463,8 +463,8 @@ async function readVoltageByDay(device, start, end, willUpdate) {
 
   for (let i = 0; i < result.length; i++) {
     let thisObject = result[i], value = thisObject.get('value');
-    sum += value;
-    arr.push({ 'x': returnFormatedDate(thisObject.get("date")), 'y': sum, "v": value })
+    sum += parseFloat(value.toFixed(2));
+    arr.push({ 'x': returnFormatedDate(thisObject.get("date")), 'y': parseFloat(sum.toFixed(2)), "v": parseFloat(value.toFixed(2)) })
   }
 
   return arr

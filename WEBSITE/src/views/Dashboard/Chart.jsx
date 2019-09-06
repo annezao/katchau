@@ -3,6 +3,8 @@ import React from "react";
 import moment from "moment";
 import "moment/locale/pt-br";
 
+import { spawnNotification, sendEmail } from '../../services/notification'
+
 import {
   CardTitle,
   CardHeader
@@ -97,25 +99,30 @@ export default class Chart extends React.Component {
           clearInterval(component.state.interval);
         }
 
-        // var interval =
-        //   setInterval(() => {
-        //     if (component.props.state.bigChartData === component.props.selectedChart) {
-        //       console.log("reloading with interval");
-        //       component._getChartDataService();
-        //     }
-        //     else
-        //       clearInterval(component.state.interval);
-        //   }, 60000); //1min
+        var interval =
+          setInterval(() => {
+            if (component.props.state.bigChartData === component.props.selectedChart) {
+              console.log("reloading with interval");
+              component._getChartDataService();
+            }
+            else
+              clearInterval(component.state.interval);
+          }, 60000); //1min
 
         if (voltages.length > 0) {
           let min = voltages.length > 0 ? voltages[0].y : 0,
             max = voltages.length > 0 ? voltages[voltages.length - 1].y : 0;
 
-          let config = JSON.parse(localStorage.getItem("config"));
-
+          let config = JSON.parse(localStorage.getItem("config"));       
           if(config.notificar_push){
             if (max > config.limite) {
-              
+              spawnNotification('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
+            }
+          }
+
+          if (config.notificar_push) {
+            if (max > config.limite) {
+              sendEmail('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
             }
           }
 
@@ -124,7 +131,7 @@ export default class Chart extends React.Component {
             options: component.getChartOptions(min, max),
             watts: max,
             loading: false,
-            // interval
+            interval
           });
         }
         else {
@@ -136,7 +143,7 @@ export default class Chart extends React.Component {
             options: null,
             loading: false,
             watts: 0,
-            // interval
+            interval
           });
         }
 

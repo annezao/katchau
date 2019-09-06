@@ -10,7 +10,7 @@ async function createDevice() {
 }
 
 async function readDevices() {
-    let devices = Parse.User.current().get("owner").relation('Monitors').query()
+    let devices = Parse.User.current().get("owner").relation('monitors').query()
     let result = await devices.find()
     return result
 }

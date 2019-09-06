@@ -10,9 +10,9 @@ import Parse from 'parse';
 import App from 'main/App.js'
 
 Parse.initialize(
-  'H5dcONjNMNy5WTpFt9tXAHdEAeanqT8mlq9HRSPu',
-  'WPnfXA7fjUYszyhf8SuEkcKR8X0LyRTEL6TrodJZ');
-Parse.serverURL = "https://katchau-dev.back4app.io";
+  'PVBDcZz4pgQKtd4ENcNb4cfMEx4lnNybkR7zGkdf',
+  'S9taD9jpvpUbdXqeoPFPoxhU23QpFGNt2lyPADDu');
+Parse.serverURL = "https://katchau.back4app.io";
 
 ReactDOM.render(
   <BrowserRouter>

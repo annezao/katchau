@@ -128,7 +128,7 @@ export default class ChartFrame extends React.Component {
             </CardHeader>
             <CardBody>
               <div className={this.state.bigChartData === "dia" ? '' : 'hidden'}>
-                  <Dia x
+                  <Dia 
                       selectedChart={this.state.bigChartData}
                       handleLoadingStatus={this.props.handleLoadingStatus}
                       device={this.props.device}/>
