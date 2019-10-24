@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 # Create your models here.
 
 
@@ -25,16 +26,18 @@ class Config(models.Model):
     time_interval = models.IntegerField(default=2)
 
 
+class Potency(models.Model):
+    value = models.FloatField(default=0)
+    date =  models.DateField(default=datetime.date.today)
+
+
 class Device(models.Model):
-    pass
+    potency = models.ForeignKey(Potency, on_delete=models.CASCADE, null=True)
 
 
 class Monitors(models.Model):
-    pass
-
-
-class Potency(models.Model):
-    pass
+    person = models.ForeignKey(Person, on_delete=models.DO_NOTHING, null=True)
+    device = models.ForeignKey(Device, on_delete=models.DO_NOTHING, null=True)
 
 # User
 # Role
