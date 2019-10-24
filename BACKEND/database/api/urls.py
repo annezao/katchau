@@ -33,8 +33,8 @@ urlpatterns = [
     path('api/Monitors/<int:pk>/', MonitorsDetail.as_view()),
    
 
-    path('user/login', LoginView.as_view(template_name= 'admin/login.html')),
-    path('user/logout', LogoutView),
+    path('user/Login', LoginView.as_view(template_name= 'admin/login.html')),
+    path('user/Logout', LogoutView),
 
 ]
 
