@@ -19,18 +19,18 @@ from .views import (
 
 '''
 urlpatterns = [
-    path('api/address/', AddressList.as_view()),
-    path('api/address/<int:pk>/', AddressDetail.as_view()),
-    path('api/person/', PersonList.as_view()),
-    path('api/person/<int:pk>/', PersonDetail.as_view()),
-    path('api/config/', ConfigList.as_view()),
-    path('api/config/<int:pk>/', ConfigDetail.as_view()),
-    path('api/potency/', PotencyList.as_view()),
-    path('api/potency/<int:pk>/', PotencyDetail.as_view()),
-    path('api/device/', DeviceList.as_view()),
-    path('api/device/<int:pk>/', DeviceDetail.as_view()),
-    path('api/monitors/', MonitorsList.as_view()),
-    path('api/monitors/<int:pk>/', MonitorsDetail.as_view()),
+    path('api/Address/', AddressList.as_view()),
+    path('api/Address/<int:pk>/', AddressDetail.as_view()),
+    path('api/Person/', PersonList.as_view()),
+    path('api/Person/<int:pk>/', PersonDetail.as_view()),
+    path('api/Config/', ConfigList.as_view()),
+    path('api/Config/<int:pk>/', ConfigDetail.as_view()),
+    path('api/Potency/', PotencyList.as_view()),
+    path('api/Potency/<int:pk>/', PotencyDetail.as_view()),
+    path('api/Device/', DeviceList.as_view()),
+    path('api/Device/<int:pk>/', DeviceDetail.as_view()),
+    path('api/Monitors/', MonitorsList.as_view()),
+    path('api/Monitors/<int:pk>/', MonitorsDetail.as_view()),
    
 
     path('user/login', LoginView.as_view(template_name= 'admin/login.html')),
