@@ -40,15 +40,9 @@ INSTALLED_APPS = [
     'database',
     'rest_framework',
     'webpack_loader',
-    'rest_framework.authtoken',
 ]
 
-REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework.authentication.BasicAuthentication',
-            'rest_framework.authentication.SessionAuthentication',
-        )
-    }
+LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -65,7 +59,7 @@ ROOT_URLCONF = 'server.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

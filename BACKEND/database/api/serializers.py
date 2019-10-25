@@ -42,11 +42,4 @@ class MonitorsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Monitors
         fields = '__all__'
-'''
-#User Serializer
 
-class UserSerializer(serializers.Serializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-'''

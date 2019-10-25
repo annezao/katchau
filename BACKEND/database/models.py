@@ -39,5 +39,7 @@ class Monitors(models.Model):
     person = models.ForeignKey(Person, on_delete=models.DO_NOTHING, null=True)
     device = models.ForeignKey(Device, on_delete=models.DO_NOTHING, null=True)
 
+
+
 # User
 # Role

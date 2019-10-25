@@ -14,10 +14,9 @@ from .views import (
     DeviceDetail,    
     MonitorsList,
     MonitorsDetail,
-)
-'''
 
-'''
+)
+
 urlpatterns = [
     path('api/Address/', AddressList.as_view()),
     path('api/Address/<int:pk>/', AddressDetail.as_view()),
@@ -31,15 +30,4 @@ urlpatterns = [
     path('api/Device/<int:pk>/', DeviceDetail.as_view()),
     path('api/Monitors/', MonitorsList.as_view()),
     path('api/Monitors/<int:pk>/', MonitorsDetail.as_view()),
-   
-
-    path('user/Login', LoginView.as_view(template_name= 'admin/login.html')),
-    path('user/Logout', LogoutView),
-
 ]
-
-'''
-
-path('user/<int:pk>', UserDetail.as_view()),
-
-'''

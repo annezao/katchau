@@ -17,23 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken import views
 
-#from django.contrib.auth import views as auth_views
-#from database import views as user_views
-#from users import views as user_views
-
-#urlpatterns = [
-
-#path('login/', auth_views.LoginView.as_view(), name='login'),
-#path('register/', user_views.register, name='register'),
-
-#]
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('login/', auth_views.LoginView.as_view(), name='login'),
     path('', include('database.api.urls')),
-   # path('', include('urls.authtoken')),
-    #path('login/', views.),
-
+    path('user/', include('django.contrib.auth.urls')),
 ]
