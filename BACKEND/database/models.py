@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 import datetime
 # Create your models here.
 
@@ -39,7 +40,11 @@ class Monitors(models.Model):
     person = models.ForeignKey(Person, on_delete=models.DO_NOTHING, null=True)
     device = models.ForeignKey(Device, on_delete=models.DO_NOTHING, null=True)
 
-
+class Account(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    config = models.ForeignKey(Config, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.DO_NOTHING)
+    
 
 # User
 # Role

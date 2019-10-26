@@ -43,3 +43,9 @@ class MonitorsSerializer(serializers.ModelSerializer):
         model = Monitors
         fields = '__all__'
 
+#Account
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'

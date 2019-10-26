@@ -14,6 +14,7 @@ from .views import (
     DeviceDetail,    
     MonitorsList,
     MonitorsDetail,
+    AccountList,
 
 )
 
@@ -30,4 +31,7 @@ urlpatterns = [
     path('api/Device/<int:pk>/', DeviceDetail.as_view()),
     path('api/Monitors/', MonitorsList.as_view()),
     path('api/Monitors/<int:pk>/', MonitorsDetail.as_view()),
+    path('api/Account/', AccountList.as_view()),
+
+
 ]

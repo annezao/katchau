@@ -124,7 +124,7 @@ class ConfigDetail(APIView):
 
     def put(self, request, pk, format=None):
         config = self.get_object(pk)
-        serializer = ConfigSerializer(Config, data=request.data)
+        serializer = ConfigSerializer(config, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -262,4 +262,19 @@ class MonitorsDetail(APIView):
         monitors.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+#Account
+
+class AccountList(APIView):
+
+    def get(self, request, format=None):
+        account = Account.objects.all()
+        serializer = AccountSerializer(account, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = AccountSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
    
