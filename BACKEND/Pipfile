@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+autopep8 = "*"
 
 [packages]
 django-webpack-loader = "==0.6.0"
