@@ -34,7 +34,7 @@ class PotencyDetail(APIView):
 
     def get(self, request, pk, format=None):
         potency = self.get_object(pk)
-        serializer = Potency(potency)
+        serializer = PotencySerializer(potency)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -78,7 +78,7 @@ class DeviceDetail(APIView):
 
     def get(self, request, pk, format=None):
         device = self.get_object(pk)
-        serializer = Device(device)
+        serializer = DeviceSerializer(device)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -122,7 +122,7 @@ class PersonDetail(APIView):
 
     def get(self, request, pk, format=None):
         person = self.get_object(pk)
-        serializer = Person(person)
+        serializer = PersonSerializer(person)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -166,7 +166,7 @@ class AddressDetail(APIView):
 
     def get(self, request, pk, format=None):
         address = self.get_object(pk)
-        serializer = Address(address)
+        serializer = AddressSerializer(address)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -209,7 +209,7 @@ class ConfigDetail(APIView):
 
     def get(self, request, pk, format=None):
         config = self.get_object(pk)
-        serializer = Config(config)
+        serializer = ConfigSerializer(config)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
