@@ -9,6 +9,23 @@ class PotencySerializer(serializers.ModelSerializer):
         model = Potency
         fields = '__all__'
 
+#Month
+
+
+class MonthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Month
+        fields = '__all__'
+
+#Year
+
+
+class YearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Year
+        fields = '__all__'
+
+
 # DeviceSerializer
 
 

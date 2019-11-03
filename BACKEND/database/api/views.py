@@ -50,6 +50,93 @@ class PotencyDetail(APIView):
         potency.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+# Month
+class MonthList(APIView):
+
+    def get(self, request, format=None):
+        month = Month.objects.all()
+        serializer = MonthSerializer(month, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = MonthSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MonthDetail(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Month.objects.get(pk=pk)
+        except Month.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        month = self.get_object(pk)
+        serializer = MonthSerializer(month)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        month = self.get_object(pk)
+        serializer = MonthSerializer(month, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        month = self.get_object(pk)
+        month.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Year
+
+
+class YearList(APIView):
+
+    def get(self, request, format=None):
+        year = Year.objects.all()
+        serializer = YearSerializer(year, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = YearSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class YearDetail(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Year.objects.get(pk=pk)
+        except Year.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        year = self.get_object(pk)
+        serializer = YearSerializer(year)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        year = self.get_object(pk)
+        serializer = YearSerializer(year, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        year = self.get_object(pk)
+        year.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 # Device
 
 

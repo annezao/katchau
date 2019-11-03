@@ -13,6 +13,10 @@ from .views import (
     ConfigList,
     ConfigDetail,
     AccountList,
+    MonthList,
+    MonthDetail,
+    YearList,
+    YearDetail,
 
 )
 
@@ -27,6 +31,10 @@ urlpatterns = [
     path('api/Address/<int:pk>/', AddressDetail.as_view()),
     path('api/Config/', ConfigList.as_view()),
     path('api/Config/<int:pk>/', ConfigDetail.as_view()),
+    path('api/Month/', MonthList.as_view()),
+    path('api/Month/<int:pk>/', MonthDetail.as_view()),
+    path('api/Year/', YearList.as_view()),
+    path('api/Year/<int:pk>/', YearDetail.as_view()),
     path('api/Account/', AccountList.as_view()),
 
 
