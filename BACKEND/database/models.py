@@ -19,24 +19,23 @@ def max_value_current_year(value):
 
 class Device(models.Model):
     pass
-    #potency = models.ForeignKey(Potency, on_delete=models.CASCADE, null=True)
 
 
 class Month(models.Model):
-    month = models.IntegerField(default=1)
+    month = models.IntegerField(primary_key=True, default=timezone.now().month)
 
 
 class Year(models.Model):
-    year = models.IntegerField(validators=[
-        MinValueValidator(1984), max_value_current_year])
+    year = models.IntegerField(primary_key=True ,validators=[
+        MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
 
 
 class Potency(models.Model):
     value = models.FloatField(default=0)
     date = models.DateTimeField(default=timezone.now())
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, null=True)
-    month = models.ForeignKey(Month, on_delete=models.CASCADE, null = True)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, null = True)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
 
 
 class Person(models.Model):
