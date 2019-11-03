@@ -3,17 +3,39 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils import timezone
 import datetime
 # Create your models here.
 
 
-class Potency(models.Model):
-    value = models.FloatField(default=0)
-    date = models.DateField(default=datetime.date.today)
+def current_year():
+    return datetime.date.today().year
+
+
+def max_value_current_year(value):
+    return MaxValueValidator(current_year())(value)
 
 
 class Device(models.Model):
-    potency = models.ForeignKey(Potency, on_delete=models.CASCADE, null=True)
+    pass
+
+
+class Month(models.Model):
+    month = models.IntegerField(primary_key=True, default=timezone.now().month)
+
+
+class Year(models.Model):
+    year = models.IntegerField(primary_key=True ,validators=[
+        MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
+
+
+class Potency(models.Model):
+    value = models.FloatField(default=0)
+    date = models.DateTimeField(default=timezone.now())
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
 
 
 class Person(models.Model):
@@ -35,7 +57,7 @@ class Config(models.Model):
     email_notifications = models.BooleanField(default=True)
     push_notifications = models.BooleanField(default=True)
     vibrate = models.BooleanField(default=True)
-    som = models.BooleanField(default=True)
+    sound = models.BooleanField(default=True)
     time_interval = models.IntegerField(default=2)
 
 
@@ -53,4 +75,4 @@ def create_user_account(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_account(sender, instance, **kwargs):
-    instance.profile.save()
+    instance.Account.save()
