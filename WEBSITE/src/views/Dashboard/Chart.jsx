@@ -55,32 +55,39 @@ export default class Chart extends React.Component {
 
     let component = this;
 
-    readDevice(id)
-      .then(function (device) {
+    component.setState({
+      loading: false,
+      data: [],
+      progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+    });
 
-        console.log("device: ", device);
+    component.props.handleLoadingStatus(false);
+    // readDevice(id)
+    //   .then(function (device) {
 
-        component.setState({
-          device: device,
-          progressMsg: "Carregando dados do dispositivo..."
-        });
+    //     console.log("device: ", device);
 
-        component._getChartDataService();
+    //     component.setState({
+    //       device: device,
+    //       progressMsg: "Carregando dados do dispositivo..."
+    //     });
 
-      }).catch(function (error) {
-        console.log("Error: ", error);
+    //     component._getChartDataService();
 
-        if (error.code === 209) {
-          component.props.history.push('/login');
-        }
-        else {
-          component.setState({
-            loading: false,
-            data: [],
-            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-          });
-        }
-      });
+    //   }).catch(function (error) {
+    //     console.log("Error: ", error);
+
+    //     if (error.code === 209) {
+    //       component.props.history.push('/login');
+    //     }
+    //     else {
+    //       component.setState({
+    //         loading: false,
+    //         data: [],
+    //         progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+    //       });
+    //     }
+    //   });
   }
 
    //método que pega dados do parse

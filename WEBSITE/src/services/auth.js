@@ -1,73 +1,47 @@
-import Parse from 'parse';
-import configService from "./settings";
+// import Parse from 'parse';
+// import configService from "./settings";
 
 const Auth = {
     isAuthenticated() {
+        // console.log("Error: " + error.code + " " + error.message);
+        // reject({ message: error.message, authenticated: false, errorCode: error.code });
         
         return new Promise(function (resolve, reject){
-            let cu = Parse.User.current();
-            if (!!cu) {
-                console.log("Verificando autenticidade...");
-                cu.fetch().then(function (User) {
-                    console.log("User:", User)
+            console.log("Logging...");
 
-                    var configStorage = localStorage.getItem("config");
+            let user = localStorage.getItem('_u');
+            if (!!user) {
 
-                    if (!!configStorage) {
-                        resolve({
-                            message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
-                            authenticated: User.authenticated()
-                        });
-                    }
-                    else {
-                        configService.readConfig().then(function (config) {
-                            console.log(config);
+                user = JSON.parse(user);
 
-                            localStorage.setItem("config", JSON.stringify({
-                                notificar_email: config.get("notificar_email"),
-                                notificar_push: config.get("notificar_push"),
-                                limite: config.get("limite")
-                            }));
-
-                            resolve({
-                                message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
-                                authenticated: User.authenticated()
-                            });
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-
-                            resolve({
-                                message: "Usuário logado.", user: { username: User.get("username"), email: User.get("email") },
-                                authenticated: User.authenticated()
-                            });
-                        });
-                    }
-
-
-                }).catch(function (error) {
-
-                    console.log("Error: " + error.code + " " + error.message);
-                    reject({message: error.message, authenticated:false, errorCode: error.code});
-
+                resolve({
+                    message: "Is logged.", user: { username: user.username, email: user.email, password: user.password },
+                    authenticated: true
                 });
             }
             else
-                reject({ message: "Usuário não logado.", authenticated: false });
+                reject({ message: "Isn't logged.", authenticated: false });
         });
     },
-    isLogged: () => {
-        console.log(Parse.User.current().authenticated());
-        return !!Parse.User.current();
-    },
     async signIn(email, password) {
-        const user = await Parse.User
-            .logIn(email, password);
 
-        console.log("Logged with ", user.attributes.email);
+        let user = {
+            username: "Fake User",
+            email,
+            password 
+        };
+
+        localStorage.setItem("_u", JSON.stringify(user));
+
+        console.log("(fake login) Logged with ", user.email);
         return user;
     },
-    signOut: () => Parse.User.logOut()
+    signOut: () => {
+        return new Promise(function (resolve, reject) {
+            localStorage.removeItem('_u');
+            resolve();
+        });
+    }
 };
 
 export default Auth;
