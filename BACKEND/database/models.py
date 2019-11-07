@@ -18,8 +18,11 @@ def max_value_current_year(value):
 
 
 class Device(models.Model):
-    pass
+    device_name = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=100, null=True)
 
+class Notification(models.Model):
+    pass
 
 class Month(models.Model):
     month = models.IntegerField(primary_key=True, default=timezone.now().month)
@@ -27,12 +30,12 @@ class Month(models.Model):
 
 class Year(models.Model):
     year = models.IntegerField(primary_key=True ,validators=[
-        MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
+          MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
 
 
 class Potency(models.Model):
     value = models.FloatField(default=0)
-    date = models.DateTimeField(default=timezone.now())
+    date = models.DateTimeField(null=True)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
