@@ -18,6 +18,7 @@ def max_value_current_year(value):
 
 
 class Device(models.Model):
+    serial = models.CharField(max_length=100, null=True)
     device_name = models.CharField(max_length=100, null=True)
     description = models.CharField(max_length=100, null=True)
 
