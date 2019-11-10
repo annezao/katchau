@@ -6,6 +6,10 @@ from .views import (
     PotencyDetail,
     DeviceList,
     DeviceDetail,
+    DevicePotency,
+    UserList,
+    UserDetail,
+    UserDevice,
     PersonList,
     PersonDetail,
     AddressList,
@@ -25,6 +29,7 @@ urlpatterns = [
     path('api/Potency/<int:pk>/', PotencyDetail.as_view()),
     path('api/Device/', DeviceList.as_view()),
     path('api/Device/<int:pk>/', DeviceDetail.as_view()),
+    path('api/Device/<int:pk>/Potency', DevicePotency.as_view()),
     path('api/Person/', PersonList.as_view()),
     path('api/Person/<int:pk>/', PersonDetail.as_view()),
     path('api/Address/', AddressList.as_view()),
@@ -36,6 +41,7 @@ urlpatterns = [
     path('api/Year/', YearList.as_view()),
     path('api/Year/<int:pk>/', YearDetail.as_view()),
     path('api/Account/', AccountList.as_view()),
-
-
+    path('api/User', UserList.as_view()),
+    path('api/User/<int:pk>/', UserDetail.as_view()),
+    path('api/User/<int:pk>/Device', UserDevice.as_view()),
 ]

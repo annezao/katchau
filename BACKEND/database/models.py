@@ -18,9 +18,9 @@ def max_value_current_year(value):
 
 
 class Device(models.Model):
-    serial = models.CharField(max_length=100, null=True)
-    device_name = models.CharField(max_length=100, null=True)
-    description = models.CharField(max_length=100, null=True)
+    serial = models.CharField(max_length=100)
+    device_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
 
 class Notification(models.Model):
     pass
@@ -40,6 +40,10 @@ class Potency(models.Model):
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
+
+    def __str__(self):
+        return self.device.serial
+    
 
 
 class Person(models.Model):
@@ -71,12 +75,4 @@ class Account(models.Model):
     person = models.OneToOneField(Person, on_delete=models.DO_NOTHING)
 
 
-@receiver(post_save, sender=User)
-def create_user_account(sender, instance, created, **kwargs):
-    if created:
-        Account.objects.create(user=instance)
 
-
-@receiver(post_save, sender=User)
-def save_user_account(sender, instance, **kwargs):
-    instance.Account.save()

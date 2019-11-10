@@ -20,5 +20,5 @@ from rest_framework.authtoken import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('database.api.urls')),
-    path('user/', include('django.contrib.auth.urls')),
+    path('User/', include('django.contrib.auth.urls')),
 ]
