@@ -1,5 +1,6 @@
 import moment from "moment";
-import Parse from 'parse';
+// import Parse from 'parse';
+import axios from "axios";
 import "moment/locale/pt-br";
 import 'hammerjs';
 import 'chartjs-plugin-zoom';
@@ -447,147 +448,88 @@ function returnFormatedDate(date) {
   return moment(date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + " " + date.getUTCHours() + ":" + date.getUTCMinutes(), "YYYY-MM-DD HH:mm");
 }
 
-async function readVoltageByDay(device, start, end, willUpdate) {
-  const Voltage = Parse.Object.extend('Voltage')
-  const query = new Parse.Query(Voltage)
+function filterDates(arr, start, end) {
+  let filteredArr = arr.filter((potency) => {
+    let date = new Date(potency.date);
+    return date.getTime() >= start.getTime() &&
+      date.getTime() <= end.getTime();
+  });
 
-  query.equalTo("source", device)
-  query.greaterThanOrEqualTo("date", start)
-  query.lessThanOrEqualTo("date", end)
-  query.include('value')
-  query.include('date')
-  query.ascending("date");
-
-  let result = await query.find(),
-    arr = [],
-    sum = 0
-
-  for (let i = 0; i < result.length; i++) {
-    let thisObject = result[i], value = thisObject.get('value');
-    sum += parseFloat(value.toFixed(2));
-    arr.push({ 'x': returnFormatedDate(thisObject.get("date")), 'y': parseFloat(sum.toFixed(2)), "v": parseFloat(value.toFixed(2)) })
-  }
-
-  return arr
-}
-async function readVoltageByMonth(device, start, end) {
-  const Voltage = Parse.Object.extend('Voltage')
-  const query = new Parse.Query(Voltage)
-
-  query.equalTo("source", device)
-  query.greaterThanOrEqualTo("date", start)
-  query.lessThanOrEqualTo("date", end)
-  query.include('value')
-  query.include('date')
-  query.ascending("date");
-
-  let result = await query.find(),
-    arr = []
-
-  if(result.length){
-    const groups = result.reduce((groups, result) => {
-      let thisObject = result,
-        day = thisObject.get('date'),
-        d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
-
-      if (!groups[d]) {
-        groups[d] = [];
-      }
-
-      groups[d].push(thisObject.get('value'));
-      return groups;
-    }, {});
-
-    // Edit: to add it in the array format instead
-    Object.keys(groups).forEach((date) => {
-      arr.push({
-        x: moment(date),
-        y: groups[date].reduce((x, y) => x + y, 0)
-      })
-    });
-
-    arr.sort(function (a, b) {
-      if (a.y < b.y) {
-        return -1;
-      }
-      if (a.y > b.y) {
-        return 1;
-      }
-      return 0;
-    })
-  }
-  
-  return arr;
-}
-async function readVoltageByYear(device, start, end) {
-  const Voltage = Parse.Object.extend('Voltage')
-  const query = new Parse.Query(Voltage)
-
-  query.equalTo("source", device)
-  query.greaterThanOrEqualTo("date", start)
-  query.lessThanOrEqualTo("date", end)
-  query.include('value')
-  query.include('date')
-  query.ascending("date");
-
-  let result = await query.find(),
-    arr = []
-
-  if (result.length) {
-    const groups = result.reduce((groups, result) => {
-      let thisObject = result,
-        day = thisObject.get('date'),
-        d = moment(`${day.getFullYear()}/${day.getMonth()+1}/1`, "YYYY/MM/DD").format('MMM')
-
-      if (!groups[d]) {
-        groups[d] = [];
-      }
-
-      groups[d].push(thisObject.get('value'));
-      return groups;
-    }, {});
-
-    // Edit: to add it in the array format instead
-    Object.keys(groups).forEach((month) => {
-      arr.push({
-        x: month,
-        y: groups[month].reduce((x, y) => x + y, 0),
-        month: moment().month(month).format("MMMM")
-      })
-    });
-
-    arr.sort(function (a, b) {
-      if (a.y < b.y) {
-        return -1;
-      }
-      if (a.y > b.y) {
-        return 1;
-      }
-      return 0;
-    })
-  }
-
-  return arr;
+  return filteredArr;
 }
 
-async function readVoltage(type, device, date) {
+async function readVoltage(type, device, date){
   switch (type) {
     case "dia":
-      return readVoltageByDay(
-        device,
-        new Date(date.getFullYear(), date.getMonth(), date.getDate()), 
-        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59));
+
+      let start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+        end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59),
+        arr = [];
+
+
+      try {
+
+        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
+        console.log(`An array with ${response.data.length} potencies...`);
+
+        let filteredData = filterDates(response.data, start, end);
+        console.log(`was filtered and now has ${filteredData.length} potencies.`);
+
+        filteredData.forEach(function (potency) {
+          arr.push({ 'x': moment(potency.date), 'y': potency.value, "v": potency.value })
+        });
+
+        return arr;
+
+      } catch (error) {
+        
+        console.error(error);
+        return arr;
+      }
+    
     case "mes":
-      return readVoltageByMonth(
-        device, 
-        new Date(date.getFullYear(), date.getMonth(), 1), 
-        new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    default:
-      date = new Date();
-      return readVoltageByYear(
-        device,
-        new Date(date.getFullYear(), 0, 1),
-        new Date(date.getFullYear(), 11, 1))
+
+        // start = new Date(date.getFullYear(), date.getMonth(), 1),
+        // end = new Date(date.getFullYear(), date.getMonth() + 1, 0),
+        arr = [];
+
+
+      try {
+
+        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
+        console.log(response.data);
+
+        return arr;
+
+      } catch (error) {
+
+        console.error(error);
+        return arr;
+      }
+
+    case "ano":
+
+       // date = new Date() 
+        // start = new Date(date.getFullYear(), 0, 1),
+        // end = new Date(date.getFullYear(), 11, 1),
+        arr = [];
+
+
+      try {
+
+        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
+        console.log(response.data);
+
+        return arr;
+
+      } catch (error) {
+
+        console.error(error);
+        return arr;
+      }
+
+      default:
+        return []
   }
 }
 

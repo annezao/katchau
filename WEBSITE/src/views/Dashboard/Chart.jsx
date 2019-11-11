@@ -62,6 +62,8 @@ export default class Chart extends React.Component {
     });
 
     component.props.handleLoadingStatus(false);
+
+    component._getChartDataService();
     // readDevice(id)
     //   .then(function (device) {
 
@@ -75,18 +77,18 @@ export default class Chart extends React.Component {
     //     component._getChartDataService();
 
     //   }).catch(function (error) {
-    //     console.log("Error: ", error);
+    //       console.log("Error: ", error);
 
-    //     if (error.code === 209) {
-    //       component.props.history.push('/login');
-    //     }
-    //     else {
-    //       component.setState({
-    //         loading: false,
-    //         data: [],
-    //         progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-    //       });
-    //     }
+    //       if (error.code === 209) {
+    //         component.props.history.push('/login');
+    //       }
+    //       else {
+    //         component.setState({
+    //           loading: false,
+    //           data: [],
+    //           progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+    //         });
+    //       }
     //   });
   }
 
@@ -97,7 +99,7 @@ export default class Chart extends React.Component {
      console.log("getting ", component.props.state.bigChartData);
      component.props.handleLoadingStatus(true);
 
-    readVoltage(component.props.state.bigChartData, component.state.device, component.state.date)
+    readVoltage(component.props.state.bigChartData, 7, component.state.date)
       .then(function (voltages) {
 
         console.log("voltages: ", voltages);
@@ -106,6 +108,7 @@ export default class Chart extends React.Component {
           clearInterval(component.state.interval);
         }
 
+        //  VAI REPETIR O MÉTODO DE 1 EM 1 MINUTO !!        
         var interval =
           setInterval(() => {
             if (component.props.state.bigChartData === component.props.selectedChart) {
@@ -115,19 +118,20 @@ export default class Chart extends React.Component {
             else
               clearInterval(component.state.interval);
           }, 60000); //1min
+        clearInterval(interval);
 
         if (voltages.length > 0) {
-          let min = voltages.length > 0 ? voltages[0].y : 0,
-            max = voltages.length > 0 ? voltages[voltages.length - 1].y : 0;
-
+          let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
+            max = voltages.reduce((acc, curr) => acc + curr.v, 0);
+            
           let config = JSON.parse(localStorage.getItem("config"));       
-          if(config.notificar_push){
+          if (!!config && config.notificar_push){
             if (max > config.limite) {
               spawnNotification('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
             }
           }
 
-          if (config.notificar_push) {
+          if (!!config && config.notificar_push) {
             if (max > config.limite) {
               sendEmail('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
             }
