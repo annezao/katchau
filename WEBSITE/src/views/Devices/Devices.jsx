@@ -1,5 +1,6 @@
-import  React from 'react'
-import { readDevices } from '../../variables/devices'
+import React from 'react'
+//import readDevices from '../../variables/devices'
+import axios from 'axios';
 import { Link } from 'react-router-dom'
 import './style.css'
 import logo from './logo.png'
@@ -27,15 +28,19 @@ class Divices extends React.Component{
     loadDevices(){
 
         let component = this;
+        
+        let user = localStorage.getItem('_u');
 
-        readDevices()
-        .then(function (devices) {
+        user = JSON.parse(user);
 
-            console.log(devices);
+        axios.get(`http://127.0.0.1:8000/api/User/`+user.id+`/Device`  
+        ).then((devices) => {
+
+            console.log(devices.data);
 
             component.setState({
                 loading: false,
-                devices: devices
+                devices: devices.data
             });
 
             component.props.handleLoadingStatus(false);
@@ -76,7 +81,7 @@ class Divices extends React.Component{
                                                         <CardHeader id="cardheader-list">
                                                             <Row>
                                                                 <Col>
-                                                                <p className="header-title">Dispositivo {key}</p>
+                                                                <p className="header-title">Dispositivo: {devices.device_name}</p>
                                                                 </Col>
                                                                 <Col>
                                                                     <img src={logo} alt="logo" className="logo"></img>
@@ -84,7 +89,7 @@ class Divices extends React.Component{
                                                             </Row>
                                                         </CardHeader>
                                                         <CardBody className="cardbody-list">
-                                                        <CardText className="card-description"></CardText>
+                                                        <CardText className="card-description">{devices.description}</CardText>
                                                         <Link to={`dashboard/${devices.id}`} id="dash-btn">Acessar Dashboard</Link>
                                                         </CardBody>
                                                     </Card>

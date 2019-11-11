@@ -26,6 +26,7 @@ const Auth = {
     async signIn(email, password) {
 
         let user = {
+            id:3,
             username: "Fake User",
             email,
             password 
