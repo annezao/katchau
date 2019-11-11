@@ -461,14 +461,17 @@ async function readVoltageByDay(device, start, end) {
   try {
 
     const response = await axios.get(`${baseUrl}/api/Device/${device}/Potency`);
-    console.log(`An array with ${response.data.length} potencies...`);
 
-    let filteredData = filterDates(response.data, start, end);
-    console.log(`was filtered and now has ${filteredData.length} potencies.`);
+    if(response.data.length){
+        console.log(`An array with ${response.data.length} potencies...`);
 
-    filteredData.forEach(function (potency) {
-      arr.push({ 'x': moment(potency.date), 'y': potency.value, "v": potency.value })
-    });
+        let filteredData = filterDates(response.data, start, end);
+        console.log(`was filtered and now has ${filteredData.length} potencies.`);
+
+        filteredData.forEach(function (potency) {
+          arr.push({ 'x': moment(potency.date), 'y': potency.value, "v": potency.value })
+        });
+    }
 
     return arr;
 
@@ -478,49 +481,51 @@ async function readVoltageByDay(device, start, end) {
     return arr;
   }
 }
-
 async function readVoltageByMonth(device, start, end) {
 
   let arr = [];
   try {
 
     const response = await axios.get(`${baseUrl}/api/Device/${device}/Potency`);
-    console.log(`An array with ${response.data.length} potencies...`);
 
-    let filteredData = filterDates(response.data, start, end);
-    console.log(`was filtered and now has ${filteredData.length} potencies.`);
+    if(response.data.length){
+        console.log(`An array with ${response.data.length} potencies...`);
 
-    if (filteredData.length) {
-      const groups = filteredData.reduce((groups, result) => {
-        let thisObject = result,
-          day = new Date(thisObject.date),
-          d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
+        let filteredData = filterDates(response.data, start, end);
+        console.log(`was filtered and now has ${filteredData.length} potencies.`);
 
-        if (!groups[d]) {
-          groups[d] = [];
+        if (filteredData.length) {
+          const groups = filteredData.reduce((groups, result) => {
+            let thisObject = result,
+              day = new Date(thisObject.date),
+              d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
+
+            if (!groups[d]) {
+              groups[d] = [];
+            }
+
+            groups[d].push(thisObject.value);
+            return groups;
+          }, {});
+
+          // Edit: to add it in the array format instead
+          Object.keys(groups).forEach((date) => {
+            arr.push({
+              x: moment(date),
+              y: groups[date].reduce((x, y) => x + y, 0)
+            })
+          });
+
+          arr.sort(function (a, b) {
+            if (a.y < b.y) {
+              return -1;
+            }
+            if (a.y > b.y) {
+              return 1;
+            }
+            return 0;
+          })
         }
-
-        groups[d].push(thisObject.value);
-        return groups;
-      }, {});
-
-      // Edit: to add it in the array format instead
-      Object.keys(groups).forEach((date) => {
-        arr.push({
-          x: moment(date),
-          y: groups[date].reduce((x, y) => x + y, 0)
-        })
-      });
-
-      arr.sort(function (a, b) {
-        if (a.y < b.y) {
-          return -1;
-        }
-        if (a.y > b.y) {
-          return 1;
-        }
-        return 0;
-      })
     }
 
     return arr;
@@ -532,7 +537,58 @@ async function readVoltageByMonth(device, start, end) {
   }
 }
 async function readVoltageByYear(device, start, end) {
-  return [];
+  let arr = [];
+  try {
+
+    const response = await axios.get(`${baseUrl}/api/Device/${device}/Potency`);
+
+    if(response.data.length){
+        console.log(`An array with ${response.data.length} potencies...`);
+
+        let filteredData = filterDates(response.data, start, end);
+        console.log(`was filtered and now has ${filteredData.length} potencies.`);
+
+      if (filteredData.length) {
+          const groups = filteredData.reduce((groups, result) => {
+            let thisObject = result,
+              d = moment(thisObject.date).set("date", 1).format('MMM')
+
+            if (!groups[d]) {
+              groups[d] = [];
+            }
+
+            groups[d].push(thisObject.value);
+            return groups;
+          }, {});
+
+          // Edit: to add it in the array format instead
+          Object.keys(groups).forEach((month) => {
+            arr.push({
+              x: month,
+              y: groups[month].reduce((x, y) => x + y, 0),
+              month: moment().month(month).format("MMMM")
+            })
+          });
+
+          arr.sort(function (a, b) {
+            if (a.y < b.y) {
+              return -1;
+            }
+            if (a.y > b.y) {
+              return 1;
+            }
+            return 0;
+          })
+        }
+    }
+
+    return arr;
+
+  } catch (error) {
+
+    console.error(error);
+    return arr;
+  }
 }
 
 async function readVoltage(type, device, date){

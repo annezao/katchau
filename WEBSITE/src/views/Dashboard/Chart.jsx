@@ -102,8 +102,6 @@ export default class Chart extends React.Component {
     readVoltage(component.props.state.bigChartData, 7, component.state.date)
       .then(function (voltages) {
 
-        // console.log("voltages: ", voltages);
-
         if (!!component.state.interval) {
           clearInterval(component.state.interval);
         }
@@ -118,11 +116,10 @@ export default class Chart extends React.Component {
             else
               clearInterval(component.state.interval);
           }, 60000); //1min
-        clearInterval(interval);
 
         if (voltages.length > 0) {
           let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
-            max = voltages.reduce((acc, curr) => acc + curr.v, 0);
+            max = voltages.reduce((acc, curr) => acc + curr.y, 0);
             
           let config = JSON.parse(localStorage.getItem("config"));       
           if (!!config && config.notificar_push){
