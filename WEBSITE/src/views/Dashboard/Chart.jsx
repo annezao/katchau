@@ -102,7 +102,7 @@ export default class Chart extends React.Component {
     readVoltage(component.props.state.bigChartData, 7, component.state.date)
       .then(function (voltages) {
 
-        console.log("voltages: ", voltages);
+        // console.log("voltages: ", voltages);
 
         if (!!component.state.interval) {
           clearInterval(component.state.interval);

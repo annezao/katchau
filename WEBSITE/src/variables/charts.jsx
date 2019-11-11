@@ -442,11 +442,8 @@ let mainCharts = {
       { x: "JUL", y: 12843 }
     ]
   }
-};
-
-function returnFormatedDate(date) {
-  return moment(date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate() + " " + date.getUTCHours() + ":" + date.getUTCMinutes(), "YYYY-MM-DD HH:mm");
-}
+},
+baseUrl = 'http://127.0.0.1:8000';
 
 function filterDates(arr, start, end) {
   let filteredArr = arr.filter((potency) => {
@@ -458,77 +455,108 @@ function filterDates(arr, start, end) {
   return filteredArr;
 }
 
+async function readVoltageByDay(device, start, end) {
+
+  let arr = [];
+  try {
+
+    const response = await axios.get(`${baseUrl}/api/Device/${device}/Potency`);
+    console.log(`An array with ${response.data.length} potencies...`);
+
+    let filteredData = filterDates(response.data, start, end);
+    console.log(`was filtered and now has ${filteredData.length} potencies.`);
+
+    filteredData.forEach(function (potency) {
+      arr.push({ 'x': moment(potency.date), 'y': potency.value, "v": potency.value })
+    });
+
+    return arr;
+
+  } catch (error) {
+
+    console.error(error);
+    return arr;
+  }
+}
+
+async function readVoltageByMonth(device, start, end) {
+
+  let arr = [];
+  try {
+
+    const response = await axios.get(`${baseUrl}/api/Device/${device}/Potency`);
+    console.log(`An array with ${response.data.length} potencies...`);
+
+    let filteredData = filterDates(response.data, start, end);
+    console.log(`was filtered and now has ${filteredData.length} potencies.`);
+
+    if (filteredData.length) {
+      const groups = filteredData.reduce((groups, result) => {
+        let thisObject = result,
+          day = new Date(thisObject.date),
+          d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
+
+        if (!groups[d]) {
+          groups[d] = [];
+        }
+
+        groups[d].push(thisObject.value);
+        return groups;
+      }, {});
+
+      // Edit: to add it in the array format instead
+      Object.keys(groups).forEach((date) => {
+        arr.push({
+          x: moment(date),
+          y: groups[date].reduce((x, y) => x + y, 0)
+        })
+      });
+
+      arr.sort(function (a, b) {
+        if (a.y < b.y) {
+          return -1;
+        }
+        if (a.y > b.y) {
+          return 1;
+        }
+        return 0;
+      })
+    }
+
+    return arr;
+
+  } catch (error) {
+
+    console.error(error);
+    return arr;
+  }
+}
+async function readVoltageByYear(device, start, end) {
+  return [];
+}
+
 async function readVoltage(type, device, date){
   switch (type) {
     case "dia":
-
-      let start = new Date(date.getFullYear(), date.getMonth(), date.getDate()),
-        end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59),
-        arr = [];
-
-
-      try {
-
-        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
-        console.log(`An array with ${response.data.length} potencies...`);
-
-        let filteredData = filterDates(response.data, start, end);
-        console.log(`was filtered and now has ${filteredData.length} potencies.`);
-
-        filteredData.forEach(function (potency) {
-          arr.push({ 'x': moment(potency.date), 'y': potency.value, "v": potency.value })
-        });
-
-        return arr;
-
-      } catch (error) {
-        
-        console.error(error);
-        return arr;
-      }
+      return readVoltageByDay(
+        device,
+        new Date(date.getFullYear(), date.getMonth(), date.getDate()),
+        new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59));
     
     case "mes":
-
-        // start = new Date(date.getFullYear(), date.getMonth(), 1),
-        // end = new Date(date.getFullYear(), date.getMonth() + 1, 0),
-        arr = [];
-
-
-      try {
-
-        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
-        console.log(response.data);
-
-        return arr;
-
-      } catch (error) {
-
-        console.error(error);
-        return arr;
-      }
+      return readVoltageByMonth(
+        device,
+        new Date(date.getFullYear(), date.getMonth(), 1),
+        new Date(date.getFullYear(), date.getMonth() + 1, 0));
 
     case "ano":
+      date = new Date();
+      return readVoltageByYear(
+        device,
+        new Date(date.getFullYear(), 0, 1),
+        new Date(date.getFullYear(), 11, 1))
 
-       // date = new Date() 
-        // start = new Date(date.getFullYear(), 0, 1),
-        // end = new Date(date.getFullYear(), 11, 1),
-        arr = [];
-
-
-      try {
-
-        const response = await axios.get(`http://127.0.0.1:8000/api/Device/${device}/Potency`);
-        console.log(response.data);
-
-        return arr;
-
-      } catch (error) {
-
-        console.error(error);
-        return arr;
-      }
-
-      default:
+    default:
         return []
   }
 }
