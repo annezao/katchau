@@ -14,7 +14,7 @@ import {
 import {
   mainCharts,
   readVoltage
-} from "../../variables/charts";
+} from "../../services/charts";
 // react plugin used to create charts
 import { Line } from "react-chartjs-2";
 
