@@ -18,7 +18,7 @@ import {
 // react plugin used to create charts
 import { Line } from "react-chartjs-2";
 
-import { readDevice } from '../../variables/devices';
+import deviceServices from '../../services/devices';
 
 export default class Chart extends React.Component {
 
@@ -55,41 +55,43 @@ export default class Chart extends React.Component {
 
     let component = this;
 
-    component.setState({
-      loading: false,
-      data: [],
-      progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-    });
+    deviceServices.readDevice(id)
+      .then(function (device) {
 
-    component.props.handleLoadingStatus(false);
+        console.log("device: ", device);
 
-    component._getChartDataService();
-    // readDevice(id)
-    //   .then(function (device) {
+        if (!!device) {
+          component.setState({
+            device: device,
+            progressMsg: "Carregando dados do dispositivo..."
+          });
 
-    //     console.log("device: ", device);
+          component._getChartDataService();
+        }
+        else {
+          component.setState({
+            loading: false,
+            data: [],
+            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+          });
+        }
 
-    //     component.setState({
-    //       device: device,
-    //       progressMsg: "Carregando dados do dispositivo..."
-    //     });
+      }).catch(function (error) {
 
-    //     component._getChartDataService();
+          console.log("Error: ", error);
 
-    //   }).catch(function (error) {
-    //       console.log("Error: ", error);
+          component.setState({
+            loading: false,
+            data: [],
+            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+          });
 
-    //       if (error.code === 209) {
-    //         component.props.history.push('/login');
-    //       }
-    //       else {
-    //         component.setState({
-    //           loading: false,
-    //           data: [],
-    //           progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-    //         });
-    //       }
-    //   });
+          if (!!component.state.interval) {
+            clearInterval(component.state.interval);
+          }
+
+          component.props.handleLoadingStatus(false);
+      });
   }
 
    //método que pega dados do parse
@@ -99,7 +101,7 @@ export default class Chart extends React.Component {
      console.log("getting ", component.props.state.bigChartData);
      component.props.handleLoadingStatus(true);
 
-    readVoltage(component.props.state.bigChartData, 7, component.state.date)
+    readVoltage(component.props.state.bigChartData, component.state.device.id, component.state.date)
       .then(function (voltages) {
 
         if (!!component.state.interval) {
@@ -117,7 +119,7 @@ export default class Chart extends React.Component {
               clearInterval(component.state.interval);
           }, 60000); //1min
 
-        if (voltages.length > 0) {
+        if (voltages.length) {
           let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
             max = voltages.reduce((acc, curr) => acc + curr.y, 0);
             
@@ -151,7 +153,8 @@ export default class Chart extends React.Component {
             options: null,
             loading: false,
             watts: 0,
-            interval
+            interval,
+            progressMsg: "Não há dados para serem mostrados."
           });
         }
 
@@ -162,19 +165,15 @@ export default class Chart extends React.Component {
 
         if (!!component.state.interval) {
           clearInterval(component.state.interval);
-        }
+        }      
 
-        if (error.code === 209) {
-          component.props.history.push('/login');
-        }
-        else {          
-          component.setState({
-            data: [],
-            options: null,
-            loading: false,
-            watts: 0
-          });
-        }
+        component.setState({
+          data: [],
+          options: null,
+          loading: false,
+          watts: 0,
+          progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+        });
 
         component.props.handleLoadingStatus(false);
       });
@@ -213,7 +212,7 @@ export default class Chart extends React.Component {
     else {
       element =
         <div className="loading mx-auto text-center row align-items-center" style={{ height: 100 + '%' }}>
-          <h3 className="col">Não há dados para serem mostrados.</h3>
+          <h3 className="col">{component.state.progressMsg}</h3>
         </div>;
     }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 //import readDevices from '../../variables/devices'
-import axios from 'axios';
+// import axios from 'axios';
 import { Link } from 'react-router-dom'
 import './style.css'
 import logo from './logo.png'
@@ -29,6 +29,7 @@ class Divices extends React.Component{
     loadDevices(){
 
         let component = this;
+        component.props.handleLoadingStatus(true);
         
         let user = localStorage.getItem('_u');
 
