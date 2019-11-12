@@ -13,6 +13,7 @@ import {
     CardBody,
     CardText,
 } from 'reactstrap'
+import deviceServices from '../../services/devices';
 
 class Divices extends React.Component{
     state = {
@@ -33,8 +34,7 @@ class Divices extends React.Component{
 
         user = JSON.parse(user);
 
-        axios.get(`http://127.0.0.1:8000/api/User/`+user.id+`/Device`  
-        ).then((devices) => {
+        deviceServices.readDevices(user.id).then((devices) => {
 
             console.log(devices.data);
 
