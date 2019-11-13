@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
+from rest_framework.authtoken import views
 
 from .views import (
     PotencyList,
@@ -21,10 +22,11 @@ from .views import (
     MonthDetail,
     YearList,
     YearDetail,
-
+    CustomAuthToken,
 )
 
 urlpatterns = [
+    path('auth/', CustomAuthToken.as_view()),
     path('api/Potency/', PotencyList.as_view()),
     path('api/Potency/<int:pk>/', PotencyDetail.as_view()),
     path('api/Device/', DeviceList.as_view()),
