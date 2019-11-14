@@ -36,7 +36,7 @@ urlpatterns = [
     path('api/Device/<int:pk>/Potency', DevicePotency.as_view()),
     path('api/Device/<int:pk>/PotencyYear/<int:pk2>', DevicePotencyYear.as_view()),
     path('api/Device/<int:pk>/PotencyMonth/<int:pk3>/<int:pk2>', DevicePotencyMonth.as_view()),
-    path('api/Device/<int:pk>/PotencyDay/<int:pk4>/<int:pk3>/<int:pk2>', DevicePotencyMonth.as_view()),
+    path('api/Device/<int:pk>/PotencyDay/<int:pk4>/<int:pk3>/<int:pk2>', DevicePotencyDay.as_view()),
     path('api/Person/', PersonList.as_view()),
     path('api/Person/<int:pk>/', PersonDetail.as_view()),
     path('api/Address/', AddressList.as_view()),
