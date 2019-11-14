@@ -34,8 +34,7 @@ class Year(models.Model):
           MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
 
 class Day(models.Model):
-    day = models.IntegerField(primary_key=True ,validators=[
-          MinValueValidator(1984), max_value_current_year], default=timezone.now().day)
+    day = models.IntegerField(primary_key=True, default=timezone.now().day)
 
 class Potency(models.Model):
     value = models.FloatField(default=0)
@@ -43,7 +42,7 @@ class Potency(models.Model):
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
-    day = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().day)
+    day = models.ForeignKey(Day, on_delete=models.CASCADE, default=timezone.now().day)
 
 
 class Person(models.Model):
