@@ -60,8 +60,10 @@ class DevicePotencyMonth(APIView):
 
     def get(self,  request, pk, pk2, pk3, format=None):
         device = self.get_object(pk)
-        serializer = PotencySerializer(device.potency_set.filter(month=pk2, year=pk3), many=True)
+        serializer = PotencySerializer(
+            device.potency_set.filter(month=pk2, year=pk3), many=True)
         return Response(serializer.data)
+
 
 class DevicePotencyYear(APIView):
     def get_object(self, pk):
@@ -72,7 +74,21 @@ class DevicePotencyYear(APIView):
 
     def get(self,  request, pk, pk2, format=None):
         device = self.get_object(pk)
-        serializer = PotencySerializer(device.potency_set.filter(year=pk2), many=True)
+        serializer = PotencySerializer(
+            device.potency_set.filter(year=pk2), many=True)
+        return Response(serializer.data)
+
+class DevicePotencyDay(APIView):
+    def get_object(self, pk):
+        try:
+            return Device.objects.get(pk=pk)
+        except Device.DoesNotExist:
+            raise Http404
+
+    def get(self,  request, pk, pk2, pk3, pk4, format=None):
+        device = self.get_object(pk)
+        serializer = PotencySerializer(
+            device.potency_set.filter(day=pk2, month=pk3, year=pk4), many=True)
         return Response(serializer.data)
 
 # Month
@@ -161,6 +177,50 @@ class YearDetail(APIView):
     def delete(self, request, pk, format=None):
         year = self.get_object(pk)
         year.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Day
+
+
+class DayList(APIView):
+
+    def get(self, request, format=None):
+        day = Day.objects.all()
+        serializer = DaySerializer(day, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = DaySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DayDetail(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Day.objects.get(pk=pk)
+        except Day.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        day = self.get_object(pk)
+        serializer = DaySerializer(day)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        day = self.get_object(pk)
+        serializer = YearSerializer(day, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        day = self.get_object(pk)
+        day.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Device
