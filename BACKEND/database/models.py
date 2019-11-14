@@ -6,7 +6,28 @@ from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 import datetime
-# Create your models here.
+
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
+import rest_framework.authtoken.models
+
+@python_2_unicode_compatible
+class Token(rest_framework.authtoken.models.Token):
+    '''
+    create multi token per user - override default rest_framework Token class
+    replace model one-to-one relationship with foreign key
+    '''
+    key = models.CharField(_("Key"), max_length=40, db_index=True, unique=True)
+    #Foreign key relationship to user for many-to-one relationship
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='auth_token',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    name = models.CharField(_("Name"), max_length=64)
+
+    class Meta:
+        # ensure user and name are unique
+        unique_together = (('user', 'name'),)
 
 
 def current_year():

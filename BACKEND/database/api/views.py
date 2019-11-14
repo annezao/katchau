@@ -1,30 +1,80 @@
 from django.http import Http404, JsonResponse
 from database.models import *
 from .serializers import *
-from rest_framework import status
+from rest_framework import status, viewsets, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
 
-#
-#from rest_framework.permissions import IsAuthenticated
+# views.py
+ 
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+import datetime
+from django.utils import timezone
+from ..models import Token
+import pytz
 
-class CustomAuthToken(ObtainAuthToken):
-    
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({
-            'token': token.key,
-            'id': user.pk,
-            'email': user.email,
-            'username': user.username
-        })
+# Authentication classes
+
+class ObtainMultiAuthToken(ObtainAuthToken):
+    '''
+    create persistent tokens that user can manually create for connecting devices
+    '''
+ 
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            name = request.data['token_name']
+            token, created = Token.objects.get_or_create(user=user, name=name)
+            
+            return Response({'token': token.key,
+                             'token_name': name,
+                             'user': user.username})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
+ 
+
+class ObtainExpiringAuthToken(generics.GenericAPIView):
+    '''
+    Create token that expires every 24hrs
+    Used for login in users from mobile and desktop clients
+    '''
+
+    permission_classes = (
+        permissions.AllowAny,
+    )
+    serializer_class = ObtainTokenSerializer
+ 
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            
+            user = serializer.user
+
+            # if get_or_create() didn't have to create an object, variable create is FALSE
+            token, created = Token.objects.get_or_create(user=user, name='auth-token')
+            utc_now = timezone.now()
+            utc_now = utc_now.replace(tzinfo=pytz.utc)
+
+            # if the object exist and isn't valid (less than 24hrs), so delet it and create another one
+            if not created and token.created < utc_now - datetime.timedelta(minutes=24):
+                token.delete()
+                token = Token.objects.create(user=user, name='auth-token')
+                token.created = utc_now
+                token.save()
+
+            return Response({'token': token.key,
+                             'id': user.pk,
+                             'email': user.email,
+                             'username': user.username})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
+ 
+class Logout(APIView):
+     
+    def get(self, request):
+        # delete token
+        request.auth.delete()
+        return Response("User successfully logged out")
 
 # Potency
 

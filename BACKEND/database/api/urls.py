@@ -22,11 +22,15 @@ from .views import (
     MonthDetail,
     YearList,
     YearDetail,
-    CustomAuthToken,
+    ObtainMultiAuthToken,
+    ObtainExpiringAuthToken,
+    Logout
 )
 
 urlpatterns = [
-    path('auth/', CustomAuthToken.as_view()),
+    path('auth-iot/', ObtainMultiAuthToken.as_view()),
+    path('auth/', ObtainExpiringAuthToken.as_view()),
+    path('logout/', Logout.as_view()),
     path('api/Potency/', PotencyList.as_view()),
     path('api/Potency/<int:pk>/', PotencyDetail.as_view()),
     path('api/Device/', DeviceList.as_view()),
