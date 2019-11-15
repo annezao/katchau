@@ -59,6 +59,8 @@ class Year(models.Model):
     year = models.IntegerField(primary_key=True ,validators=[
           MinValueValidator(1984), max_value_current_year], default=utc_now.year)
 
+class Day(models.Model):
+    day = models.IntegerField(primary_key=True, default=timezone.now().day)
 
 class Potency(models.Model):
     utc_now = timezone.now()
@@ -68,10 +70,7 @@ class Potency(models.Model):
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=utc_now.month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=utc_now.year)
-
-    def __str__(self):
-        return self.device.serial
-    
+    day = models.ForeignKey(Day, on_delete=models.CASCADE, default=utc_now.day)
 
 
 class Person(models.Model):

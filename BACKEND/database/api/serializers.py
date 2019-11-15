@@ -28,6 +28,14 @@ class YearSerializer(serializers.ModelSerializer):
         model = Year
         fields = '__all__'
 
+#Day
+
+
+class DaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Day
+        fields = '__all__'
+
 
 # DeviceSerializer
 
