@@ -4,6 +4,7 @@ import axios from "axios";
 import "moment/locale/pt-br";
 import 'hammerjs';
 import 'chartjs-plugin-zoom';
+import { BASE_URL } from '../variables/env'
 
 moment.locale('pt-br');
 
@@ -442,128 +443,86 @@ let mainCharts = {
             { x: "JUL", y: 12843 }
         ]
     }
-},
-    baseUrl = 'http://127.0.0.1:8000';
+};
 
 async function readVoltageByDay(device, year, month, day) {
 
     let arr = [];
-    try {
+    
+    const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyDay/${year}/${month}/${day}`);
 
-        const response = await axios.get(`${baseUrl}/api/Device/${device}/PotencyDay/${year}/${month}/${day}`);
+    if (response.data.length) {
+        console.log(`Got an array with ${response.data.length} potencies.`);
 
-        if (response.data.length) {
-            console.log(`Got an array with ${response.data.length} potencies.`);
-
-            response.data.forEach(function (potency) {
-                arr.push({ 'x': moment(potency.date), 'y': potency.value })
-            });
-        }
-
-        return arr;
-
-    } catch (error) {
-
-        console.error(error);
-        return arr;
+        response.data.forEach(function (potency) {
+            arr.push({ 'x': moment(potency.date), 'y': potency.value })
+        });
     }
+
+    return arr;
 }
 async function readVoltageByMonth(device, year, month) {
 
     let arr = [];
-    try {
 
-        const response = await axios.get(`${baseUrl}/api/Device/${device}/PotencyMonth/${year}/${month}`);
+    const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyMonth/${year}/${month}`);
 
-        if (response.data.length) {
-            console.log(`Got an array with ${response.data.length} potencies.`);
+    if (response.data.length) {
+        console.log(`Got an array with ${response.data.length} potencies.`);
 
-            const groups = response.data.reduce((groups, result) => {
-                let day = new Date(result.date),
-                    d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
+        const groups = response.data.reduce((groups, result) => {
+            let day = new Date(result.date),
+                d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
 
-                if (!groups[d]) {
-                    groups[d] = [];
-                }
+            if (!groups[d]) {
+                groups[d] = [];
+            }
 
-                groups[d].push(result.value);
-                return groups;
-            }, {});
+            groups[d].push(result.value);
+            return groups;
+        }, {});
 
-            // Edit: to add it in the array format instead
-            Object.keys(groups).forEach((date) => {
-                arr.push({
-                    x: moment(date),
-                    y: groups[date].reduce((x, y) => x + y, 0)
-                })
-            });
-
-            // arr.sort(function (a, b) {
-            //     if (a.y < b.y) {
-            //         return -1;
-            //     }
-            //     if (a.y > b.y) {
-            //         return 1;
-            //     }
-            //     return 0;
-            // })
-        }
-
-        return arr;
-
-    } catch (error) {
-
-        console.error(error);
-        return arr;
+        // Edit: to add it in the array format instead
+        Object.keys(groups).forEach((date) => {
+            arr.push({
+                x: moment(date),
+                y: groups[date].reduce((x, y) => x + y, 0)
+            })
+        });
     }
+
+    return arr;
 }
 async function readVoltageByYear(device, year) {
     let arr = [];
-    try {
 
-        const response = await axios.get(`${baseUrl}/api/Device/${device}/PotencyYear/${year}`);
+    const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyYear/${year}`);
 
-        if (response.data.length) {
-            console.log(`Got an array with ${response.data.length} potencies.`);
+    if (response.data.length) {
+        console.log(`Got an array with ${response.data.length} potencies.`);
 
-            const groups = response.data.reduce((groups, result) => {
-                let d = moment(result.date).set("date", 1).format('MMM')
+        const groups = response.data.reduce((groups, result) => {
+            let d = moment(result.date).set("date", 1).format('MMM')
 
-                if (!groups[d]) {
-                    groups[d] = [];
-                }
+            if (!groups[d]) {
+                groups[d] = [];
+            }
 
-                groups[d].push(result.value);
-                return groups;
-            }, {});
+            groups[d].push(result.value);
+            return groups;
+        }, {});
 
-            // Edit: to add it in the array format instead
-            Object.keys(groups).forEach((month) => {
-                arr.push({
-                    x: month,
-                    y: groups[month].reduce((x, y) => x + y, 0),
-                    month: moment().month(month).format("MMMM")
-                })
-            });
-
-            // arr.sort(function (a, b) {
-            //     if (a.y < b.y) {
-            //         return -1;
-            //     }
-            //     if (a.y > b.y) {
-            //         return 1;
-            //     }
-            //     return 0;
-            // })
-        }
-
-        return arr;
-
-    } catch (error) {
-
-        console.error(error);
-        return arr;
+        // Edit: to add it in the array format instead
+        Object.keys(groups).forEach((month) => {
+            arr.push({
+                x: month,
+                y: groups[month].reduce((x, y) => x + y, 0),
+                month: moment().month(month).format("MMMM")
+            })
+        });
     }
+
+    return arr;
 }
 
 async function readVoltage(type, device, date) {

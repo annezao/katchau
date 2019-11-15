@@ -150,16 +150,8 @@ class Admin extends React.Component {
         history.push("/login");
 
       }).catch(function (error) {
-
-        _class.notify({
-          place: "tr",
-          message: ("Error: " + error.code + " " + error.message),
-          type: "danger",
-          icon: "tim-icons icon-alert-circle-exc"
-        });
-        console.log("Error: " + error.code + " " + error.message);
+        console.log(error);
         _class.handleLoadingStatus(false);
-
       });
   };
   handleLoadingStatus(value) {

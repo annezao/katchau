@@ -49,15 +49,16 @@ class Divices extends React.Component{
         }).catch(function (error) {
             console.log("Error: " + error.code);
 
-            if(error.code === 209){
+            if (error.response.status === 401){
+                localStorage.setItem('shallnotpass', "hold on")
                 component.props.history.push('/login');
             }
             else {
                 component.setState({
                     loading: false
                 });
+                component.props.handleLoadingStatus(false);
             }
-            component.props.handleLoadingStatus(false);
         });
 
     }

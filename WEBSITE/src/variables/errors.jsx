@@ -10,7 +10,7 @@ const Errors = {
     101: {
         message: "Usuário/Senha Inválido" 
     },
-    209: {
+    401: {
         message: "Faça login para continuar."
     },
     500: {

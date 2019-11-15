@@ -80,17 +80,23 @@ export default class Chart extends React.Component {
 
           console.log("Error: ", error);
 
-          component.setState({
-            loading: false,
-            data: [],
-            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-          });
-
-          if (!!component.state.interval) {
-            clearInterval(component.state.interval);
+          if (error.response.status === 401){
+              localStorage.setItem('shallnotpass', "hold on")
+              window.location.href = '/login';
           }
+          else {
+              component.setState({
+                loading: false,
+                data: [],
+                progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+              });
 
-          component.props.handleLoadingStatus(false);
+              if (!!component.state.interval) {
+                clearInterval(component.state.interval);
+              }
+
+              component.props.handleLoadingStatus(false);
+          }
       });
   }
 
@@ -163,19 +169,25 @@ export default class Chart extends React.Component {
       }).catch(function (error) {
         console.log("Error: " + error);
 
-        if (!!component.state.interval) {
-          clearInterval(component.state.interval);
-        }      
+        if (error.response.status === 401) {
+            localStorage.setItem('shallnotpass', "hold on")
+            window.location.href = '/login';
+        }
+        else {
+            if (!!component.state.interval) {
+              clearInterval(component.state.interval);
+            }
 
-        component.setState({
-          data: [],
-          options: null,
-          loading: false,
-          watts: 0,
-          progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-        });
+            component.setState({
+              data: [],
+              options: null,
+              loading: false,
+              watts: 0,
+              progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
+            });
 
-        component.props.handleLoadingStatus(false);
+            component.props.handleLoadingStatus(false);
+        }
       });
   }
 
