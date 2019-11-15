@@ -60,7 +60,9 @@ class Year(models.Model):
           MinValueValidator(1984), max_value_current_year], default=utc_now.year)
 
 class Day(models.Model):
-    day = models.IntegerField(primary_key=True, default=timezone.now().day)
+    utc_now = timezone.now()
+    utc_now = utc_now.replace(tzinfo=pytz.utc)
+    day = models.IntegerField(primary_key=True, default=utc_now.day)
 
 class Potency(models.Model):
     utc_now = timezone.now()

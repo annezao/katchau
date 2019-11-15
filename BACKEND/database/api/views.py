@@ -1,9 +1,14 @@
 from django.http import Http404, JsonResponse
+from django.db.models import Sum, Count
 from database.models import *
 from .serializers import *
 from rest_framework import status, viewsets, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics
+from rest_framework import viewsets
 
 # views.py
 
@@ -112,32 +117,22 @@ class PotencyDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class DevicePotencyMonth(APIView):
-    def get_object(self, pk):
-        try:
-            return Device.objects.get(pk=pk)
-        except Device.DoesNotExist:
-            raise Http404
-
-    def get(self,  request, pk, pk2, pk3, format=None):
-        device = self.get_object(pk)
-        serializer = PotencySerializer(
-            device.potency_set.filter(month=pk2, year=pk3), many=True)
-        return Response(serializer.data)
+class DevicePotencyMonth(generics.GenericAPIView):
+    def get(self, request, pk, pk2, pk3):
+        queryset = Potency.objects.filter(
+            device_id=pk, month=pk2, year=pk3
+        ).values('day').annotate(total=Sum('value')).order_by('day')
+        return Response(queryset)
 
 
 class DevicePotencyYear(APIView):
-    def get_object(self, pk):
-        try:
-            return Device.objects.get(pk=pk)
-        except Device.DoesNotExist:
-            raise Http404
+    def get(self, request, pk, pk2):
+        queryset = Potency.objects.filter(
+            device_id=pk, year=pk2
+        ).values('month').annotate(total=Sum('value')).order_by('month')
+        return Response(queryset)
 
-    def get(self,  request, pk, pk2, format=None):
-        device = self.get_object(pk)
-        serializer = PotencySerializer(
-            device.potency_set.filter(year=pk2), many=True)
-        return Response(serializer.data)
+
 
 class DevicePotencyDay(APIView):
     def get_object(self, pk):
