@@ -78,11 +78,12 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'database.authentication.TokenAuthentication',
+        'database.authentication.ExpiringTokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'database.utils.custom_exception_handler'
 }
 
 WSGI_APPLICATION = 'server.wsgi.application'

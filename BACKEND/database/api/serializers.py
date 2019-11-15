@@ -100,7 +100,7 @@ class ObtainTokenSerializer(serializers.Serializer):
         if self.user:
             if not self.user.is_active:
                 raise serializers.ValidationError(
-                    self.error_messages['inactive_account'])
+                    self.error_messages['inactive_account'], )
             return attrs
         else:
             raise serializers.ValidationError(

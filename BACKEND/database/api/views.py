@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # views.py
- 
+
+from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 import datetime
@@ -20,7 +21,8 @@ class ObtainMultiAuthToken(ObtainAuthToken):
     '''
     create persistent tokens that user can manually create for connecting devices
     '''
- 
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -33,22 +35,19 @@ class ObtainMultiAuthToken(ObtainAuthToken):
                              'user': user.username})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
  
-
 class ObtainExpiringAuthToken(generics.GenericAPIView):
     '''
     Create token that expires every 24hrs
     Used for login in users from mobile and desktop clients
     '''
 
-    permission_classes = (
-        permissions.AllowAny,
-    )
+    permission_classes = (AllowAny,)
     serializer_class = ObtainTokenSerializer
  
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            
+        if serializer.is_valid(raise_exception=True):
+
             user = serializer.user
 
             # if get_or_create() didn't have to create an object, variable create is FALSE
@@ -68,13 +67,6 @@ class ObtainExpiringAuthToken(generics.GenericAPIView):
                              'email': user.email,
                              'username': user.username})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
- 
-class Logout(APIView):
-     
-    def get(self, request):
-        # delete token
-        request.auth.delete()
-        return Response("User successfully logged out")
 
 # Potency
 

@@ -10,6 +10,7 @@ import datetime
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 import rest_framework.authtoken.models
+import pytz
 
 @python_2_unicode_compatible
 class Token(rest_framework.authtoken.models.Token):
@@ -47,20 +48,26 @@ class Notification(models.Model):
     pass
 
 class Month(models.Model):
-    month = models.IntegerField(primary_key=True, default=timezone.now().month)
+    utc_now = timezone.now()
+    utc_now = utc_now.replace(tzinfo=pytz.utc)
+    month = models.IntegerField(primary_key=True, default=utc_now.month)
 
 
 class Year(models.Model):
+    utc_now = timezone.now()
+    utc_now = utc_now.replace(tzinfo=pytz.utc)
     year = models.IntegerField(primary_key=True ,validators=[
-          MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
+          MinValueValidator(1984), max_value_current_year], default=utc_now.year)
 
 
 class Potency(models.Model):
+    utc_now = timezone.now()
+    utc_now = utc_now.replace(tzinfo=pytz.utc)
     value = models.FloatField(default=0)
     date = models.DateTimeField(null=True)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
-    month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
+    month = models.ForeignKey(Month, on_delete=models.CASCADE, default=utc_now.month)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, default=utc_now.year)
 
     def __str__(self):
         return self.device.serial
