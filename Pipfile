@@ -6,6 +6,16 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+django-webpack-loader = "*"
+djangorestframework = "*"
+django = "*"
+pylint = "*"
+astroid = "*"
+dataclasses = "*"
+django-cors-headers = "*"
+pytz = "*"
+six = "*"
+djongo = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
