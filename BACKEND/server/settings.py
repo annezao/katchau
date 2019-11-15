@@ -23,10 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$war(cb(1&tob@d6#-lvi5%wz5izye5e&irs%9s$^$wm#q+g7j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'katchau-api.herokuapp.com']
+ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'katchau-api.herokuapp.com']
 
 
 # Application definition
