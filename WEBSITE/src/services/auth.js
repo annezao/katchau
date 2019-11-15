@@ -1,5 +1,7 @@
 // import Parse from 'parse';
 // import configService from "./settings";
+import axios from 'axios'
+import { BASE_URL } from '../variables/env'
 
 const Auth = {
     isAuthenticated() {
@@ -23,19 +25,22 @@ const Auth = {
                 reject({ message: "Isn't logged.", authenticated: false });
         });
     },
-    async signIn(email, password) {
+    async signIn(username, password) {
 
-        let user = {
-            id:3,
-            username: "Fake User",
-            email,
-            password 
-        };
+        const response = await axios.post(
+            `${BASE_URL}/api/auth/`,
+            {
+                username: username,
+                password: password
+            }
+        ),
+        user = response.data;
 
         localStorage.setItem("_u", JSON.stringify(user));
+        console.log("Logged with ", user.email);
 
-        console.log("(fake login) Logged with ", user.email);
         return user;
+        
     },
     signOut: () => {
         return new Promise(function (resolve, reject) {
