@@ -84,7 +84,7 @@ class Login extends React.Component {
 
         Auth.signIn(this.state.email, this.state.password)
             .then((user) => {
-                console.log('User logged with name: ' + user.get("username") + ' and email: ' + user.get("email"));
+                console.log('User logged with name: ' + user.username + ' and email: ' + user.email);
                 const { history } = this.props;
                 _class.handleLoadingStatus(false);
                 history.push("/admin/dashboard");
