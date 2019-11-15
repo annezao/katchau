@@ -13,7 +13,7 @@ def is_token_expired(token):
     else:
         utc_now = timezone.now()
         utc_now = utc_now.replace(tzinfo=pytz.utc)
-        return token.created < utc_now - datetime.timedelta(minutes=24)
+        return token.created < utc_now - datetime.timedelta(hours=24)
 
 class ExpiringTokenAuthentication(TokenAuthentication):
     """ 

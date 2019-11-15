@@ -56,7 +56,7 @@ class ObtainExpiringAuthToken(generics.GenericAPIView):
             utc_now = utc_now.replace(tzinfo=pytz.utc)
 
             # if the object exist and isn't valid (less than 24hrs), so delet it and create another one
-            if not created and token.created < utc_now - datetime.timedelta(minutes=24):
+            if not created and token.created < utc_now - datetime.timedelta(hours=24):
                 token.delete()
                 token = Token.objects.create(user=user, name='auth-token')
                 token.created = utc_now
