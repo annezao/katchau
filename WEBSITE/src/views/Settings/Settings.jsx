@@ -54,24 +54,25 @@ class Settings extends React.Component {
         var component = this;
         component.handleLoadingStatus(true);
 
-        configServices.readConfig()
-            .then(function (config) {
+        configServices.readConfig(1)
+            .then(function (res) {
+            const config = res.data;
             if (!!config) {
 
-                localStorage.setItem("config", JSON.stringify({
-                    notificar_email: config.get("notificar_email"),
-                    notificar_push: config.get("notificar_push"),
-                    limite: config.get("limite")
-                }));
+                // localStorage.setItem("config", JSON.stringify({
+                //     notificar_email: config.get("notificar_email"),
+                //     notificar_push: config.get("notificar_push"),
+                //     limite: config.get("limite")
+                // }));
 
                 component.setState({
                     id: config.id,
-                    checkedEmail: config.attributes.notificar_email,
-                    checkedPush: config.attributes.notificar_push,
-                    checkedVibrate: config.attributes.vibrate,
-                    checkedSound: config.attributes.som,
+                    checkedEmail: config.email_notifications,
+                    checkedPush: config.push_notifications,
+                    checkedVibrate: config.vibrate,
+                    checkedSound: config.sound,
                     // value: config.attributes.intervalo_notificar,
-                    limit: config.attributes.limite
+                    limit: config.time_interval
                 });
             }
             else {
