@@ -126,13 +126,13 @@ export default class Chart extends React.Component {
           let config = JSON.parse(localStorage.getItem("config"));       
           if (!!config && config.notificar_push){
             if (max > config.limite) {
-              spawnNotification('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
+              //spawnNotification('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
             }
           }
 
           if (!!config && config.notificar_push) {
             if (max > config.limite) {
-              sendEmail('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
+              //sendEmail('Alerta!', `Identificamos que seu limite de ${max} foi ultrapassado`);
             }
           }
 
