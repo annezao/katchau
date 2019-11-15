@@ -452,7 +452,6 @@ async function readVoltageByDay(device, year, month, day) {
     const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyDay/${year}/${month}/${day}`);
 
     if (response.data.length) {
-        console.log(`Got an array with ${response.data.length} potencies.`);
 
         response.data.forEach(function (potency) {
             arr.push({ 'x': moment(potency.date), 'y': potency.value })
@@ -468,25 +467,11 @@ async function readVoltageByMonth(device, year, month) {
     const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyMonth/${year}/${month}`);
 
     if (response.data.length) {
-        console.log(`Got an array with ${response.data.length} potencies.`);
 
-        const groups = response.data.reduce((groups, result) => {
-            let day = new Date(result.date),
-                d = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0).toISOString()
-
-            if (!groups[d]) {
-                groups[d] = [];
-            }
-
-            groups[d].push(result.value);
-            return groups;
-        }, {});
-
-        // Edit: to add it in the array format instead
-        Object.keys(groups).forEach((date) => {
+        response.data.forEach((item) => {
             arr.push({
-                x: moment(date),
-                y: groups[date].reduce((x, y) => x + y, 0)
+                x: moment(new Date(year, month-1, item.day)),
+                y: item.total
             })
         });
     }
@@ -499,25 +484,12 @@ async function readVoltageByYear(device, year) {
     const response = await axios.get(`${BASE_URL}/api/Device/${device}/PotencyYear/${year}`);
 
     if (response.data.length) {
-        console.log(`Got an array with ${response.data.length} potencies.`);
 
-        const groups = response.data.reduce((groups, result) => {
-            let d = moment(result.date).set("date", 1).format('MMM')
-
-            if (!groups[d]) {
-                groups[d] = [];
-            }
-
-            groups[d].push(result.value);
-            return groups;
-        }, {});
-
-        // Edit: to add it in the array format instead
-        Object.keys(groups).forEach((month) => {
+        response.data.forEach((item) => {
             arr.push({
-                x: month,
-                y: groups[month].reduce((x, y) => x + y, 0),
-                month: moment().month(month).format("MMMM")
+                x: moment().month(item.month-1).format("MMM"),
+                y: item.total,
+                month: moment().month(item.month-1).format("MMMM")
             })
         });
     }
@@ -528,10 +500,10 @@ async function readVoltageByYear(device, year) {
 async function readVoltage(type, device, date) {
     switch (type) {
         case "dia":
-            return readVoltageByDay(device, date.getFullYear(), date.getMonth(), date.getDate());
+            return readVoltageByDay(device, date.getFullYear(), date.getMonth()+1, date.getDate());
 
         case "mes":
-            return readVoltageByMonth(device, date.getFullYear(), date.getMonth());
+            return readVoltageByMonth(device, date.getFullYear(), date.getMonth()+1);
 
         case "ano":
             return readVoltageByYear(device, new Date().getFullYear())

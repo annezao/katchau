@@ -3,7 +3,7 @@ import React from "react";
 import moment from "moment";
 import "moment/locale/pt-br";
 
-import { spawnNotification, sendEmail } from '../../services/notification'
+// import { spawnNotification, sendEmail } from '../../services/notification'
 
 import {
   CardTitle,
@@ -117,6 +117,7 @@ export default class Chart extends React.Component {
         //  VAI REPETIR O MÉTODO DE 1 EM 1 MINUTO !!        
         var interval =
           setInterval(() => {
+            console.log("INTERVAL");
             if (component.props.state.bigChartData === component.props.selectedChart) {
               console.log("reloading with interval");
               component._getChartDataService();
@@ -128,6 +129,9 @@ export default class Chart extends React.Component {
         if (voltages.length) {
           let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
             max = voltages.reduce((acc, curr) => acc + curr.y, 0);
+
+          min = Number(min.toFixed(2));
+          max = Number(max.toFixed(2));
             
           let config = JSON.parse(localStorage.getItem("config"));       
           if (!!config && config.notificar_push){
