@@ -50,7 +50,7 @@ export default class Chart extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log(`Cleaning interval for ${this.props.bigChartData}`);   
+    console.log(`Cleaning interval for ${this.props.bigChartData}`.);   
     clearInterval(this.state.interval);
   }
 
@@ -62,7 +62,7 @@ export default class Chart extends React.Component {
    _getChartDataService() {
 
      let component = this;
-     console.log(`Getting ${component.props.bigChartData} potencies.`);
+     console.log(`Requesting ${component.props.bigChartData} potencies.`);
      component.props.handleLoadingStatus(true);
 
     readVoltage(component.props.bigChartData, component.props.device.id, component.state.date)
@@ -74,10 +74,10 @@ export default class Chart extends React.Component {
         }
 
         //  VAI REPETIR O MÉTODO DE 1 EM 1 MINUTO !!   
-        console.log(`Setting interval for ${component.props.bigChartData}`);     
+        console.log(`Setting interval for ${component.props.bigChartData}.`);     
         var interval =
           setInterval(() => {
-            console.log(`- Getting interval for ${component.props.bigChartData} and the selected is ${component.props.selectedChart}...`);
+            console.log(`Getting interval for ${component.props.bigChartData} and the selected is ${component.props.selectedChart}...`);
             if (component.props.bigChartData === component.props.selectedChart) {
               console.log("...reloading with interval");
               component._getChartDataService();
