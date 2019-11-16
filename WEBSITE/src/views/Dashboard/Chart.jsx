@@ -18,8 +18,6 @@ import {
 // react plugin used to create charts
 import { Line } from "react-chartjs-2";
 
-import deviceServices from '../../services/devices';
-
 export default class Chart extends React.Component {
 
   constructor(props){
@@ -30,16 +28,15 @@ export default class Chart extends React.Component {
       date: props.state.date,
       options: null,
       loading: true,
-      progressMsg: "Buscando dados do dispositivo...",
-      device: null,
+      progressMsg: "Carregando dados do dispositivo...",
       interval: null
     };
-    console.log(props);    
-  //   this._getChartDataService = this._getChartDataService.bind(this);
+
     this.getChartOptions = this.getChartOptions.bind(this);
     this._getChartDataService = this._getChartDataService.bind(this);
     this.getChartData = this.getChartData.bind(this);
     this.getState = this.getState.bind(this);
+    this.setUniqueInterval = this.setUniqueInterval.bind(this);
   }
   //função criada para pegar o estado do componente chart
   getState(){
@@ -49,82 +46,43 @@ export default class Chart extends React.Component {
   //primeira chamada de função ao criar o componente
   componentDidMount() {
     moment.locale('pt-br');
+    this._getChartDataService();
+  }
 
-    const { id } = this.props.device;
-    console.log("id device: ", id);
+  componentWillUnmount() {
+    console.log(`Cleaning interval for ${this.props.bigChartData}`);   
+    clearInterval(this.state.interval);
+  }
 
-    let component = this;
-
-    deviceServices.readDevice(id)
-      .then(function (device) {
-
-        console.log("device: ", device);
-
-        if (!!device) {
-          component.setState({
-            device: device,
-            progressMsg: "Carregando dados do dispositivo..."
-          });
-
-          component._getChartDataService();
-        }
-        else {
-          component.setState({
-            loading: false,
-            data: [],
-            progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-          });
-        }
-
-      }).catch(function (error) {
-
-          console.log("Error: ", error);
-
-          if (error.response.status === 401){
-              localStorage.setItem('shallnotpass', "hold on")
-              window.location.href = '/login';
-          }
-          else {
-              component.setState({
-                loading: false,
-                data: [],
-                progressMsg: "Ocorreu um erro ao buscar dados do dispositivo."
-              });
-
-              if (!!component.state.interval) {
-                clearInterval(component.state.interval);
-              }
-
-              component.props.handleLoadingStatus(false);
-          }
-      });
+  setUniqueInterval() {
+    this._getChartDataService();
   }
 
    //método que pega dados do parse
    _getChartDataService() {
 
      let component = this;
-     console.log("getting ", component.props.state.bigChartData);
+     console.log(`Getting ${component.props.bigChartData} potencies.`);
      component.props.handleLoadingStatus(true);
 
-    readVoltage(component.props.state.bigChartData, component.state.device.id, component.state.date)
+    readVoltage(component.props.bigChartData, component.props.device.id, component.state.date)
       .then(function (voltages) {
 
         if (!!component.state.interval) {
+          console.log(`Cleaning existent ${component.props.bigChartData} interval.`);
           clearInterval(component.state.interval);
         }
 
-        //  VAI REPETIR O MÉTODO DE 1 EM 1 MINUTO !!        
+        //  VAI REPETIR O MÉTODO DE 1 EM 1 MINUTO !!   
+        console.log(`Setting interval for ${component.props.bigChartData}`);     
         var interval =
           setInterval(() => {
-            console.log("INTERVAL");
-            if (component.props.state.bigChartData === component.props.selectedChart) {
-              console.log("reloading with interval");
+            console.log(`- Getting interval for ${component.props.bigChartData} and the selected is ${component.props.selectedChart}...`);
+            if (component.props.bigChartData === component.props.selectedChart) {
+              console.log("...reloading with interval");
               component._getChartDataService();
             }
-            else
-              clearInterval(component.state.interval);
-          }, 60000); //1min
+          }, 20000); //1min
 
         if (voltages.length) {
           let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
@@ -197,7 +155,7 @@ export default class Chart extends React.Component {
 
   //método auxiliar para pegar opções do charts (o plugin pega as options e data separadamente)
   getChartOptions(min, max) {
-    return mainCharts[this.props.state.bigChartData].options(min, max, this.state.date);
+    return mainCharts[this.props.bigChartData].options(min, max, this.state.date);
   }
 
   //roda quando renderiza o componente do chart
@@ -210,8 +168,8 @@ export default class Chart extends React.Component {
     gradientStroke.addColorStop(0, "rgba(208, 72, 182, 0)"); //purple colors
 
     let config = {}
-    config.datasets = mainCharts[this.props.state.bigChartData].datasets(this.state.data, gradientStroke);
-    config.labels = mainCharts[this.props.state.bigChartData].labels(this.state.date);
+    config.datasets = mainCharts[this.props.bigChartData].datasets(this.state.data, gradientStroke);
+    config.labels = mainCharts[this.props.bigChartData].labels(this.state.date);
 
     return config;
   }
@@ -234,7 +192,7 @@ export default class Chart extends React.Component {
 
     let legend = this.props.legend;
     //para mostrar kW apenas de Dia
-    let cardTitle = this.props.state.bigChartData === "dia" ? 
+    let cardTitle = this.props.bigChartData === "dia" ? 
       <>
         <CardTitle tag="h2">
           <i className="tim-icons icon-bulb-63 text-primary"></i>

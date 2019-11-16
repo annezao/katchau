@@ -14,7 +14,6 @@ export default class Dia extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            bigChartData: "dia",
             watts: 0,
             date: new Date(),
           };
@@ -56,7 +55,8 @@ export default class Dia extends React.Component{
         <h5 className="mt-2 card-category text-lowercase">já foram gastos</h5>
         </>;
       return ( <>
-          <Chart
+        <Chart
+          bigChartData={"dia"}
           selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
