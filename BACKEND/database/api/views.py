@@ -67,10 +67,14 @@ class ObtainExpiringAuthToken(generics.GenericAPIView):
                 token.created = utc_now
                 token.save()
 
+            acc = Account.objects.get(user=user.pk);
+
             return Response({'token': token.key,
                              'id': user.pk,
                              'email': user.email,
-                             'username': user.username})
+                             'username': user.username,
+                             'config': acc.config.pk
+                             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
 
 # Potency
