@@ -29,6 +29,7 @@ from .views import (
     ObtainExpiringAuthToken,
     DayList,
     DayDetail,
+    send_push,
 )
 
 urlpatterns = [
@@ -58,4 +59,5 @@ urlpatterns = [
     path('api/User', UserList.as_view()),
     path('api/User/<int:pk>/', UserDetail.as_view()),
     path('api/User/<int:pk>/Device', UserDevice.as_view()),
+    path('api/send_push/', send_push)
 ]

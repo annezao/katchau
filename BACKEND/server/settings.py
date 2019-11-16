@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     #'rest_framework.authtoken',
     'corsheaders',
+    'webpush',
 ]
 
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/user/login/'
@@ -127,6 +128,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BO2MqJLU6LMTMySIgY2Kj4noDbMAR_J2KIdIdJcb8E6S5cXzcKSXQLIjp8U3xw-KtGQ2yp7Z_sbPqxZxLspuQ8M",
+   "VAPID_PRIVATE_KEY": "ZdHD2jyOzWz4syh47oyHKX6xrUU_DjAT9Y6r2aeE7-A",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
