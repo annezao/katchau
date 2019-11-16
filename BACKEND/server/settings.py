@@ -27,7 +27,11 @@ SECRET_KEY = '$war(cb(1&tob@d6#-lvi5%wz5izye5e&irs%9s$^$wm#q+g7j'
 DEBUG = False
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'katchau-api.herokuapp.com']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost',
+                 'katchau-api.herokuapp.com', 
+                 'katchau-dev.herokuapp.com', 
+                 'katchau-api-prod.herokuapp.com'
+                 'katchau-prod.herokuapp.com']
 
 
 # Application definition
@@ -92,7 +96,7 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
