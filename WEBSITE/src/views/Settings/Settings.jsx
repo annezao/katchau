@@ -54,11 +54,21 @@ class Settings extends React.Component {
         var component = this;
         component.handleLoadingStatus(true);
 
-        configServices.readConfig(1)
+        let user = localStorage.getItem('_u');
+        if(!!user) {
+            user = JSON.parse(user);
+        }
+        else{
+            return;
+        }
+
+        //console.log(user.config)
+        configServices.readConfig(user.config)
             .then(function (res) {
             const config = res.data;
             if (!!config) {
-
+                //console.log(config)
+                
                 // localStorage.setItem("config", JSON.stringify({
                 //     notificar_email: config.get("notificar_email"),
                 //     notificar_push: config.get("notificar_push"),
@@ -84,7 +94,7 @@ class Settings extends React.Component {
                 });
             }
             
-            console.log(config);
+            //console.log(config);
             component.props.handleLoadingStatus(false);
         })
         .catch(function (error) {
@@ -106,7 +116,7 @@ class Settings extends React.Component {
     }      
 
     updateConfig(checkedEmail, checkedPush, checkedVibrate, checkedSound, limit, callback) {
-
+        console.log('CONGFIFI');
         var component = this;
 
         configServices
@@ -120,20 +130,22 @@ class Settings extends React.Component {
                 limit)
             .then(function (config) {
                 if (!!config) {
+                    
                     console.log(config);
-                    localStorage.setItem("config", JSON.stringify({
-                        notificar_email: config.get("notificar_email"),
-                        notificar_push: config.get("notificar_push"),
-                        limite: config.get("limite")
-                    }));
+
+                    // localStorage.setItem("config", JSON.stringify({
+                    //     notificar_email: config.get("notificar_email"),
+                    //     notificar_push: config.get("notificar_push"),
+                    //     limite: config.get("limite")
+                    // }));
                     component.setState({
                         id: config.id,
-                        checkedEmail: config.attributes.notificar_email,
-                        checkedPush: config.attributes.notificar_push,
-                        checkedVibrate: config.attributes.vibrate,
-                        checkedSound: config.attributes.som,
+                        checkedEmail: config.email_notifications,
+                        checkedPush: config.push_notifications,
+                        checkedVibrate: config.vibrate,
+                        checkedSound: config.sound,
                         // value: config.attributes.intervalo_notificar,
-                        limit: config.attributes.limite
+                        limit: config.time_interval
                     });
                     callback();
                 }
@@ -141,14 +153,7 @@ class Settings extends React.Component {
             })
             .catch(function (error) {
                 component.props.handleLoadingStatus(false);
-
-                component.props.notify({
-                    place: "tr",
-                    message: ("Error: " + error.code + " " + error.message),
-                    type: "danger",
-                    icon: "tim-icons icon-alert-circle-exc"
-                });
-                console.log("Error: " + error.code + " " + error.message);
+                console.log(error.message)
             });
     }
      

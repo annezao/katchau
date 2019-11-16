@@ -1,27 +1,28 @@
+import { BASE_URL } from '../variables/env'
 const axios = require('axios');
 
 const configServices = {
     async readConfig(id) {
         const config = await axios.get(
-        `http://127.0.0.1:8000/api/Config/`+id 
+        `${BASE_URL}/api/Config/`+id 
         );
+
         console.log(config.data)
         return config;
     },
-    // async updatingConfig(id, notificar_email, notificar_push, vibrate, som, limite) {
-    //     console.log("cofig")
-    //     let Config = Parse.Object.extend('Config')
-    //     const query = new Parse.Query(Config);
-    //     let config = await query.get(id); 
-
-    //     config.set('notificar_email', notificar_email)
-    //     config.set('notificar_push', notificar_push)
-    //     config.set('vibrate', vibrate)
-    //     config.set('som', som)
-    //     // config.set('intervalo_notificar', intervalo_notificar)
-    //     config.set('limite', limite)
-    //     return config.save();
-    // }
+    async updatingConfig(id, email_notifications, push_notifications,
+        vibrate, sound, time_interval) {
+        const config = {id: id,
+            email_notifications: email_notifications,
+            push_notifications: push_notifications,
+            vibrate: vibrate, 
+            sound: sound,
+            time_interval: time_interval};
+        console.log(config)
+        const res = await axios.put(`${BASE_URL}/api/Config/${id}`, config);
+        console.log(res.data)
+        return res.data;
+    }
 };
 
 export default configServices;
