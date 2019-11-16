@@ -38,7 +38,7 @@ class Day(models.Model):
 
 class Potency(models.Model):
     value = models.FloatField(default=0)
-    date = models.DateTimeField(null=True)
+    date = models.DateTimeField(null=True, default=timezone.now())
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
