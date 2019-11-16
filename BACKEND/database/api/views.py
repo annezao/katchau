@@ -144,7 +144,8 @@ class DevicePotencyDay(APIView):
     def get(self,  request, pk, pk2, pk3, pk4, format=None):
         device = self.get_object(pk)
         serializer = PotencySerializer(
-            device.potency_set.filter(day=pk2, month=pk3, year=pk4), many=True)
+            device.potency_set.filter(day=pk2, month=pk3, year=pk4).order_by('date'), many=True
+        )
         return Response(serializer.data)
 
 # Month

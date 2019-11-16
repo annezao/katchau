@@ -61,7 +61,7 @@ let mainCharts = {
             ]
         },
         options: (min, max, date) => {
-            console.log("charts.jsx options: (min, max)", min, max);
+            // console.log("charts.jsx options: (min, max)", min, max);
             return {
                 maintainAspectRatio: false,
                 legend: {

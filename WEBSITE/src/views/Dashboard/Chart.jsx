@@ -50,7 +50,7 @@ export default class Chart extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log(`Cleaning interval for ${this.props.bigChartData}`.);   
+    console.log(`Cleaning interval for ${this.props.bigChartData}.`);   
     clearInterval(this.state.interval);
   }
 
@@ -82,7 +82,7 @@ export default class Chart extends React.Component {
               console.log("...reloading with interval");
               component._getChartDataService();
             }
-          }, 20000); //1min
+          }, 60000); //1min
 
         if (voltages.length) {
           let min = voltages.reduce((min, p) => p.y < min ? p.y : min, voltages[0].y),
