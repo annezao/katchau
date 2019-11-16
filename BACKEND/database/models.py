@@ -68,7 +68,7 @@ class Potency(models.Model):
     utc_now = timezone.now()
     utc_now = utc_now.replace(tzinfo=pytz.utc)
     value = models.FloatField(default=0)
-    date = models.DateTimeField(null=True)
+    date = models.DateTimeField(null=True, default=utc_now)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=utc_now.month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=utc_now.year)
