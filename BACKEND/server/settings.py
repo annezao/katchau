@@ -157,6 +157,7 @@ STATICFILES_DIRS = (
 # https://github.com/adamchainz/django-cors-headers#cors_origin_whitelist
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'http://localhost',
     'https://katchau-dev.herokuapp.com',
     'http://katchau-dev.herokuapp.com'
 ]
