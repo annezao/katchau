@@ -5,8 +5,10 @@ import Errors from '../variables/errors';
 import NotificationAlert from "react-notification-alert";
 
 import logo from "../assets/img/logo.png"
+import { FiZap } from "react-icons/fi";
 
 import {
+    Container,
     FormGroup,
     Label,
     Input,
@@ -181,7 +183,12 @@ class Login extends React.Component {
                         </Col>
                     </Row>
                 </div>
-                   
+
+                <Container fluid>
+                    <p className="copyright text-center">
+                        © Copyright {new Date().getFullYear()} | KATCHAU <FiZap /> Company.
+                    </p>
+                </Container>  
             </div>
 
         );
