@@ -2,14 +2,15 @@ import React from 'react';
 import Auth from '../services/auth';
 import Errors from '../variables/errors';
 
-import Progress from 'components/ProgressBar/Progress'
 import NotificationAlert from "react-notification-alert";
+
+import logo from "../assets/img/logo.png"
 
 import {
     FormGroup,
     Label,
     Input,
-    FormText,
+    // FormText,
     Button,
     Card,
     CardBody,
@@ -26,7 +27,7 @@ class Login extends React.Component {
             username: 'annezao',
             password: 'senhaboladona',
             rememberMe: false,
-            isLoading: true,
+            isLoading: false,
             redirectUrl: (props.location.redirectFrom ? props.location.redirectFrom : null )
         };
 
@@ -60,7 +61,6 @@ class Login extends React.Component {
                 type: "primary"
             });
         }
-        this.handleLoadingStatus(false);
     }
 
     handleRememberMeClick() {
@@ -80,13 +80,13 @@ class Login extends React.Component {
 
         var _class = this,
             _Errors = Errors;
-        _class.handleLoadingStatus(true);
+
+        this.handleLoadingStatus(true);
 
         Auth.signIn(this.state.username, this.state.password)
             .then((user) => {
                 console.log('User logged with name: ' + user.username + ' and email: ' + user.email);
                 const { history } = this.props;
-                _class.handleLoadingStatus(false);
                 history.push("/admin/dashboard");
         }, 
         function(error) {
@@ -109,8 +109,8 @@ class Login extends React.Component {
 
         return (
 
-            <div className="content">
-                <Progress isAnimating={this.state.isLoading} />
+            <div className="content" style={this.state.isLoading ? { pointerEvents: "none" } : { pointerEvents: "auto" }}>
+                {/* <Progress isAnimating={this.state.isLoading} /> */}
                 <div className="react-notification-alert-container">
                     <NotificationAlert ref="notificationAlert" />
                 </div>
@@ -127,15 +127,15 @@ class Login extends React.Component {
                                         <img
                                             alt="..."
                                             className="avatar"
-                                            src={"https://pbs.twimg.com/media/DMgZ2fxXUAEqrFP.jpg"}
+                                            src={logo}
                                         />
                                         <h3 className="description mb-2">Faça login</h3>
                                     </div>
                                     <Form onSubmit={this.handleSubmit}>
-                                        <FormText color="muted text-center mb-4">
+                                        {/* <FormText color="muted text-center mb-4">
                                             Para testes use como usuário <b>annezao </b> 
                                             e a senha <b>senhaboladona</b>
-                                        </FormText>
+                                        </FormText> */}
                                         <FormGroup>
                                             <Label for="exampleEmail">Usuário</Label>
                                             <Input
@@ -172,7 +172,7 @@ class Login extends React.Component {
                                         </FormGroup> */}
                                         <div className="text-center pt-3">
                                             <Button color="primary" type="submit">
-                                                Entrar
+                                                {this.state.isLoading ? "Entrando..." : "Entrar"}
                                             </Button>
                                         </div>
                                     </Form>

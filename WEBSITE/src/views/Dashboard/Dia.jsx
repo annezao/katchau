@@ -42,7 +42,7 @@ export default class Dia extends React.Component{
 
     render(){
       const component = this;
-      let legend = <>
+      let legend = <div className="p-0 col-md-3">
         <DatePicker
             selected={this.state.date}
             onChange={component.handleChange}
@@ -53,7 +53,7 @@ export default class Dia extends React.Component{
             maxDate={new Date()}
           />
         <h5 className="mt-2 card-category text-lowercase">já foram gastos</h5>
-        </>;
+        </div>;
       return ( <>
         <Chart
           bigChartData={"dia"}

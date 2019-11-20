@@ -124,9 +124,11 @@ let mainCharts = {
                             },
                             type: 'time',
                             time: {
-                                unit: 'hour',
+                                unit: 'minute',
+                                stepSize: 1,
                                 displayFormats: {
-                                    hour: 'HH:mm'
+                                    'minute': 'HH:mm',
+                                    'hour': 'HH:mm'
                                 }
                             }
                         }
@@ -134,13 +136,13 @@ let mainCharts = {
                 },
                 pan: {
                     enabled: true,
-                    mode: "y",
+                    mode: "xy",
                     rangeMin: {
-                        x: moment(date).valueOf(),
+                        // x: moment(date).add({ hours: 0 }).valueOf(),
                         y: 0
                     },
                     rangeMax: {
-                        x: moment(date).add({ hours: 23 }).valueOf(),
+                        // x: moment(date).add({ hours: 23 }).valueOf(),
                         y: (parseInt(max) + 1000)
                     }
                 },
