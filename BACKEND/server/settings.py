@@ -23,11 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$war(cb(1&tob@d6#-lvi5%wz5izye5e&irs%9s$^$wm#q+g7j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = False
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = ['0.0.0.0', 'localhost', 'katchau-api.herokuapp.com']
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost',
+                 'katchau-api.herokuapp.com', 
+                 'katchau-dev.herokuapp.com', 
+                 'katchau-api-prod.herokuapp.com'
+                 'katchau-prod.herokuapp.com']
 
 
 # Application definition
@@ -42,7 +46,10 @@ INSTALLED_APPS = [
     'database',
     'rest_framework',
     'webpack_loader',
+
+    #'rest_framework.authtoken',
     'corsheaders',
+    'webpush',
 ]
 
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/user/login/'
@@ -78,15 +85,19 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ]
+        'database.authentication.ExpiringTokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'EXCEPTION_HANDLER': 'database.utils.custom_exception_handler'
 }
 
 WSGI_APPLICATION = 'server.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -117,6 +128,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BO2MqJLU6LMTMySIgY2Kj4noDbMAR_J2KIdIdJcb8E6S5cXzcKSXQLIjp8U3xw-KtGQ2yp7Z_sbPqxZxLspuQ8M",
+   "VAPID_PRIVATE_KEY": "ZdHD2jyOzWz4syh47oyHKX6xrUU_DjAT9Y6r2aeE7-A",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -146,5 +162,8 @@ STATICFILES_DIRS = (
 # A list of origins that are authorized to make cross-site HTTP requests.
 # https://github.com/adamchainz/django-cors-headers#cors_origin_whitelist
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://localhost',
+    'https://katchau-dev.herokuapp.com',
+    'http://katchau-dev.herokuapp.com'
 ]

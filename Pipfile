@@ -16,6 +16,7 @@ django-cors-headers = "*"
 pytz = "*"
 six = "*"
 djongo = "*"
+django-webpush = "*"
 
 [requires]
 python_version = "3.8"

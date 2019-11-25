@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
+from rest_framework.authtoken import views
 
 from .views import (
     PotencyList,
@@ -24,11 +25,16 @@ from .views import (
     MonthDetail,
     YearList,
     YearDetail,
+    ObtainMultiAuthToken,
+    ObtainExpiringAuthToken,
     DayList,
     DayDetail,
+    send_push,
 )
 
 urlpatterns = [
+    path('api/auth-iot/', ObtainMultiAuthToken.as_view()),
+    path('api/auth/', ObtainExpiringAuthToken.as_view()),
     path('api/Potency/', PotencyList.as_view()),
     path('api/Potency/<int:pk>/', PotencyDetail.as_view()),
     path('api/Device/', DeviceList.as_view()),
@@ -53,4 +59,5 @@ urlpatterns = [
     path('api/User', UserList.as_view()),
     path('api/User/<int:pk>/', UserDetail.as_view()),
     path('api/User/<int:pk>/Device', UserDevice.as_view()),
+    path('api/send_push/', send_push)
 ]

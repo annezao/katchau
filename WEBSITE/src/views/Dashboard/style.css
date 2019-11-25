@@ -67,6 +67,6 @@ select.form-control option, select.form-control option:hover, select.form-contro
 
 @media (min-width: 768px) { 
     .card-chart .chart-area.custom {
-        height: 350px;
+        height: 345px;
     }
 }

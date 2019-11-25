@@ -2,15 +2,106 @@ from django.http import Http404, JsonResponse
 from django.db.models import Sum, Count
 from database.models import *
 from .serializers import *
-from rest_framework import status
+from rest_framework import status, viewsets, generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import generics
 from rest_framework import viewsets
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from webpush import send_user_notification
+import json
+
+@require_POST
+def send_push(request):
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+        payload = {'head': "Hello!", 'body': 'World'}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+
+
+# views.py
+
+from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.response import Response
+import datetime
+from django.utils import timezone
+from ..models import Token
+import pytz
+
+# Authentication classes
+
+class ObtainMultiAuthToken(ObtainAuthToken):
+    '''
+    create persistent tokens that user can manually create for connecting devices
+    '''
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            name = request.data['token_name']
+            token, created = Token.objects.get_or_create(user=user, name=name)
+            
+            return Response({'token': token.key,
+                             'token_name': name,
+                             'user': user.username})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
+ 
+class ObtainExpiringAuthToken(generics.GenericAPIView):
+    '''
+    Create token that expires every 24hrs
+    Used for login in users from mobile and desktop clients
+    '''
+
+    permission_classes = (AllowAny,)
+    serializer_class = ObtainTokenSerializer
+ 
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+
+            user = serializer.user
+
+            # if get_or_create() didn't have to create an object, variable create is FALSE
+            token, created = Token.objects.get_or_create(user=user, name='auth-token')
+            utc_now = timezone.now()
+            utc_now = utc_now.replace(tzinfo=pytz.utc)
+
+            # if the object exist and isn't valid (less than 24hrs), so delet it and create another one
+            if not created and token.created < utc_now - datetime.timedelta(hours=24):
+                token.delete()
+                token = Token.objects.create(user=user, name='auth-token')
+                token.created = utc_now
+                token.save()
+
+            acc = Account.objects.get(user=user.pk);
+
+            return Response({'token': token.key,
+                             'id': user.pk,
+                             'email': user.email,
+                             'username': user.username,
+                             'config': acc.config.pk
+                             })
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
 
 # Potency
-
 
 class PotencyList(APIView):
 
@@ -81,11 +172,11 @@ class DevicePotencyDay(APIView):
     def get(self,  request, pk, pk2, pk3, pk4, format=None):
         device = self.get_object(pk)
         serializer = PotencySerializer(
-            device.potency_set.filter(day=pk2, month=pk3, year=pk4), many=True)
+            device.potency_set.filter(day=pk2, month=pk3, year=pk4).order_by('date'), many=True
+        )
         return Response(serializer.data)
 
 # Month
-
 
 class MonthList(APIView):
 
