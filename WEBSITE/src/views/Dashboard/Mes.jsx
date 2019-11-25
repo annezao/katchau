@@ -15,7 +15,6 @@ export default class Mes extends React.Component{
   constructor(props){
       super(props);
       this.state = {
-          bigChartData: "mes",
           date: new Date(),
           value: true,
         };
@@ -65,6 +64,8 @@ export default class Mes extends React.Component{
       </Col>;
       return (
         <Chart
+          bigChartData={"mes"}
+          selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}

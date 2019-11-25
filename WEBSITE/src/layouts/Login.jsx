@@ -1,16 +1,18 @@
 import React from 'react';
 import Auth from '../services/auth';
-import errors from '../variables/errors';
+import Errors from '../variables/errors';
 
-import Progress from 'components/ProgressBar/Progress'
 import NotificationAlert from "react-notification-alert";
-// import errorCode from "../variables/errors.jsx";
+
+import logo from "../assets/img/logo.png"
+import { FiZap } from "react-icons/fi";
 
 import {
+    Container,
     FormGroup,
     Label,
     Input,
-    FormText,
+    // FormText,
     Button,
     Card,
     CardBody,
@@ -24,10 +26,10 @@ class Login extends React.Component {
         super(props);
         
         this.state = {
-            email: 'katchaumarquinhos@gmail.com',
-            password: 'secret',
+            username: 'annezao',
+            password: 'senhaboladona',
             rememberMe: false,
-            isLoading: true,
+            isLoading: false,
             redirectUrl: (props.location.redirectFrom ? props.location.redirectFrom : null )
         };
 
@@ -61,7 +63,6 @@ class Login extends React.Component {
                 type: "primary"
             });
         }
-        this.handleLoadingStatus(false);
     }
 
     handleRememberMeClick() {
@@ -79,33 +80,30 @@ class Login extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        var _class = this;
-        _class.handleLoadingStatus(true);
+        var _class = this,
+            _Errors = Errors;
 
-        Auth.signIn(this.state.email, this.state.password)
+        this.handleLoadingStatus(true);
+
+        Auth.signIn(this.state.username, this.state.password)
             .then((user) => {
-                console.log('User logged with name: ' + user.get("username") + ' and email: ' + user.get("email"));
+                console.log('User logged with name: ' + user.username + ' and email: ' + user.email);
                 const { history } = this.props;
-                _class.handleLoadingStatus(false);
                 history.push("/admin/dashboard");
         }, 
-        (error) => {
+        function(error) {
             _class.notify({
                 place: "tr",
-                message: errors[error.code].message,
+                message: !!error.response ? _Errors.login[error.response.data.status_code].message : _Errors.disabled.message,
                 type: "danger",
                 icon: "tim-icons icon-alert-circle-exc"
             });
-            console.log("Error on login: " + error.code + " " + error.message);
+            console.log(error);
             _class.handleLoadingStatus(false);
         });
 
         return false;
     }
-
-    // verifyUser() {
-    //     console.log(Parse.User.current())
-    // }
 
     render() {
 
@@ -113,11 +111,8 @@ class Login extends React.Component {
 
         return (
 
-            <div className="content">
-                <Progress isAnimating={this.state.isLoading} />
-                {/* {console.log(state.props)} */}
-                {/* {console.log(Auth.isAuthenticated)} */}
-                {/* <button onClick={this.verifyUser}>Current User</button> */}
+            <div className="content" style={this.state.isLoading ? { pointerEvents: "none" } : { pointerEvents: "auto" }}>
+                {/* <Progress isAnimating={this.state.isLoading} /> */}
                 <div className="react-notification-alert-container">
                     <NotificationAlert ref="notificationAlert" />
                 </div>
@@ -134,23 +129,23 @@ class Login extends React.Component {
                                         <img
                                             alt="..."
                                             className="avatar"
-                                            src={"https://pbs.twimg.com/media/DMgZ2fxXUAEqrFP.jpg"}
+                                            src={logo}
                                         />
                                         <h3 className="description mb-2">Faça login</h3>
                                     </div>
                                     <Form onSubmit={this.handleSubmit}>
-                                        <FormText color="muted text-center mb-4">
-                                            Para testes use o email <b>katchaumarquinhos@gmail.com </b> 
-                                            e a senha <b>secret</b>
-                                        </FormText>
+                                        {/* <FormText color="muted text-center mb-4">
+                                            Para testes use como usuário <b>annezao </b> 
+                                            e a senha <b>senhaboladona</b>
+                                        </FormText> */}
                                         <FormGroup>
-                                            <Label for="exampleEmail">Email</Label>
+                                            <Label for="exampleEmail">Usuário</Label>
                                             <Input
-                                                type="email"
-                                                name="email"
-                                                id="exampleEmail"
-                                                placeholder="Digite seu email"
-                                                value={this.state.email}
+                                                type="text"
+                                                name="username"
+                                                id="formUsername"
+                                                placeholder="Digite seu usuário"
+                                                value={this.state.username}
                                                 autoFocus onChange={this.handleUsernameChange}
                                                 required
                                             />
@@ -160,7 +155,7 @@ class Login extends React.Component {
                                             <Input
                                                 type="password"
                                                 name="password"
-                                                id="examplePassword"
+                                                id="formPassword"
                                                 placeholder="Digite sua senha"
                                                 autoComplete="off"
                                                 value={this.state.password}
@@ -179,7 +174,7 @@ class Login extends React.Component {
                                         </FormGroup> */}
                                         <div className="text-center pt-3">
                                             <Button color="primary" type="submit">
-                                                Entrar
+                                                {this.state.isLoading ? "Entrando..." : "Entrar"}
                                             </Button>
                                         </div>
                                     </Form>
@@ -188,7 +183,12 @@ class Login extends React.Component {
                         </Col>
                     </Row>
                 </div>
-                   
+
+                <Container fluid>
+                    <p className="copyright text-center">
+                        © Copyright {new Date().getFullYear()} | KATCHAU <FiZap /> Company.
+                    </p>
+                </Container>  
             </div>
 
         );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert   } from 'reactstrap';
 // import './style.css'
-import {readNotifications} from '../../variables/notification'
+import servicesNotifications from '../../services/notification'
 
 class Notification extends React.Component {
     constructor(props) {
@@ -21,7 +21,7 @@ class Notification extends React.Component {
 
     let component = this;
 
-    readNotifications()
+    servicesNotifications.readNotifications()
     .then(function (notifications) {
 
         console.log(notifications);
@@ -54,8 +54,8 @@ class Notification extends React.Component {
             this.state.notifications.length > 0 ? (
                 this.state.notifications.map((notification, index) => (
                   <Alert color="danger" key={index}>
-                    <p><strong>{notification.get("title")}</strong></p>
-                    <p>{notification.get("description")}</p>
+                    <p><strong>{notification.title}</strong></p>
+                    <p>{notification.description}</p>
                   </Alert>
                 )
               )
