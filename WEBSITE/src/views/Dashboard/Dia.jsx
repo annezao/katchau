@@ -14,7 +14,6 @@ export default class Dia extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            bigChartData: "dia",
             watts: 0,
             date: new Date(),
           };
@@ -42,9 +41,8 @@ export default class Dia extends React.Component{
     }
 
     render(){
-      console.log("dia");
       const component = this;
-      let legend = <>
+      let legend = <div className="p-0 col-md-3">
         <DatePicker
             selected={this.state.date}
             onChange={component.handleChange}
@@ -55,9 +53,11 @@ export default class Dia extends React.Component{
             maxDate={new Date()}
           />
         <h5 className="mt-2 card-category text-lowercase">já foram gastos</h5>
-        </>;
+        </div>;
       return ( <>
-          <Chart
+        <Chart
+          bigChartData={"dia"}
+          selectedChart={this.props.selectedChart}
           handleLoadingStatus={this.props.handleLoadingStatus}
           legend={legend}
           state={this.state}

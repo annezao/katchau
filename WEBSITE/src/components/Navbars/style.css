@@ -10,7 +10,8 @@
     position: relative;
     float: right;
     background: rgb(145, 170, 182);
-    margin: 0.3rem 1rem;
+    margin: 4.0rem 1rem;
+    animation-duration: 0s;
 }
 .dropdown-toggle.custom:after {
     color: transparent;

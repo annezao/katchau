@@ -4,13 +4,14 @@ import './style.css'
 
 /*Icones*/
 import { FiMail, FiVolume2 } from 'react-icons/fi';
-import { MdVibration, MdNotifications, MdNotificationsActive } from 'react-icons/md';
+import { MdVibration, MdNotifications } from 'react-icons/md';
 
 // reactstrap components
 import {
   Card,
- // CardHeader,
- // CardTitle,
+  Input,
+  Button,
+  FormGroup,
   CardBody,
   CardText,
   Row,
@@ -34,7 +35,8 @@ class Settings extends React.Component {
             checkedInterval: false,
             onColor: "#a85bd5",
             onHandleColor: "#8b1acc",
-            value: 0,
+            // value: 0,
+            limit: 0,
             id: null
         };
             
@@ -42,7 +44,8 @@ class Settings extends React.Component {
         this.handleChangePush = this.handleChangePush.bind(this);
         this.handleChangeVibrate = this.handleChangeVibrate.bind(this);
         this.handleChangeSound = this.handleChangeSound.bind(this);
-        this.handleChangeInterval = this.handleChangeInterval.bind(this);
+        // this.handleChangeInterval = this.handleChangeInterval.bind(this);
+        this.handleChangeLimit = this.handleChangeLimit.bind(this);
         //
         this.handleLoadingStatus = this.handleLoadingStatus.bind(this)
       }
@@ -51,16 +54,35 @@ class Settings extends React.Component {
         var component = this;
         component.handleLoadingStatus(true);
 
-        configServices.readConfig()
-            .then(function (config) {
+        let user = localStorage.getItem('_u');
+        if(!!user) {
+            user = JSON.parse(user);
+        }
+        else{
+            return;
+        }
+
+        //console.log(user.config)
+        configServices.readConfig(user.config)
+            .then(function (res) {
+            const config = res.data;
             if (!!config) {
+                //console.log(config)
+                
+                // localStorage.setItem("config", JSON.stringify({
+                //     notificar_email: config.get("notificar_email"),
+                //     notificar_push: config.get("notificar_push"),
+                //     limite: config.get("limite")
+                // }));
+
                 component.setState({
                     id: config.id,
-                    checkedEmail: config.attributes.notificar_email,
-                    checkedPush: config.attributes.notificar_push,
-                    checkedVibrate: config.attributes.vibrate,
-                    checkedSound: config.attributes.som,
-                    value: config.attributes.intervalo_notificar
+                    checkedEmail: config.email_notifications,
+                    checkedPush: config.push_notifications,
+                    checkedVibrate: config.vibrate,
+                    checkedSound: config.sound,
+                    // value: config.attributes.intervalo_notificar,
+                    limit: config.time_interval
                 });
             }
             else {
@@ -72,7 +94,7 @@ class Settings extends React.Component {
                 });
             }
             
-            console.log(config);
+            //console.log(config);
             component.props.handleLoadingStatus(false);
         })
         .catch(function (error) {
@@ -93,8 +115,8 @@ class Settings extends React.Component {
           this.props.handleLoadingStatus(value);
     }      
 
-    updateConfig(checkedEmail, checkedPush, checkedVibrate, checkedSound, value, callback) {
-
+    updateConfig(checkedEmail, checkedPush, checkedVibrate, checkedSound, limit, callback) {
+        console.log('CONGFIFI');
         var component = this;
 
         configServices
@@ -104,24 +126,34 @@ class Settings extends React.Component {
                 checkedPush,
                 checkedVibrate,
                 checkedSound,
-                value)
+                // value,
+                limit)
             .then(function (config) {
                 if (!!config) {
+                    
                     console.log(config);
+
+                    // localStorage.setItem("config", JSON.stringify({
+                    //     notificar_email: config.get("notificar_email"),
+                    //     notificar_push: config.get("notificar_push"),
+                    //     limite: config.get("limite")
+                    // }));
+                    component.setState({
+                        id: config.id,
+                        checkedEmail: config.email_notifications,
+                        checkedPush: config.push_notifications,
+                        checkedVibrate: config.vibrate,
+                        checkedSound: config.sound,
+                        // value: config.attributes.intervalo_notificar,
+                        limit: config.time_interval
+                    });
                     callback();
                 }
                 component.props.handleLoadingStatus(false);
             })
             .catch(function (error) {
                 component.props.handleLoadingStatus(false);
-
-                component.props.notify({
-                    place: "tr",
-                    message: ("Error: " + error.code + " " + error.message),
-                    type: "danger",
-                    icon: "tim-icons icon-alert-circle-exc"
-                });
-                console.log("Error: " + error.code + " " + error.message);
+                console.log(error.message)
             });
     }
      
@@ -133,7 +165,8 @@ class Settings extends React.Component {
             this.state.checkedPush,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedEmail: checked })
         );
     }
@@ -145,7 +178,8 @@ class Settings extends React.Component {
             checked,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedPush: checked })
         );
     }
@@ -157,7 +191,8 @@ class Settings extends React.Component {
             this.state.checkedPush,
             checked,
             this.state.checkedSound,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedVibrate: checked })
         );
     }
@@ -169,21 +204,37 @@ class Settings extends React.Component {
             this.state.checkedPush,
             this.state.checkedVibrate,
             checked,
-            this.state.value,
+            // this.state.value,
+            this.state.limit,
             () => this.setState({ checkedSound: checked })
         );
     }
-    handleChangeInterval(e) {
+    // handleChangeInterval(e) {
+    //     this.handleLoadingStatus(true);
+    //     let value = parseInt(e.target.value);
+
+    //     this.updateConfig(
+    //         this.state.checkedEmail,
+    //         this.state.checkedPush,
+    //         this.state.checkedVibrate,
+    //         this.state.checkedSound,
+    //         value,
+    //         this.state.limit,
+    //         () => this.setState({ value })
+    //     );
+    // }
+    handleChangeLimit(e) {
         this.handleLoadingStatus(true);
-        let value = parseInt(e.target.value);
+        let limit = parseInt(e.target.parentElement.parentNode.querySelector("input").value);
 
         this.updateConfig(
             this.state.checkedEmail,
             this.state.checkedPush,
             this.state.checkedVibrate,
             this.state.checkedSound,
-            value,
-            () => this.setState({ value })
+            // this.state.value,
+            limit,
+            () => this.setState({ limit })
         );
     }
     
@@ -289,7 +340,7 @@ class Settings extends React.Component {
                                         </label>
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col>
                                         <CardText><MdNotificationsActive /> Intervalo de notificação</CardText>
                                     </Col>
@@ -304,6 +355,23 @@ class Settings extends React.Component {
                                                 <Col><p style={{ textAlign: 'right' }}>24h</p></Col>
                                             </Row>
                                         </div>
+                                    </Col>
+                                </Row> */}
+                                <Row>
+                                    <Col className="pr-md-1" sm="3" xs="3">
+                                        <FormGroup>
+                                        <p>Limite</p>
+                                        <Input
+                                            defaultValue={this.state.limit}
+                                            placeholder="0 kW"
+                                            type="number"/>
+                                        </FormGroup>
+                                    </Col>
+                                    <Col className="botao">
+                                        <Button onClick={this.handleChangeLimit}
+                                        className="btn-fill" color="primary" type="button">
+                                            Salvar limite
+                                        </Button>
                                     </Col>
                                 </Row>
                             </>

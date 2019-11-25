@@ -8,16 +8,16 @@ export default class Ano extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            bigChartData: "ano",
             date: new Date(),
             value: null,
           };
     }
     
     render(){        
-        console.log("ano")
         return ( 
             <Chart
+                bigChartData={"ano"}
+                selectedChart={this.props.selectedChart}
                 handleLoadingStatus={this.props.handleLoadingStatus}
                 legend={this.props.legend}
                 state={this.state}

@@ -9,9 +9,9 @@ class Dashboard extends React.Component {
     return (
       <>
         <div className="content pb-0">
-        <ChartFrame
-            handleLoadingStatus={this.props.handleLoadingStatus}
-            device={this.props.match.params}/>
+            <ChartFrame
+                handleLoadingStatus={this.props.handleLoadingStatus}
+                device={this.props.match.params}/>
         </div>
       </>
     )
