@@ -23,9 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '$war(cb(1&tob@d6#-lvi5%wz5izye5e&irs%9s$^$wm#q+g7j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost',
+                 'katchau-api.herokuapp.com', 
+                 'katchau-dev.herokuapp.com', 
+                 'katchau-api-prod.herokuapp.com'
+                 'katchau-prod.herokuapp.com']
 
 
 # Application definition
@@ -42,9 +48,10 @@ INSTALLED_APPS = [
     'webpack_loader',
 ]
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/user/login/'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,11 +79,21 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'database.authentication.ExpiringTokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'EXCEPTION_HANDLER': 'database.utils.custom_exception_handler'
+}
+
 WSGI_APPLICATION = 'server.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+# docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -107,6 +124,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": "BO2MqJLU6LMTMySIgY2Kj4noDbMAR_J2KIdIdJcb8E6S5cXzcKSXQLIjp8U3xw-KtGQ2yp7Z_sbPqxZxLspuQ8M",
+   "VAPID_PRIVATE_KEY": "ZdHD2jyOzWz4syh47oyHKX6xrUU_DjAT9Y6r2aeE7-A",
+   "VAPID_ADMIN_EMAIL": "admin@example.com"
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -122,7 +144,22 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
+# Static files (CSS, JavaScript, Images)'
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+# CORS Origin Whitelist
+# A list of origins that are authorized to make cross-site HTTP requests.
+# https://github.com/adamchainz/django-cors-headers#cors_origin_whitelist
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://localhost',
+    'https://katchau-dev.herokuapp.com',
+    'http://katchau-dev.herokuapp.com'
+]

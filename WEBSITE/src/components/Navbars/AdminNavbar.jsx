@@ -2,47 +2,69 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 import Notification from "./Notification";
-import Settings from '../../views/Settings/Settings';
+
+//import { MdClose } from 'react-icons/md';
+
 import './style.css'
 
-//Icones
-import { MdClose } from 'react-icons/md';
 // reactstrap components
 import {
-  // Collapse,
-  InputGroup,
+  Collapse,
+  DropdownToggle,
+  UncontrolledDropdown,
   NavbarBrand,
   Navbar,
   Nav,
   Container,
-  Modal,
- // Alert,
-  // UncontrolledDropdown,
-  // DropdownToggle,
-  // DropdownMenu,
-  // NavLink,
-  // DropdownItem,
+  Modal
 } from "reactstrap";
 
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // collapseOpen: false,
-      modalSearch: false,
-      modalNotification:false,
-      // color: "navbar-transparent"
+      collapseOpen: false,
+      modalNotification: false,
+      color: "navbar-transparent"
     };
   }
-  toggleModalNotification = () => {
+  componentDidMount() {
+    window.addEventListener("resize", this.updateColor);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateColor);
+  }
+  // function that adds color white/transparent to the navbar on resize (this is for the collapse)
+  updateColor = () => {
+    if (window.innerWidth < 993 && this.state.collapseOpen) {
+      this.setState({
+        color: "bg-white"
+      });
+    } else {
+      this.setState({
+        color: "navbar-transparent"
+      });
+    }
+  };
+  // this function opens and closes the collapse on small devices
+  toggleCollapse = () => {
+    if (this.state.collapseOpen) {
+      this.setState({
+        color: "navbar-transparent"
+      });
+    } else {
+      this.setState({
+        color: "bg-white"
+      });
+    }
     this.setState({
-      modalNotification: !this.state.modalNotification
+      collapseOpen: !this.state.collapseOpen
     });
   };
 
-  toggleModalSearch = () => {
+  toggleModalNotification = () => {
     this.setState({
-      modalSearch: !this.state.modalSearch
+      modalNotification: !this.state.modalNotification
     });
   };
   render() {
@@ -50,7 +72,7 @@ class AdminNavbar extends React.Component {
       <>
         <Navbar
           className={classNames("navbar-absolute", this.state.color)}
-          expand="md"
+          expand="lg"
         >
           <Container fluid>
             <div className="navbar-wrapper">
@@ -73,81 +95,70 @@ class AdminNavbar extends React.Component {
                 {this.props.brandText}
               </NavbarBrand>
             </div>
-            <Nav className="ml-auto" navbar>
-              <InputGroup>
-              <button
-                  aria-label="Toggle navigation"
-                  className="btn btn-link"
-                  data-target="#searchModal"
-                  data-toggle="modal"
-                  id="navigation"
-                  type="button"
-                  onClick={this.toggleModalNotification}
-                >
-                  <div className="notification" />
-                  <i className="tim-icons icon-sound-wave" id="iconNotification" />
-                </button>
-                {  this.props.brandText.indexOf("Painel de controle") !== -1 ? (<button
-                  aria-label="Toggle navigation"
-                  className="btn btn-link"
-                  data-target="#searchModal"
-                  data-toggle="modal"
-                  id="navigation"
-                  type="button"
-                  onClick={this.toggleModalSearch}
-                >
-                  <span className="navbar-toggler-bar navbar-kebab" />
-                  <span className="navbar-toggler-bar navbar-kebab" />
-                  <span className="navbar-toggler-bar navbar-kebab" />
-                </button>): null}
-              </InputGroup>
-            </Nav>
+            <button
+              aria-expanded={false}
+              aria-label="Toggle navigation"
+              className="navbar-toggler"
+              data-target="#navigation"
+              data-toggle="collapse"
+              id="navigation"
+              type="button"
+              onClick={this.toggleCollapse}
+            >
+              <span className="navbar-toggler-bar navbar-kebab" />
+              <span className="navbar-toggler-bar navbar-kebab" />
+              <span className="navbar-toggler-bar navbar-kebab" />
+            </button>
+            <Collapse navbar isOpen={this.state.collapseOpen}>
+              <Nav className="ml-auto" navbar>
+                <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    nav
+                    onClick={this.toggleModalNotification}
+                    className="custom"
+                  >
+                    <div className="notification d-none d-lg-block d-xl-block" />
+                    <i className="tim-icons icon-sound-wave" />
+                    <p className="d-lg-none">Notificações</p>
+                  </DropdownToggle>
+                </UncontrolledDropdown>
+                <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    nav
+                    onClick={this.props.signOutClick}
+                    className="custom"
+                  >
+                    <h4 className="text-uppercase mb-0">Sair</h4>
+                  </DropdownToggle>
+                </UncontrolledDropdown>
+                <li className="separator d-lg-none" />
+              </Nav>
+            </Collapse>
           </Container>
         </Navbar>
+
         {/* Modal de Notificações */}
-        <Modal 
+        <Modal
           modalClassName="modal-notification"
           isOpen={this.state.modalNotification}
           toggle={this.toggleModalNotification}
           id="modalNoti">
           <div className="modal-header white-content">
-          <button
-            aria-label="Toggle navigation"
-            className="btn btn-link"
-            data-toggle="modal"
-            id="buttonClose"
-            type="button"
-            onClick={this.toggleModalNotification}
-          >
-           <MdClose/>
-          </button>
             <p>Notificações</p>
           </div>
           <div className="modal-body  white-content">
-            <Notification/>
-          </div>
-        </Modal>
-        {/* Modal Configurações do dispositovo */}
-        <Modal
-          modalClassName="modal-search"
-          isOpen={this.state.modalSearch}
-          toggle={this.toggleModalSearch}
-        >
-          <div className="modal-header white-content">
-          <button
-            aria-label="Toggle navigation"
-            className="btn btn-link"
-            data-toggle="modal"
-            id="buttonClose"
-            type="button"
-            onClick={this.toggleModalSearch}
-          >
-           <MdClose/>
-          </button>
-            <h3 id="header">Configurações do dispositivo</h3>
-          </div>
-          <div className="modal-body  white-content">
-                <Settings/>
+            {
+              this.state.modalNotification ?
+              <Notification />
+              :
+              <></>
+            }
           </div>
         </Modal>
       </>

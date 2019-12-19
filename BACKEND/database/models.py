@@ -6,7 +6,28 @@ from django.db.models.signals import post_save
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 import datetime
-# Create your models here.
+
+from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
+import rest_framework.authtoken.models
+
+@python_2_unicode_compatible
+class Token(rest_framework.authtoken.models.Token):
+    '''
+    create multi token per user - override default rest_framework Token class
+    replace model one-to-one relationship with foreign key
+    '''
+    key = models.CharField(_("Key"), max_length=40, db_index=True, unique=True)
+    #Foreign key relationship to user for many-to-one relationship
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='auth_token',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    name = models.CharField(_("Name"), max_length=64)
+
+    class Meta:
+        # ensure user and name are unique
+        unique_together = (('user', 'name'),)
 
 
 def current_year():
@@ -18,8 +39,12 @@ def max_value_current_year(value):
 
 
 class Device(models.Model):
-    pass
+    serial = models.CharField(max_length=100)
+    device_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
 
+class Notification(models.Model):
+    pass
 
 class Month(models.Model):
     month = models.IntegerField(primary_key=True, default=timezone.now().month)
@@ -27,16 +52,18 @@ class Month(models.Model):
 
 class Year(models.Model):
     year = models.IntegerField(primary_key=True ,validators=[
-        MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
+          MinValueValidator(1984), max_value_current_year], default=timezone.now().year)
 
+class Day(models.Model):
+    day = models.IntegerField(primary_key=True, default=timezone.now().day)
 
 class Potency(models.Model):
     value = models.FloatField(default=0)
-    date = models.DateTimeField(default=timezone.now())
+    date = models.DateTimeField(null=True, default=timezone.now)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     month = models.ForeignKey(Month, on_delete=models.CASCADE, default=timezone.now().month)
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
-
+    day = models.ForeignKey(Day, on_delete=models.CASCADE, default=timezone.now().day)
 
 class Person(models.Model):
     name = models.CharField(max_length=100)
@@ -66,7 +93,6 @@ class Account(models.Model):
     config = models.OneToOneField(Config, on_delete=models.CASCADE)
     person = models.OneToOneField(Person, on_delete=models.DO_NOTHING)
 
-
 @receiver(post_save, sender=User)
 def create_user_account(sender, instance, created, **kwargs):
     if created:
@@ -76,3 +102,4 @@ def create_user_account(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_account(sender, instance, **kwargs):
     instance.Account.save()
+
