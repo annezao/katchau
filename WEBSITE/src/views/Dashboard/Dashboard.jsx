@@ -2,6 +2,7 @@ import React from "react";
 
 // import "./style.css";
 import ChartFrame from "./ChartFrame";
+import Bandeiras from "./Bandeiras";
 
 class Dashboard extends React.Component {
 
@@ -12,6 +13,8 @@ class Dashboard extends React.Component {
             <ChartFrame
                 handleLoadingStatus={this.props.handleLoadingStatus}
                 device={this.props.match.params}/>
+            <br></br>
+            <Bandeiras/>
         </div>
       </>
     )

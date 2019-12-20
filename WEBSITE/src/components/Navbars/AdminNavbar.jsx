@@ -149,10 +149,10 @@ class AdminNavbar extends React.Component {
           isOpen={this.state.modalNotification}
           toggle={this.toggleModalNotification}
           id="modalNoti">
-          <div className="modal-header white-content">
-            <p>Notificações</p>
+          <div className="modal-header">
+            Notificações
           </div>
-          <div className="modal-body  white-content">
+          <div className="modal-body">
             {
               this.state.modalNotification ?
               <Notification />

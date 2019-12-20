@@ -3,8 +3,8 @@ import Switch from "react-switch";
 import './style.css'
 
 /*Icones*/
-import { FiMail, FiVolume2 } from 'react-icons/fi';
-import { MdVibration, MdNotifications } from 'react-icons/md';
+import { FiMail } from 'react-icons/fi';
+import { MdNotifications } from 'react-icons/md';
 
 // reactstrap components
 import {
@@ -295,82 +295,19 @@ class Settings extends React.Component {
                             this.state.checkedPush ?
                             <>
                                 <Row>
-                                    <Col sm="6" xs="8">
-                                        <CardText><MdVibration /> Vibrar ao notificar</CardText>
-                                    </Col>
-                                    <Col>
-                                        <label>
-                                            <Switch
-                                                checked={this.state.checkedVibrate}
-                                                onChange={this.handleChangeVibrate}
-                                                onColor={this.state.onColor}
-                                                onHandleColor={this.state.onHandleColor}
-                                                handleDiameter={30}
-                                                uncheckedIcon={false}
-                                                checkedIcon={false}
-                                                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                                height={20}
-                                                width={48}
-                                                className="react-switch"
-                                                id="material-switch" />
-                                        </label>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col sm="6" xs="8">
-                                        <CardText><FiVolume2 /> Som</CardText>
-                                    </Col>
-                                    <Col>
-                                        <label>
-                                            <Switch
-                                                checked={this.state.checkedSound}
-                                                onChange={this.handleChangeSound}
-                                                onColor={this.state.onColor}
-                                                onHandleColor={this.state.onHandleColor}
-                                                handleDiameter={30}
-                                                uncheckedIcon={false}
-                                                checkedIcon={false}
-                                                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                                                activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                                                height={20}
-                                                width={48}
-                                                className="react-switch"
-                                                id="material-switch" />
-                                        </label>
-                                    </Col>
-                                </Row>
-                                {/* <Row>
-                                    <Col>
-                                        <CardText><MdNotificationsActive /> Intervalo de notificação</CardText>
-                                    </Col>
-                                    <Col>
-                                        <div className="slidecontainer">
-                                            <input type="range" min={1} max={24} onMouseUp={this.handleChangeInterval} value={this.state.value} className="slider" id="myRange" onChange={this.onChangeValue}>
-                                            </input>
-
-
-                                            <Row>
-                                                <Col><p>{this.state.value}h</p></Col>
-                                                <Col><p style={{ textAlign: 'right' }}>24h</p></Col>
-                                            </Row>
-                                        </div>
-                                    </Col>
-                                </Row> */}
-                                <Row>
                                     <Col className="pr-md-1" sm="3" xs="3">
                                         <FormGroup>
-                                        <p>Limite</p>
+                                        <p>Valor limite de gastos</p>
                                         <Input
                                             defaultValue={this.state.limit}
-                                            placeholder="0 kW"
+                                            placeholder="R$ 0,00"
                                             type="number"/>
                                         </FormGroup>
                                     </Col>
                                     <Col className="botao">
                                         <Button onClick={this.handleChangeLimit}
                                         className="btn-fill" color="primary" type="button">
-                                            Salvar limite
+                                            Salvar
                                         </Button>
                                     </Col>
                                 </Row>

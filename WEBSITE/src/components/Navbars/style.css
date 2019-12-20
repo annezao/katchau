@@ -1,17 +1,38 @@
 #header{
     margin-bottom: 0px;
 }
+.modal-content{
+    width: 90%;
+    background-color:rgba(255, 255, 255, 0.86);
+    border-radius: 10px;
+}
+.modal-header{
+    color: #000;
+    font-weight: 600;
+}
 #iconNotification{
     font-size: 23px;
     color: #fff;
 }
 #modalNoti{
-    transform: translate(0, 15%);
+    border-radius: 15px;
+    transform: translate(0, 5%);
     position: relative;
     float: right;
-    background: rgb(145, 170, 182);
+    
     margin: 4.0rem 1rem;
     animation-duration: 0s;
+}
+#modalNoti::after{
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid rgba(255, 255, 255, 0.86);;
+    top: -19px;
+    left: 66%;
 }
 .dropdown-toggle.custom:after {
     color: transparent;
@@ -23,5 +44,20 @@
 @media screen and (max-width: 991px) {
     #iconNotification{
         font-size: 20px;
+    }
+    #modalNoti{
+        float: left;
+        transform: translate(0, 15%);
+    }
+    #modalNoti::after{
+        left: 20%;
+    }
+    .modal-content{
+        width: 100%;
+    }
+    .text-uppercase{
+        color: #1e263c;
+        font-size: 17px;
+        font-weight: 300;
     }
 } 
