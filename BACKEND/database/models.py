@@ -65,7 +65,6 @@ class Potency(models.Model):
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=timezone.now().year)
     day = models.ForeignKey(Day, on_delete=models.CASCADE, default=timezone.now().day)
 
-
 class Person(models.Model):
     name = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
@@ -94,5 +93,13 @@ class Account(models.Model):
     config = models.OneToOneField(Config, on_delete=models.CASCADE)
     person = models.OneToOneField(Person, on_delete=models.DO_NOTHING)
 
+@receiver(post_save, sender=User)
+def create_user_account(sender, instance, created, **kwargs):
+    if created:
+        Account.objects.create(user=instance)
 
+
+@receiver(post_save, sender=User)
+def save_user_account(sender, instance, **kwargs):
+    instance.Account.save()
 

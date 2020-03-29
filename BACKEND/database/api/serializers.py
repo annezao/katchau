@@ -36,7 +36,6 @@ class DaySerializer(serializers.ModelSerializer):
         model = Day
         fields = '__all__'
 
-
 # DeviceSerializer
 
 

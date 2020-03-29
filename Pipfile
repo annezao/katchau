@@ -4,18 +4,27 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+autopep8 = "*"
 
 [packages]
-django-webpack-loader = "*"
-djangorestframework = "*"
-django = "*"
-pylint = "*"
-astroid = "*"
-dataclasses = "*"
-django-cors-headers = "*"
-pytz = "*"
-six = "*"
-djongo = "*"
+django-webpack-loader = "==0.6.0"
+djangorestframework = "==3.10.3"
+Django = "==2.2.6"
+djongo = "==1.2.36"
+pylint = "==2.4.3"
+astroid = "==2.3.2"
+colorama = "==0.4.1"
+dataclasses = "==0.6"
+django-cors-headers = "==3.1.1"
+isort = "==4.3.21"
+lazy-object-proxy = "==1.4.3"
+mccabe = "==0.6.1"
+pymongo = "==3.9.0"
+pytz = "==2019.3"
+six = "==1.12.0"
+sqlparse = "==0.2.4"
+wrapt = "==1.11.2"
 django-webpush = "*"
 
 [requires]

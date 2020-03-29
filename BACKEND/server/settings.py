@@ -46,10 +46,6 @@ INSTALLED_APPS = [
     'database',
     'rest_framework',
     'webpack_loader',
-
-    #'rest_framework.authtoken',
-    'corsheaders',
-    'webpush',
 ]
 
 LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/user/login/'
@@ -148,7 +144,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images)'
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'

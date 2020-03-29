@@ -102,7 +102,6 @@ class ObtainExpiringAuthToken(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST, )
 
 # Potency
-
 class PotencyList(APIView):
 
     def get(self, request, format=None):
@@ -144,7 +143,6 @@ class PotencyDetail(APIView):
         potency.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class DevicePotencyMonth(generics.GenericAPIView):
     def get(self, request, pk, pk2, pk3):
         queryset = Potency.objects.filter(
@@ -177,7 +175,6 @@ class DevicePotencyDay(APIView):
         return Response(serializer.data)
 
 # Month
-
 class MonthList(APIView):
 
     def get(self, request, format=None):
@@ -264,8 +261,6 @@ class YearDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Day
-
-
 class DayList(APIView):
 
     def get(self, request, format=None):
@@ -308,8 +303,6 @@ class DayDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Device
-
-
 class DeviceList(APIView):
 
     def get(self, request, format=None):
@@ -352,8 +345,6 @@ class DeviceDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # User
-
-
 class UserList(APIView):
 
     def get(self, request, format=None):
@@ -423,9 +414,7 @@ class DevicePotency(APIView):
         serializer = PotencySerializer(device.potency_set.all(), many=True)
         return Response(serializer.data)
 
-# Person
-
-
+# Person.
 class PersonList(APIView):
 
     def get(self, request, format=None):
